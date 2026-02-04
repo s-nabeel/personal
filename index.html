@@ -1,15 +1,17 @@
 <!--
 index.html
 
-Version: 2.0
+Version: 2.0.1
 Last updated: 2026-02-04
 Author: Nabeel
--->
-<!DOCTYPE html>
+--><!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>Not Found</title>
     <style>
       @import url(https://db.onlinewebfonts.com/c/3c37c4157a2cd0a1b92569ce78aa99a3?family=Apoc+Revelations);
@@ -41,15 +43,21 @@ Author: Nabeel
         -webkit-font-smoothing: antialiased;
       }
 
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        position: fixed;
+      }
+
       body {
         background-color: var(--bg-color);
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        min-height: 100vh;
         color: var(--text-color);
-        overflow-x: hidden;
         transition: background-color 0.4s ease, color 0.4s ease;
       }
 
@@ -93,7 +101,6 @@ Author: Nabeel
       #moon-icon {
         display: none;
       }
-
       [data-theme="light"] #sun-icon {
         display: none;
       }
@@ -148,7 +155,6 @@ Author: Nabeel
 
       .home-link {
         color: var(--link-color);
-        font-family: "PP Fraktion Mono", monospace;
         font-size: 0.75rem;
         line-height: 30px;
         letter-spacing: -0.02em;
@@ -158,7 +164,7 @@ Author: Nabeel
 
       .home-link:hover {
         opacity: 0.8;
-        text-decoration: underline;
+        text-decoration: underline !important;
       }
 
       footer {
@@ -167,7 +173,6 @@ Author: Nabeel
         align-items: center;
         width: 100%;
         padding: 40px 60px;
-        font-family: "PP Fraktion Mono", monospace;
         color: var(--footer-color);
         font-size: 0.75rem;
         letter-spacing: 0.02em;
@@ -178,12 +183,14 @@ Author: Nabeel
         .top-nav {
           padding: 20px;
         }
+
         footer {
-          padding: 30px 20px;
-          flex-direction: column;
-          gap: 15px;
-          text-align: center;
+          padding: 20px 15px;
+          flex-direction: row;
+          justify-content: space-between;
+          font-size: 0.55rem;
         }
+
         .error-container {
           flex-direction: column;
         }
@@ -197,6 +204,7 @@ Author: Nabeel
         .error-message {
           font-size: 15vw;
         }
+
         .home-link-wrapper {
           position: relative;
           top: auto;
@@ -249,14 +257,12 @@ Author: Nabeel
       const themeToggle = document.getElementById("theme-toggle");
       const body = document.body;
 
-      const currentTheme = localStorage.getItem("theme");
-      if (currentTheme === "light") {
+      if (localStorage.getItem("theme") === "light") {
         body.setAttribute("data-theme", "light");
       }
 
       themeToggle.addEventListener("click", () => {
-        const isLight = body.getAttribute("data-theme") === "light";
-        if (isLight) {
+        if (body.getAttribute("data-theme") === "light") {
           body.removeAttribute("data-theme");
           localStorage.setItem("theme", "dark");
         } else {
@@ -275,13 +281,11 @@ Author: Nabeel
           second: "2-digit",
           hour12: true,
         };
-
         const formatter = new Intl.DateTimeFormat([], options);
         document.getElementById("clock").textContent = formatter.format(
           new Date()
         );
       }
-
       setInterval(updateClock, 1000);
       updateClock();
     </script>
