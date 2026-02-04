@@ -1,10 +1,4 @@
-<!--
-index.html
-
-Version: 2.0.1
-Last updated: 2026-02-04
-Author: Nabeel
---><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -13,6 +7,22 @@ Author: Nabeel
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>Not Found</title>
+
+    <meta name="title" content="Nabeel | 404" />
+    <meta name="description" content="An undefined path." />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://nabeel.ca/" />
+    <meta property="og:title" content="Nabeel | 404" />
+    <meta property="og:description" content="An undefined path." />
+    <meta property="og:image" content="https://nabeel.ca/og-image.png" />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://nabeel.ca/" />
+    <meta property="twitter:title" content="Nabeel | 404" />
+    <meta property="twitter:description" content="An undefined path." />
+    <meta property="twitter:image" content="https://nabeel.ca/og-image.png" />
+
     <style>
       @import url(https://db.onlinewebfonts.com/c/3c37c4157a2cd0a1b92569ce78aa99a3?family=Apoc+Revelations);
       @import url(https://db.onlinewebfonts.com/c/fec3dc5a80a709e226724da889433aaf?family=PP+Fraktion+Mono);
@@ -39,7 +49,6 @@ Author: Nabeel
         box-sizing: border-box;
         font-family: "PP Fraktion Mono", "FraktionMono", sans-serif;
         font-style: normal !important;
-        font-synthesis: none;
         -webkit-font-smoothing: antialiased;
       }
 
@@ -74,18 +83,16 @@ Author: Nabeel
         border: none;
         color: var(--text-color);
         cursor: pointer;
+        width: 20px;
+        height: 20px;
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 0;
-        transition: opacity 0.3s ease;
-      }
-
-      #theme-toggle:hover {
-        opacity: 0.6;
       }
 
       #theme-toggle svg {
+        position: absolute;
         width: 14px;
         height: 14px;
         fill: none;
@@ -93,19 +100,26 @@ Author: Nabeel
         stroke-width: 1.5;
         stroke-linecap: round;
         stroke-linejoin: round;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+          opacity 0.4s ease;
       }
 
       #sun-icon {
-        display: block;
+        opacity: 1;
+        transform: rotate(0deg);
       }
       #moon-icon {
-        display: none;
+        opacity: 0;
+        transform: rotate(-90deg);
       }
+
       [data-theme="light"] #sun-icon {
-        display: none;
+        opacity: 0;
+        transform: rotate(90deg);
       }
       [data-theme="light"] #moon-icon {
-        display: block;
+        opacity: 1;
+        transform: rotate(0deg);
       }
 
       .content-wrapper {
@@ -133,8 +147,7 @@ Author: Nabeel
         margin: 0 20px 0 0;
         padding: 10px 23px 10px 0;
         border-right: 1px solid var(--border-color);
-        display: flex;
-        align-items: center;
+        user-select: none;
       }
 
       .error-message {
@@ -142,8 +155,14 @@ Author: Nabeel
         font-size: 3.8rem;
         line-height: 1;
         letter-spacing: -1.782px;
-        display: flex;
-        align-items: center;
+        cursor: pointer;
+        user-select: none;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+      }
+
+      .error-message.fading {
+        opacity: 0;
+        transform: translateY(5px);
       }
 
       .home-link-wrapper {
@@ -156,8 +175,6 @@ Author: Nabeel
       .home-link {
         color: var(--link-color);
         font-size: 0.75rem;
-        line-height: 30px;
-        letter-spacing: -0.02em;
         text-decoration: none;
         transition: opacity 0.2s ease;
       }
@@ -175,7 +192,6 @@ Author: Nabeel
         padding: 40px 60px;
         color: var(--footer-color);
         font-size: 0.75rem;
-        letter-spacing: 0.02em;
         opacity: 0.6;
       }
 
@@ -183,14 +199,10 @@ Author: Nabeel
         .top-nav {
           padding: 20px;
         }
-
         footer {
           padding: 20px 15px;
-          flex-direction: row;
-          justify-content: space-between;
           font-size: 0.55rem;
         }
-
         .error-container {
           flex-direction: column;
         }
@@ -204,7 +216,6 @@ Author: Nabeel
         .error-message {
           font-size: 15vw;
         }
-
         .home-link-wrapper {
           position: relative;
           top: auto;
@@ -236,9 +247,8 @@ Author: Nabeel
     <div class="content-wrapper">
       <div class="error-container">
         <div class="error-text">404</div>
-        <div class="error-message">undefined</div>
+        <div class="error-message" id="error-msg">undefined</div>
       </div>
-
       <div class="home-link-wrapper">
         <a href="mailto:x@nabeel.ca" class="home-link">x@nabeel.ca</a>
       </div>
@@ -256,10 +266,8 @@ Author: Nabeel
     <script>
       const themeToggle = document.getElementById("theme-toggle");
       const body = document.body;
-
-      if (localStorage.getItem("theme") === "light") {
+      if (localStorage.getItem("theme") === "light")
         body.setAttribute("data-theme", "light");
-      }
 
       themeToggle.addEventListener("click", () => {
         if (body.getAttribute("data-theme") === "light") {
@@ -271,8 +279,20 @@ Author: Nabeel
         }
       });
 
-      document.getElementById("year").textContent = new Date().getFullYear();
+      const errorMsg = document.getElementById("error-msg");
+      const states = ["undefined", "null", "not found", "void", "lost"];
+      let currentState = 0;
 
+      errorMsg.addEventListener("click", () => {
+        errorMsg.classList.add("fading");
+        setTimeout(() => {
+          currentState = (currentState + 1) % states.length;
+          errorMsg.textContent = states[currentState];
+          errorMsg.classList.remove("fading");
+        }, 300);
+      });
+
+      document.getElementById("year").textContent = new Date().getFullYear();
       function updateClock() {
         const options = {
           timeZone: "America/Los_Angeles",
