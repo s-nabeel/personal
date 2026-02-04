@@ -164,7 +164,12 @@ Author: Nabeel
         letter-spacing: -1.782px;
         cursor: pointer;
         user-select: none;
+        opacity: 1;
+        transform: translateY(0);
         transition: opacity 0.3s ease, transform 0.3s ease;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        will-change: opacity, transform;
       }
 
       .error-message.fading {
