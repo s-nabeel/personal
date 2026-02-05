@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 2.1.6
+Version: 2.1.7
 Last updated: 2026-02-05
 Author: Nabeel
 -->
@@ -163,9 +163,9 @@ Author: Nabeel
         padding: 10px 23px 10px 0;
         border-right: 1px solid var(--border-color);
         user-select: none;
-        touch-action: manipulation;
-        cursor: default;
-        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation; /* Prevents mobile zoom on rapid taps */
+        cursor: default; /* Desktop Secret: No pointer on hover */
+        -webkit-tap-highlight-color: transparent; /* Mobile Secret: No tap flash */
       }
 
       .error-message {
@@ -315,6 +315,7 @@ Author: Nabeel
       let hasExploded = false;
       let clickCount = 0;
 
+      // Shared Secret Trigger
       const triggerHello = () => {
         errorMsg.textContent = "hello";
         confetti({
@@ -324,6 +325,7 @@ Author: Nabeel
         });
       };
 
+      // Universal Secret: 10 clicks on "404" (Desktop & Mobile)
       errorText.addEventListener("click", () => {
         clickCount++;
         if (clickCount >= 10) {
