@@ -1,8 +1,8 @@
 <!--
 index.html
 
-Version: 2.0.3
-Last updated: 2026-02-04
+Version: 2.1
+Last updated: 2026-02-05
 Author: Nabeel
 -->
 <!doctype html>
@@ -333,6 +333,35 @@ Author: Nabeel
             hasExploded = true;
           }
         }, 300);
+      });
+
+      let inputBuffer = "";
+      const secrets = {
+        dark: () => {
+          body.removeAttribute("data-theme");
+          localStorage.setItem("theme", "dark");
+        },
+        light: () => {
+          body.setAttribute("data-theme", "light");
+          localStorage.setItem("theme", "light");
+        },
+        nabeel: () => {
+          errorMsg.textContent = "hello";
+          confetti({ particleCount: 50, spread: 50, origin: { y: 0.8 } });
+        },
+      };
+
+      window.addEventListener("keydown", (e) => {
+        if (e.key.length === 1) {
+          inputBuffer += e.key.toLowerCase();
+          if (inputBuffer.length > 10) inputBuffer = inputBuffer.substring(1);
+          for (const word in secrets) {
+            if (inputBuffer.includes(word)) {
+              secrets[word]();
+              inputBuffer = "";
+            }
+          }
+        }
       });
 
       document.getElementById("year").textContent = new Date().getFullYear();
