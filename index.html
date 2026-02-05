@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 2.1
+Version: 2.1.6
 Last updated: 2026-02-05
 Author: Nabeel
 -->
@@ -163,6 +163,9 @@ Author: Nabeel
         padding: 10px 23px 10px 0;
         border-right: 1px solid var(--border-color);
         user-select: none;
+        touch-action: manipulation;
+        cursor: default;
+        -webkit-tap-highlight-color: transparent;
       }
 
       .error-message {
@@ -236,6 +239,7 @@ Author: Nabeel
           padding: 0 0 10px 0;
           border-right: none;
           border-bottom: 1px solid var(--border-color);
+          touch-action: manipulation;
         }
         .error-message {
           font-size: 15vw;
@@ -305,9 +309,28 @@ Author: Nabeel
       });
 
       const errorMsg = document.getElementById("error-msg");
+      const errorText = document.querySelector(".error-text");
       const states = ["undefined", "null", "not found", "void", "error"];
       let currentState = 0;
       let hasExploded = false;
+      let clickCount = 0;
+
+      const triggerHello = () => {
+        errorMsg.textContent = "hello";
+        confetti({
+          particleCount: 50,
+          spread: 50,
+          origin: { y: 0.8 },
+        });
+      };
+
+      errorText.addEventListener("click", () => {
+        clickCount++;
+        if (clickCount >= 10) {
+          triggerHello();
+          clickCount = 0;
+        }
+      });
 
       errorMsg.addEventListener("click", () => {
         errorMsg.classList.add("fading");
@@ -346,8 +369,7 @@ Author: Nabeel
           localStorage.setItem("theme", "light");
         },
         nabeel: () => {
-          errorMsg.textContent = "hello";
-          confetti({ particleCount: 50, spread: 50, origin: { y: 0.8 } });
+          triggerHello();
         },
       };
 
