@@ -5,7 +5,7 @@ Version: 2.0.3
 Last updated: 2026-02-04
 Author: Nabeel
 -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -77,7 +77,9 @@ Author: Nabeel
         justify-content: center;
         align-items: center;
         color: var(--text-color);
-        transition: background-color 0.4s ease, color 0.4s ease;
+        transition:
+          background-color 0.4s ease,
+          color 0.4s ease;
       }
 
       .top-nav {
@@ -99,6 +101,8 @@ Author: Nabeel
         display: flex;
         align-items: center;
         justify-content: center;
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
       }
 
       #theme-toggle svg {
@@ -110,7 +114,8 @@ Author: Nabeel
         stroke-width: 1.5;
         stroke-linecap: round;
         stroke-linejoin: round;
-        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+        transition:
+          transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
           opacity 0.4s ease;
       }
 
@@ -169,7 +174,9 @@ Author: Nabeel
         user-select: none;
         opacity: 1;
         transform: translateY(0);
-        transition: opacity 0.3s ease, transform 0.3s ease;
+        transition:
+          opacity 0.3s ease,
+          transform 0.3s ease;
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
         will-change: opacity, transform;
@@ -238,6 +245,7 @@ Author: Nabeel
         }
       }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   </head>
   <body>
     <div class="top-nav">
@@ -297,6 +305,7 @@ Author: Nabeel
       const errorMsg = document.getElementById("error-msg");
       const states = ["undefined", "null", "not found", "void", "error"];
       let currentState = 0;
+      let hasExploded = false;
 
       errorMsg.addEventListener("click", () => {
         errorMsg.classList.add("fading");
@@ -304,6 +313,18 @@ Author: Nabeel
           currentState = (currentState + 1) % states.length;
           errorMsg.textContent = states[currentState];
           errorMsg.classList.remove("fading");
+
+          if (currentState === 0 && !hasExploded) {
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.6 },
+              colors: ["#ffffff", "#a3a3a3", "#666666"],
+              shapes: ["square"],
+              disableForReducedMotion: true,
+            });
+            hasExploded = true;
+          }
         }, 300);
       });
 
@@ -318,7 +339,7 @@ Author: Nabeel
         };
         const formatter = new Intl.DateTimeFormat([], options);
         document.getElementById("clock").textContent = formatter.format(
-          new Date()
+          new Date(),
         );
       }
       setInterval(updateClock, 1000);
