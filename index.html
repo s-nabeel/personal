@@ -89,6 +89,8 @@ Author: Nabeel
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        user-select: none;
+        -webkit-user-select: none;
         /* Apple's newest font: real SF Pro on Apple devices, Inter elsewhere */
         font-family:
           -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter",
@@ -382,26 +384,26 @@ Author: Nabeel
       .apple-a::after {
         content: "";
         position: absolute;
-        bottom: 0.56em;
-        left: 58%;
-        width: 0.2em;
-        height: 0.22em;
+        bottom: 0.52em;
+        left: 55%;
+        width: 0.24em;
+        height: 0.13em;
         background: #61bb46;
-        border-radius: 0 100% 0 100%;
-        transform: translateX(-30%) rotate(30deg);
+        border-radius: 100% 0 100% 0;
+        transform: rotate(-25deg);
         pointer-events: none;
         animation: leaf-drop 0.55s cubic-bezier(0.5, 0, 0.7, 0.4) 0.15s both;
       }
       @keyframes leaf-drop {
         from {
-          transform: translate(-30%, -0.6em) rotate(8deg);
+          transform: translateY(-0.6em) rotate(-5deg);
           opacity: 0;
         }
         40% {
           opacity: 1;
         }
         to {
-          transform: translateX(-30%) rotate(30deg);
+          transform: translateY(0) rotate(-25deg);
           opacity: 1;
         }
       }
