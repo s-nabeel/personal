@@ -41,24 +41,24 @@ Author: Nabeel
     />
     <style>
       :root {
-        --bg-color: #050507;
-        --text-color: #ffffff;
-        --footer-color: #a3a3a3;
-        --link-color: #b5b5b2;
-        --border-color: rgba(255, 255, 255, 0.28);
+        --bg-color: #0b0d12;
+        --text-color: #f5f5f7;
+        --footer-color: #86868b;
+        --link-color: #d6d6da;
+        --border-color: rgba(255, 255, 255, 0.24);
 
         /* liquid glass tokens */
-        --glass-bg: rgba(255, 255, 255, 0.07);
-        --glass-bg-strong: rgba(255, 255, 255, 0.1);
-        --glass-stroke: rgba(255, 255, 255, 0.16);
-        --glass-highlight: rgba(255, 255, 255, 0.45);
-        --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.45),
-          0 2px 10px rgba(0, 0, 0, 0.3);
-        --glass-inner: inset 0 1px 0 rgba(255, 255, 255, 0.25),
-          inset 0 -1px 0 rgba(255, 255, 255, 0.06);
-        --blob-a: rgba(94, 114, 235, 0.28);
-        --blob-b: rgba(0, 190, 214, 0.2);
-        --blob-c: rgba(190, 90, 220, 0.18);
+        --glass-bg: rgba(255, 255, 255, 0.08);
+        --glass-bg-strong: rgba(255, 255, 255, 0.12);
+        --glass-stroke: rgba(255, 255, 255, 0.18);
+        --glass-highlight: rgba(255, 255, 255, 0.4);
+        --glass-shadow: 0 24px 70px rgba(0, 0, 0, 0.5),
+          0 2px 8px rgba(0, 0, 0, 0.25);
+        --glass-inner: inset 0 1px 0 rgba(255, 255, 255, 0.22),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+        --blob-a: rgba(75, 115, 250, 0.34);
+        --blob-b: rgba(0, 185, 215, 0.22);
+        --blob-c: rgba(130, 100, 255, 0.22);
         --glint-core: rgba(255, 255, 255, 0.95);
         --glint-mid: rgba(255, 255, 255, 0.3);
       }
@@ -78,9 +78,9 @@ Author: Nabeel
           0 2px 10px rgba(40, 50, 90, 0.08);
         --glass-inner: inset 0 1px 0 rgba(255, 255, 255, 0.9),
           inset 0 -1px 0 rgba(255, 255, 255, 0.35);
-        --blob-a: rgba(94, 114, 235, 0.3);
-        --blob-b: rgba(0, 190, 214, 0.26);
-        --blob-c: rgba(255, 140, 190, 0.3);
+        --blob-a: rgba(70, 110, 245, 0.18);
+        --blob-b: rgba(0, 180, 210, 0.14);
+        --blob-c: rgba(150, 140, 255, 0.14);
         --glint-core: rgba(60, 80, 215, 1);
         --glint-mid: rgba(60, 80, 215, 0.4);
       }
@@ -342,20 +342,22 @@ Author: Nabeel
       }
 
       .glass-card {
-        border-radius: 36px;
-        padding: 56px 64px;
+        border-radius: 32px;
+        padding: 72px 96px;
         display: flex;
         flex-direction: column;
         align-items: center;
       }
 
       .name {
-        /* Apple's New York serif on Apple devices, Source Serif elsewhere */
-        font-family: "New York", ui-serif, "Source Serif 4", Georgia, serif;
-        font-weight: 600;
-        font-size: 4.4rem;
+        /* apple.com headline style: SF Pro Display on Apple devices, Inter elsewhere */
+        font-family:
+          -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter",
+          "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 700;
+        font-size: 4.2rem;
         line-height: 1.05;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.03em;
         user-select: none;
         cursor: pointer;
         touch-action: manipulation;
@@ -379,7 +381,7 @@ Author: Nabeel
       .apple-a::after {
         content: "";
         position: absolute;
-        top: 0.12em;
+        bottom: 0.56em;
         left: 58%;
         width: 0.2em;
         height: 0.22em;
@@ -464,13 +466,11 @@ Author: Nabeel
       }
 
       .tagline {
-        margin-top: 18px;
-        padding-top: 18px;
-        border-top: 1px solid var(--border-color);
+        margin-top: 20px;
         color: var(--footer-color);
-        font-size: 0.85rem;
+        font-size: 1.05rem;
         font-weight: 400;
-        letter-spacing: 0.01em;
+        letter-spacing: 0.005em;
         text-align: center;
         user-select: none;
       }
@@ -494,17 +494,18 @@ Author: Nabeel
       }
 
       .home-link-wrapper {
-        margin-top: 34px;
+        margin-top: 40px;
         text-align: center;
       }
 
       .home-link {
         display: inline-block;
-        color: var(--link-color);
-        font-size: 0.8rem;
+        color: var(--text-color);
+        font-size: 0.9rem;
+        font-weight: 500;
         letter-spacing: 0.01em;
         text-decoration: none;
-        padding: 10px 22px;
+        padding: 13px 28px;
         border-radius: 999px;
         background: var(--glass-bg);
         -webkit-backdrop-filter: blur(14px) saturate(160%);
@@ -537,7 +538,7 @@ Author: Nabeel
         padding: 16px 28px;
         border-radius: 999px;
         color: var(--footer-color);
-        font-size: 0.8rem;
+        font-size: 0.78rem;
         letter-spacing: 0.01em;
       }
 
@@ -549,7 +550,7 @@ Author: Nabeel
           width: calc(100% - 24px);
           margin: 0 12px 12px;
           padding: 12px 18px;
-          font-size: 0.55rem;
+          font-size: 0.62rem;
         }
         .glass-card {
           border-radius: 28px;
@@ -615,7 +616,8 @@ Author: Nabeel
     <script>
       const themeToggle = document.getElementById("theme-toggle");
       const body = document.body;
-      if (localStorage.getItem("theme") === "light")
+      // light is the default; dark only when explicitly chosen
+      if (localStorage.getItem("theme") !== "dark")
         body.setAttribute("data-theme", "light");
 
       themeToggle.addEventListener("click", () => {
@@ -829,29 +831,37 @@ Author: Nabeel
         });
       }
 
-      function enableTilt() {
-        if (
-          typeof DeviceOrientationEvent !== "undefined" &&
-          typeof DeviceOrientationEvent.requestPermission === "function"
-        ) {
-          // iOS needs a user gesture to grant motion access
+      // iOS: motion access needs HTTPS + a user gesture. Keep asking on every
+      // tap until it's granted (or the user denies it in the popup).
+      const needsMotionPermission =
+        typeof DeviceOrientationEvent !== "undefined" &&
+        typeof DeviceOrientationEvent.requestPermission === "function";
+
+      function startTilt() {
+        window.addEventListener("deviceorientation", handleOrientation);
+      }
+
+      if (needsMotionPermission) {
+        let motionSettled = false;
+        const askMotion = () => {
+          if (motionSettled) return;
           DeviceOrientationEvent.requestPermission()
             .then((state) => {
-              if (state === "granted")
-                window.addEventListener("deviceorientation", handleOrientation);
+              if (state === "granted" || state === "denied") {
+                motionSettled = true;
+                window.removeEventListener("touchend", askMotion);
+                window.removeEventListener("click", askMotion);
+              }
+              if (state === "granted") startTilt();
             })
-            .catch(() => {});
-        } else {
-          window.addEventListener("deviceorientation", handleOrientation);
-        }
-      }
-      if (
-        typeof DeviceOrientationEvent !== "undefined" &&
-        typeof DeviceOrientationEvent.requestPermission === "function"
-      ) {
-        window.addEventListener("touchend", enableTilt, { once: true });
-      } else {
-        enableTilt();
+            .catch(() => {
+              /* not a valid gesture yet — try again on the next tap */
+            });
+        };
+        window.addEventListener("touchend", askMotion);
+        window.addEventListener("click", askMotion);
+      } else if (typeof DeviceOrientationEvent !== "undefined") {
+        startTilt();
       }
 
       console.log(
