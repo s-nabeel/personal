@@ -384,26 +384,27 @@ Author: Nabeel
       .apple-a::after {
         content: "";
         position: absolute;
-        bottom: 0.52em;
-        left: 55%;
-        width: 0.24em;
-        height: 0.13em;
-        background: #61bb46;
-        border-radius: 100% 0 100% 0;
-        transform: rotate(-25deg);
+        bottom: 0.62em;
+        left: 50%;
+        width: 0.22em;
+        height: 0.25em;
+        /* the genuine Apple logo leaf path */
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 85 98"><path fill="%2361bb46" d="M62.2 66.8c14.6-17.7 24.5-42.3 21.8-66.8-21.1.9-46.6 14.1-61.7 31.8-13.5 15.7-25.3 40.7-22.1 64.7 23.5 1.8 47.4-12 62-29.7z"/></svg>')
+          no-repeat center / contain;
+        transform: translateX(-50%);
         pointer-events: none;
         animation: leaf-drop 0.55s cubic-bezier(0.5, 0, 0.7, 0.4) 0.15s both;
       }
       @keyframes leaf-drop {
         from {
-          transform: translateY(-0.6em) rotate(-5deg);
+          transform: translate(-50%, -0.6em);
           opacity: 0;
         }
         40% {
           opacity: 1;
         }
         to {
-          transform: translateY(0) rotate(-25deg);
+          transform: translate(-50%, 0);
           opacity: 1;
         }
       }
