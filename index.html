@@ -1,8 +1,8 @@
 <!--
 index.html
 
-Version: 2.1.8
-Last updated: 2026-02-05
+Version: 3.1.0
+Last updated: 2026-08-31
 Author: Nabeel
 -->
 <!doctype html>
@@ -13,51 +13,86 @@ Author: Nabeel
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>Not Found</title>
+    <title>Nabeel</title>
 
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="apple-touch-icon" href="favicon.png" />
 
-    <meta name="title" content="Nabeel | 404" />
-    <meta name="description" content="An undefined path." />
+    <meta name="title" content="Nabeel" />
+    <meta name="description" content="Personal site of Nabeel." />
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://nabeel.ca/" />
-    <meta property="og:title" content="Nabeel | 404" />
-    <meta property="og:description" content="An undefined path." />
+    <meta property="og:title" content="Nabeel" />
+    <meta property="og:description" content="Personal site of Nabeel." />
     <meta property="og:image" content="https://nabeel.ca/og-image.png" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://nabeel.ca/" />
-    <meta name="twitter:title" content="Nabeel | 404" />
-    <meta name="twitter:description" content="An undefined path." />
+    <meta name="twitter:title" content="Nabeel" />
+    <meta name="twitter:description" content="Personal site of Nabeel." />
     <meta name="twitter:image" content="https://nabeel.ca/og-image.png" />
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600&display=swap"
+      rel="stylesheet"
+    />
     <style>
-      @import url(https://db.onlinewebfonts.com/c/3c37c4157a2cd0a1b92569ce78aa99a3?family=Apoc+Revelations);
-      @import url(https://db.onlinewebfonts.com/c/fec3dc5a80a709e226724da889433aaf?family=PP+Fraktion+Mono);
-
       :root {
-        --bg-color: #0a0a0a;
+        --bg-color: #050507;
         --text-color: #ffffff;
         --footer-color: #a3a3a3;
-        --link-color: #999996;
-        --border-color: rgba(255, 255, 255, 0.3);
+        --link-color: #b5b5b2;
+        --border-color: rgba(255, 255, 255, 0.28);
+
+        /* liquid glass tokens */
+        --glass-bg: rgba(255, 255, 255, 0.07);
+        --glass-bg-strong: rgba(255, 255, 255, 0.1);
+        --glass-stroke: rgba(255, 255, 255, 0.16);
+        --glass-highlight: rgba(255, 255, 255, 0.45);
+        --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.45),
+          0 2px 10px rgba(0, 0, 0, 0.3);
+        --glass-inner: inset 0 1px 0 rgba(255, 255, 255, 0.25),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+        --blob-a: rgba(94, 114, 235, 0.28);
+        --blob-b: rgba(0, 190, 214, 0.2);
+        --blob-c: rgba(190, 90, 220, 0.18);
+        --glint-core: rgba(255, 255, 255, 0.95);
+        --glint-mid: rgba(255, 255, 255, 0.3);
       }
 
       [data-theme="light"] {
-        --bg-color: #f5f5f5;
+        --bg-color: #eef0f4;
         --text-color: #0a0a0a;
-        --footer-color: #666666;
-        --link-color: #444444;
-        --border-color: rgba(0, 0, 0, 0.2);
+        --footer-color: #55555a;
+        --link-color: #3a3a40;
+        --border-color: rgba(0, 0, 0, 0.18);
+
+        --glass-bg: rgba(255, 255, 255, 0.42);
+        --glass-bg-strong: rgba(255, 255, 255, 0.55);
+        --glass-stroke: rgba(255, 255, 255, 0.65);
+        --glass-highlight: rgba(255, 255, 255, 0.95);
+        --glass-shadow: 0 20px 50px rgba(40, 50, 90, 0.16),
+          0 2px 10px rgba(40, 50, 90, 0.08);
+        --glass-inner: inset 0 1px 0 rgba(255, 255, 255, 0.9),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.35);
+        --blob-a: rgba(94, 114, 235, 0.3);
+        --blob-b: rgba(0, 190, 214, 0.26);
+        --blob-c: rgba(255, 140, 190, 0.3);
+        --glint-core: rgba(60, 80, 215, 1);
+        --glint-mid: rgba(60, 80, 215, 0.4);
       }
 
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: "PP Fraktion Mono", "FraktionMono", sans-serif;
+        /* Apple's newest font: real SF Pro on Apple devices, Inter elsewhere */
+        font-family:
+          -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter",
+          "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-style: normal !important;
         -webkit-font-smoothing: antialiased;
       }
@@ -82,6 +117,150 @@ Author: Nabeel
           color 0.4s ease;
       }
 
+      /* ambient color field the glass refracts */
+      .ambient {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .ambient::before,
+      .ambient::after,
+      .ambient .blob {
+        content: "";
+        position: absolute;
+        width: 55vmax;
+        height: 55vmax;
+        border-radius: 50%;
+        filter: blur(90px);
+        will-change: transform;
+      }
+      .ambient::before {
+        background: var(--blob-a);
+        top: -20vmax;
+        left: -15vmax;
+        animation: drift-a 26s ease-in-out infinite alternate;
+      }
+      .ambient::after {
+        background: var(--blob-b);
+        bottom: -25vmax;
+        right: -15vmax;
+        animation: drift-b 32s ease-in-out infinite alternate;
+      }
+      .ambient .blob {
+        background: var(--blob-c);
+        top: 40%;
+        left: 55%;
+        width: 40vmax;
+        height: 40vmax;
+        animation: drift-c 38s ease-in-out infinite alternate;
+      }
+      @keyframes drift-a {
+        to {
+          transform: translate(12vmax, 8vmax) scale(1.1);
+        }
+      }
+      @keyframes drift-b {
+        to {
+          transform: translate(-10vmax, -6vmax) scale(1.15);
+        }
+      }
+      @keyframes drift-c {
+        to {
+          transform: translate(-14vmax, -10vmax) scale(0.9);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .ambient::before,
+        .ambient::after,
+        .ambient .blob {
+          animation: none;
+        }
+      }
+
+      /* the liquid glass recipe */
+      .glass {
+        position: relative;
+        background: var(--glass-bg);
+        -webkit-backdrop-filter: blur(22px) saturate(180%);
+        backdrop-filter: blur(22px) saturate(180%);
+        border: 1px solid var(--glass-stroke);
+        box-shadow: var(--glass-shadow), var(--glass-inner);
+        transition:
+          background 0.4s ease,
+          border-color 0.4s ease,
+          box-shadow 0.4s ease;
+      }
+      .glass::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        background:
+          radial-gradient(
+            45vmax circle at var(--spec-x, 30%) var(--spec-y, 20%),
+            var(--glass-highlight) 0%,
+            transparent 40%
+          ),
+          linear-gradient(
+            135deg,
+            var(--glass-highlight) 0%,
+            transparent 22%,
+            transparent 78%,
+            rgba(255, 255, 255, 0.12) 100%
+          );
+        background-attachment: fixed, scroll;
+        opacity: 0.22;
+        transition: opacity 0.4s ease;
+      }
+
+      /* liquid glass rim glint — the border lights up near the cursor
+         and glides along the edge */
+      .glass::after,
+      #theme-toggle::after,
+      .home-link::after {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        pointer-events: none;
+        padding: 2px;
+        background: radial-gradient(
+          160px circle at var(--mx, 50%) var(--my, 50%),
+          var(--glint-core) 0%,
+          var(--glint-mid) 40%,
+          transparent 70%
+        );
+        -webkit-mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .glass:hover::after,
+      #theme-toggle:hover::after,
+      .home-link:hover::after {
+        opacity: 1;
+      }
+
+      /* gyroscope drives the glints on mobile — always lit, no hover needed */
+      body.tilt-active .glass::after,
+      body.tilt-active #theme-toggle::after,
+      body.tilt-active .home-link::after {
+        opacity: 0.8;
+      }
+      #theme-toggle,
+      .home-link {
+        position: relative;
+      }
+
       .top-nav {
         position: fixed;
         top: 0;
@@ -91,24 +270,38 @@ Author: Nabeel
       }
 
       #theme-toggle {
-        background: none;
-        border: none;
+        background: var(--glass-bg);
+        -webkit-backdrop-filter: blur(18px) saturate(180%);
+        backdrop-filter: blur(18px) saturate(180%);
+        border: 1px solid var(--glass-stroke);
+        box-shadow: var(--glass-inner), 0 6px 20px rgba(0, 0, 0, 0.2);
+        border-radius: 999px;
         color: var(--text-color);
         cursor: pointer;
-        width: 20px;
-        height: 20px;
+        width: 44px;
+        height: 44px;
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
         outline: none;
         -webkit-tap-highlight-color: transparent;
+        transition:
+          transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+          background 0.4s ease;
+      }
+      #theme-toggle:hover {
+        transform: scale(1.08);
+        background: var(--glass-bg-strong);
+      }
+      #theme-toggle:active {
+        transform: scale(0.94);
       }
 
       #theme-toggle svg {
         position: absolute;
-        width: 14px;
-        height: 14px;
+        width: 16px;
+        height: 16px;
         fill: none;
         stroke: currentColor;
         stroke-width: 1.5;
@@ -145,81 +338,207 @@ Author: Nabeel
         align-items: center;
         position: relative;
         width: 100%;
+        z-index: 1;
       }
 
-      .error-container {
+      .glass-card {
+        border-radius: 36px;
+        padding: 56px 64px;
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
       }
 
-      .error-text {
-        font-family: "Apoc Revelations", sans-serif;
-        font-size: 3.8rem;
-        line-height: 1;
-        letter-spacing: -1.782px;
-        margin: 0 20px 0 0;
-        padding: 10px 23px 10px 0;
-        border-right: 1px solid var(--border-color);
+      .name {
+        /* Apple's New York serif on Apple devices, Source Serif elsewhere */
+        font-family: "New York", ui-serif, "Source Serif 4", Georgia, serif;
+        font-weight: 600;
+        font-size: 4.4rem;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
         user-select: none;
-        touch-action: manipulation;
-        cursor: default;
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      .error-message {
-        font-family: "Apoc Revelations", sans-serif;
-        font-size: 3.8rem;
-        line-height: 1;
-        letter-spacing: -1.782px;
         cursor: pointer;
-        user-select: none;
-        opacity: 1;
-        transform: translateY(0);
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
         transition:
           opacity 0.3s ease,
           transform 0.3s ease;
-        will-change: opacity, transform;
-        outline: none;
-        -webkit-backface-visibility: hidden;
-        -webkit-tap-highlight-color: transparent;
-        backface-visibility: hidden;
       }
 
-      .error-message.fading {
+      .name.fading {
         opacity: 0;
         transform: translateY(5px);
       }
 
-      .home-link-wrapper {
+      /* apple leaf over the first "a": drops in, and the "a" bounces on impact */
+      .apple-a {
+        position: relative;
+        display: inline-block;
+        animation: a-bounce 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.62s;
+      }
+      .apple-a::after {
+        content: "";
         position: absolute;
-        top: calc(50% + 60px);
+        top: 0.12em;
+        left: 58%;
+        width: 0.2em;
+        height: 0.22em;
+        background: #61bb46;
+        border-radius: 0 100% 0 100%;
+        transform: translateX(-30%) rotate(30deg);
+        pointer-events: none;
+        animation: leaf-drop 0.55s cubic-bezier(0.5, 0, 0.7, 0.4) 0.15s both;
+      }
+      @keyframes leaf-drop {
+        from {
+          transform: translate(-30%, -0.6em) rotate(8deg);
+          opacity: 0;
+        }
+        40% {
+          opacity: 1;
+        }
+        to {
+          transform: translateX(-30%) rotate(30deg);
+          opacity: 1;
+        }
+      }
+      @keyframes a-bounce {
+        0% {
+          transform: translateY(0);
+        }
+        35% {
+          transform: translateY(0.07em) scaleY(0.93);
+        }
+        70% {
+          transform: translateY(-0.03em);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .apple-a,
+        .apple-a::after {
+          animation: none;
+        }
+      }
+
+      .name span {
+        font-family: inherit;
+      }
+
+      /* LoveFrom-style typewriter caret */
+      .name .caret {
+        display: inline-block;
+        width: 1px;
+        height: 0.9em;
+        background: var(--text-color);
+        margin-left: 6px;
+        vertical-align: -0.08em;
+        animation: blink 1.1s step-end infinite;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+      .name .caret.done {
+        animation: caret-out 0.6s ease forwards 1.2s;
+      }
+      @keyframes caret-out {
+        to {
+          opacity: 0;
+        }
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(8px);
+        transition:
+          opacity 0.9s ease,
+          transform 0.9s ease;
+      }
+      .reveal.shown {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .tagline {
+        margin-top: 18px;
+        padding-top: 18px;
+        border-top: 1px solid var(--border-color);
+        color: var(--footer-color);
+        font-size: 0.85rem;
+        font-weight: 400;
+        letter-spacing: 0.01em;
         text-align: center;
-        width: 100%;
+        user-select: none;
+      }
+
+      /* retro six-color Apple stripes — secret */
+      .name.retro #name-text,
+      .name.retro #name-text .apple-a {
+        background: linear-gradient(
+          180deg,
+          #61bb46 0% 16.6%,
+          #fdb827 16.6% 33.3%,
+          #f5821f 33.3% 50%,
+          #e03a3e 50% 66.6%,
+          #963d97 66.6% 83.3%,
+          #009ddc 83.3% 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+      }
+
+      .home-link-wrapper {
+        margin-top: 34px;
+        text-align: center;
       }
 
       .home-link {
+        display: inline-block;
         color: var(--link-color);
-        font-size: 0.75rem;
+        font-size: 0.8rem;
+        letter-spacing: 0.01em;
         text-decoration: none;
-        transition: opacity 0.2s ease;
+        padding: 10px 22px;
+        border-radius: 999px;
+        background: var(--glass-bg);
+        -webkit-backdrop-filter: blur(14px) saturate(160%);
+        backdrop-filter: blur(14px) saturate(160%);
+        border: 1px solid var(--glass-stroke);
+        box-shadow: var(--glass-inner);
+        transition:
+          transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+          background 0.3s ease,
+          color 0.3s ease;
       }
 
       .home-link:hover {
-        opacity: 0.8;
-        text-decoration: underline !important;
+        transform: scale(1.05);
+        background: var(--glass-bg-strong);
+        color: var(--text-color);
+      }
+      .home-link:active {
+        transform: scale(0.96);
       }
 
       footer {
+        position: relative;
+        z-index: 1;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        width: 100%;
-        padding: 40px 60px;
+        width: calc(100% - 48px);
+        margin: 0 24px 24px;
+        padding: 16px 28px;
+        border-radius: 999px;
         color: var(--footer-color);
-        font-size: 0.75rem;
-        opacity: 0.6;
+        font-size: 0.8rem;
+        letter-spacing: 0.01em;
       }
 
       @media (max-width: 768px) {
@@ -227,33 +546,32 @@ Author: Nabeel
           padding: 20px;
         }
         footer {
-          padding: 20px 15px;
+          width: calc(100% - 24px);
+          margin: 0 12px 12px;
+          padding: 12px 18px;
           font-size: 0.55rem;
         }
-        .error-container {
-          flex-direction: column;
+        .glass-card {
+          border-radius: 28px;
+          padding: 40px 28px;
+          margin: 0 16px;
         }
-        .error-text {
-          font-size: 15vw;
-          margin: 0 0 10px 0;
-          padding: 0 0 10px 0;
-          border-right: none;
-          border-bottom: 1px solid var(--border-color);
-          touch-action: manipulation;
+        .name {
+          font-size: 14vw;
         }
-        .error-message {
-          font-size: 15vw;
+        .tagline {
+          font-size: 0.7rem;
         }
         .home-link-wrapper {
-          position: relative;
-          top: auto;
-          margin-top: 30px;
+          margin-top: 26px;
         }
       }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   </head>
   <body>
+    <div class="ambient"><div class="blob"></div></div>
+
     <div class="top-nav">
       <button id="theme-toggle" aria-label="Toggle Theme">
         <svg id="sun-icon" viewBox="0 0 24 24">
@@ -274,16 +592,18 @@ Author: Nabeel
     </div>
 
     <div class="content-wrapper">
-      <div class="error-container">
-        <div class="error-text">404</div>
-        <div class="error-message" id="error-msg">undefined</div>
-      </div>
-      <div class="home-link-wrapper">
-        <a href="mailto:x@nabeel.ca" class="home-link">x@nabeel.ca</a>
+      <div class="glass glass-card">
+        <div class="name" id="name"
+          ><span id="name-text"></span><span class="caret" id="caret"></span
+        ></div>
+        <div class="tagline reveal">building things on the internet</div>
+        <div class="home-link-wrapper reveal">
+          <a href="mailto:x@nabeel.ca" class="home-link">x@nabeel.ca</a>
+        </div>
       </div>
     </div>
 
-    <footer>
+    <footer class="glass">
       <div class="footer-left">
         © <span id="year"></span> Nabeel. All rights reserved
       </div>
@@ -308,54 +628,70 @@ Author: Nabeel
         }
       });
 
-      const errorMsg = document.getElementById("error-msg");
-      const errorText = document.querySelector(".error-text");
-      const states = ["undefined", "null", "not found", "void", "error"];
-      let currentState = 0;
-      let hasExploded = false;
-      let clickCount = 0;
+      const nameEl = document.getElementById("name");
+      const nameText = document.getElementById("name-text");
+      const caret = document.getElementById("caret");
+
+      // LoveFrom-style typewriter intro
+      const NAME = "Nabeel";
+      let typeIndex = 0;
+      function typeNext() {
+        if (typeIndex < NAME.length) {
+          nameText.textContent = NAME.slice(0, ++typeIndex);
+          setTimeout(typeNext, 140 + Math.random() * 90);
+        } else {
+          nameText.innerHTML = 'N<span class="apple-a">a</span>beel';
+          caret.classList.add("done");
+          document
+            .querySelectorAll(".reveal")
+            .forEach((el, i) =>
+              setTimeout(() => el.classList.add("shown"), 250 + i * 200),
+            );
+        }
+      }
+      setTimeout(typeNext, 600);
+
+      const greetings = [
+        "Nabeel",
+        "hello",
+        "salaam",
+        "bonjour",
+        "hola",
+        "ciao",
+        "こんにちは",
+      ];
+      let greetIndex = 0;
+      let nameClicks = 0;
 
       const triggerHello = () => {
-        errorMsg.textContent = "hello";
         confetti({
-          particleCount: 50,
-          spread: 50,
+          particleCount: 60,
+          spread: 60,
           origin: { y: 0.6 },
+          disableForReducedMotion: true,
         });
       };
 
-      errorText.addEventListener("click", () => {
-        clickCount++;
-        if (clickCount >= 10) {
-          triggerHello();
-          clickCount = 0;
-        }
-      });
-
-      errorMsg.addEventListener("click", () => {
-        errorMsg.classList.add("fading");
+      nameEl.addEventListener("click", () => {
+        nameClicks++;
+        nameEl.classList.add("fading");
         setTimeout(() => {
-          currentState = (currentState + 1) % states.length;
-          errorMsg.textContent = states[currentState];
-          errorMsg.classList.remove("fading");
-
-          if (currentState === 0 && !hasExploded) {
-            confetti({
-              particleCount: 100,
-              spread: 70,
-              origin: { y: 0.6 },
-              colors: ["#ffffff", "#a3a3a3", "#666666"],
-              shapes: ["square"],
-              disableForReducedMotion: true,
-            });
-
-            console.log(
-              "%c;)",
-              "color: #a3a3a3; font-family: 'PP Fraktion Mono', monospace; font-size: 12px;",
-            );
-            hasExploded = true;
+          greetIndex = (greetIndex + 1) % greetings.length;
+          if (greetings[greetIndex] === "Nabeel") {
+            nameText.innerHTML = 'N<span class="apple-a">a</span>beel';
+          } else {
+            nameText.textContent = greetings[greetIndex];
           }
+          nameEl.classList.remove("fading");
         }, 300);
+        if (nameClicks === 5) {
+          triggerHello();
+          console.log(
+            "%c;)",
+            "color: #a3a3a3; font-family: monospace; font-size: 12px;",
+          );
+          nameClicks = 0;
+        }
       });
 
       let inputBuffer = "";
@@ -370,6 +706,9 @@ Author: Nabeel
         },
         nabeel: () => {
           triggerHello();
+        },
+        apple: () => {
+          nameEl.classList.toggle("retro");
         },
       };
 
@@ -387,9 +726,18 @@ Author: Nabeel
       });
 
       document.getElementById("year").textContent = new Date().getFullYear();
+      let clockZone = "America/Los_Angeles";
+      const footerRight = document.querySelector(".footer-right");
+      footerRight.style.cursor = "pointer";
+      footerRight.addEventListener("click", () => {
+        clockZone = clockZone === "UTC" ? "America/Los_Angeles" : "UTC";
+        footerRight.firstChild.textContent =
+          clockZone === "UTC" ? "UTC. " : "San Francisco, CA. ";
+        updateClock();
+      });
       function updateClock() {
         const options = {
-          timeZone: "America/Los_Angeles",
+          timeZone: clockZone,
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
@@ -403,13 +751,116 @@ Author: Nabeel
       setInterval(updateClock, 1000);
       updateClock();
 
+      // dynamic specular highlight: mouse on desktop, gyroscope on mobile
+      const root = document.documentElement;
+      let rafPending = false;
+      let specX = 30,
+        specY = 20;
+      function applySpec() {
+        rafPending = false;
+        root.style.setProperty("--spec-x", specX + "%");
+        root.style.setProperty("--spec-y", specY + "%");
+      }
+      function setSpec(x, y) {
+        specX = Math.max(0, Math.min(100, x));
+        specY = Math.max(0, Math.min(100, y));
+        if (!rafPending) {
+          rafPending = true;
+          requestAnimationFrame(applySpec);
+        }
+      }
+
+      window.addEventListener("pointermove", (e) => {
+        setSpec(
+          (e.clientX / window.innerWidth) * 100,
+          (e.clientY / window.innerHeight) * 100,
+        );
+      });
+
+      // per-element rim glint: lerped toward the cursor for a fluid glide
+      document
+        .querySelectorAll(".glass, #theme-toggle, .home-link")
+        .forEach((el) => {
+          let tx = 0,
+            ty = 0,
+            cx = null,
+            cy = null,
+            animating = false;
+          const step = () => {
+            cx += (tx - cx) * 0.12;
+            cy += (ty - cy) * 0.12;
+            el.style.setProperty("--mx", cx + "px");
+            el.style.setProperty("--my", cy + "px");
+            if (Math.abs(tx - cx) + Math.abs(ty - cy) > 0.3) {
+              requestAnimationFrame(step);
+            } else {
+              animating = false;
+            }
+          };
+          el.addEventListener("pointermove", (e) => {
+            const r = el.getBoundingClientRect();
+            tx = e.clientX - r.left;
+            ty = e.clientY - r.top;
+            if (cx === null) {
+              cx = tx;
+              cy = ty;
+            }
+            if (!animating) {
+              animating = true;
+              requestAnimationFrame(step);
+            }
+          });
+        });
+
+      const glintEls = document.querySelectorAll(
+        ".glass, #theme-toggle, .home-link",
+      );
+      function handleOrientation(e) {
+        if (e.gamma === null && e.beta === null) return;
+        document.body.classList.add("tilt-active");
+        // gamma: left/right tilt (-90..90), beta: front/back tilt (-180..180)
+        const nx = Math.max(-1, Math.min(1, e.gamma / 35));
+        const ny = Math.max(-1, Math.min(1, (e.beta - 40) / 35));
+        setSpec(50 + nx * 50, 50 + ny * 50);
+        // sweep each element's rim glint with the tilt
+        glintEls.forEach((el) => {
+          el.style.setProperty("--mx", ((nx + 1) / 2) * el.offsetWidth + "px");
+          el.style.setProperty("--my", ((ny + 1) / 2) * el.offsetHeight + "px");
+        });
+      }
+
+      function enableTilt() {
+        if (
+          typeof DeviceOrientationEvent !== "undefined" &&
+          typeof DeviceOrientationEvent.requestPermission === "function"
+        ) {
+          // iOS needs a user gesture to grant motion access
+          DeviceOrientationEvent.requestPermission()
+            .then((state) => {
+              if (state === "granted")
+                window.addEventListener("deviceorientation", handleOrientation);
+            })
+            .catch(() => {});
+        } else {
+          window.addEventListener("deviceorientation", handleOrientation);
+        }
+      }
+      if (
+        typeof DeviceOrientationEvent !== "undefined" &&
+        typeof DeviceOrientationEvent.requestPermission === "function"
+      ) {
+        window.addEventListener("touchend", enableTilt, { once: true });
+      } else {
+        enableTilt();
+      }
+
       console.log(
         "%cNABEEL",
-        "color: #ffffff; font-family: 'PP Fraktion Mono', monospace; font-size: 24px; font-weight: bold; padding: 10px 0;",
+        "color: #ffffff; font-family: monospace; font-size: 24px; font-weight: bold; padding: 10px 0;",
       );
       console.log(
-        "%cStatus: 404 — Path Undefined.",
-        "color: #a3a3a3; font-family: 'PP Fraktion Mono', monospace; font-size: 12px;",
+        "%cYou found the console. Try typing 'apple' on the page ;)",
+        "color: #a3a3a3; font-family: monospace; font-size: 12px;",
       );
     </script>
   </body>
