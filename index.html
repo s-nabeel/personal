@@ -36,7 +36,7 @@ Author: Nabeel
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=EB+Garamond:wght@500;600&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -350,14 +350,14 @@ Author: Nabeel
       }
 
       .name {
-        /* apple.com headline: real SF Pro Display on Apple devices, Inter elsewhere */
-        font-family:
-          -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter",
-          "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-weight: 700;
-        font-size: 4.2rem;
+        /* Apple Garamond wordmark: EB Garamond condensed ~82% like Apple's cut */
+        font-family: "EB Garamond", "Apple Garamond", Garamond, Georgia, serif;
+        font-weight: 500;
+        font-size: 4.8rem;
         line-height: 1.05;
-        letter-spacing: -0.03em;
+        letter-spacing: -0.005em;
+        transform: scaleX(0.82);
+        transform-origin: center;
         user-select: none;
         cursor: pointer;
         touch-action: manipulation;
@@ -369,7 +369,7 @@ Author: Nabeel
 
       .name.fading {
         opacity: 0;
-        transform: translateY(5px);
+        transform: scaleX(0.82) translateY(5px);
       }
 
       /* apple leaf over the first "a": drops in, and the "a" bounces on impact */
