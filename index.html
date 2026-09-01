@@ -286,193 +286,86 @@ Author: Nabeel
         perspective: 1400px;
       }
 
-      /* ————— the platinum card ————— */
+      /* ————— the bank card (liquidGL demo-2, 1:1) ————— */
       .card {
-        width: min(360px, calc(100vw - 48px));
-        height: 220px;
+        width: min(340px, calc(100vw - 48px));
+        height: 200px;
         border-radius: 1rem;
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 0.5rem;
         position: relative;
         overflow: clip;
         will-change: transform;
         z-index: 5;
       }
-      /* content renders above the WebGL canvas */
+      /* card content renders above the WebGL canvas and adapts to the
+         backdrop via difference blending */
       .card > * {
-        position: absolute;
+        position: relative;
         z-index: 3;
-      }
-      .card a {
-        pointer-events: auto;
-      }
-
-      /* brushed platinum face — translucent so the liquid glass shows through */
-      .metal {
-        inset: 0;
-        z-index: 2;
-        border-radius: inherit;
-        background:
-          repeating-linear-gradient(
-            92deg,
-            rgba(255, 255, 255, 0) 0 1px,
-            rgba(120, 120, 130, 0.05) 1px 2px
-          ),
-          radial-gradient(
-            120% 160% at 28% 0%,
-            rgba(255, 255, 255, 0.65) 0%,
-            rgba(226, 226, 232, 0.55) 34%,
-            rgba(196, 196, 205, 0.55) 60%,
-            rgba(230, 230, 236, 0.6) 100%
-          ),
-          linear-gradient(105deg, #dcdce2 0%, #f2f2f5 45%, #c8c8d0 100%);
-        opacity: 0.82;
-        pointer-events: none;
-      }
-      /* faint guilloché-style engraving over the metal */
-      .metal::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        background:
-          repeating-radial-gradient(
-            circle at 30% 20%,
-            rgba(90, 90, 100, 0.05) 0 1px,
-            transparent 1px 9px
-          ),
-          repeating-radial-gradient(
-            circle at 75% 85%,
-            rgba(90, 90, 100, 0.05) 0 1px,
-            transparent 1px 11px
-          );
-      }
-
-      /* ornate lace border, like an engraved chain frame */
-      .lace {
-        inset: 3px;
-        z-index: 3;
-        border-radius: calc(1rem - 3px);
-        border: 7px solid transparent;
-        border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path d="M7 2L12 7L7 12L2 7Z" fill="none" stroke="%23515158" stroke-width="1.2"/><circle cx="7" cy="7" r="1" fill="%23515158"/></svg>')
-          14 round;
-        opacity: 0.7;
-        pointer-events: none;
-      }
-
-      /* double hairline engraved frame */
-      .frame {
-        inset: 11px;
-        z-index: 3;
-        border-radius: calc(1rem - 10px);
-        border: 1px solid rgba(70, 70, 78, 0.3);
-        pointer-events: none;
-      }
-
-      .engraved {
-        color: #4b4b52;
-        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.65);
-      }
-
-      /* top wordmark */
-      .card-word {
-        top: 18px;
-        left: 0;
-        right: 0;
-        text-align: center;
-        font-size: 1.45rem;
-        font-weight: 800;
-        letter-spacing: 0.3em;
-        text-indent: 0.3em;
-        text-transform: uppercase;
-        color: #2d2d33;
-      }
-
-      /* ghost brand lettering in the metal, like the reference */
-      .ghost {
-        inset: 0;
-        z-index: 2;
-        border-radius: inherit;
-        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="240" height="150"><g fill="rgba(80,80,92,0.08)" font-family="Helvetica,Arial" font-weight="700" letter-spacing="6"><text x="6" y="42" font-size="15" transform="rotate(-4 6 42)">NABEEL</text><text x="120" y="108" font-size="13" transform="rotate(3 120 108)">NABEEL</text><text x="30" y="140" font-size="11">NABEEL</text></g></svg>');
-        pointer-events: none;
-      }
-
-      .card-chip {
-        top: 52px;
-        left: 26px;
-        width: 40px;
-        height: auto;
-        opacity: 0.85;
-        filter: brightness(0.75) contrast(1.1);
-      }
-
-      /* engraved leaf emblem */
-      .emblem {
-        top: 47%;
-        left: 42%;
-        transform: translate(-50%, -50%);
-        width: 66px;
-        height: 82px;
-        pointer-events: none;
-      }
-      .emblem svg {
-        width: 100%;
-        height: 100%;
-      }
-
-      /* contactless + number */
-      .tap-row {
-        top: 84px;
-        right: 26px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 0.95rem;
-        font-weight: 600;
-        letter-spacing: 0.12em;
-      }
-      .tap-row svg {
-        width: 16px;
-        height: 16px;
-        opacity: 0.75;
-      }
-
-      /* curved member-since scroll ribbon */
-      .member {
-        top: 132px;
-        right: 18px;
-        width: 122px;
-        height: 46px;
-        pointer-events: none;
-      }
-      .member svg {
-        width: 100%;
-        height: 100%;
-        overflow: visible;
-      }
-
-      .holder {
-        bottom: 16px;
-        left: 26px;
-        font-size: 1.15rem;
-        font-weight: 400;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        text-decoration: none;
-        color: #55555c;
-      }
-
-      .card-copyright {
-        bottom: 18px;
-        right: 26px;
-        font-size: 0.52rem;
-        font-weight: 600;
-        letter-spacing: 0.1em;
-        opacity: 0.7;
+        mix-blend-mode: difference;
       }
 
       .card-top {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
+        align-items: center;
+        width: 100%;
+      }
+
+      .card-chip {
+        width: 44px;
+        height: auto;
+        opacity: 0.8;
+      }
+
+      .card-brand {
+        width: 56px;
+        height: auto;
+        filter: grayscale(1) invert(1);
+      }
+
+      .card-number {
+        font-size: 1.2rem;
+        letter-spacing: 0.33rem;
+        font-weight: 600;
+        color: #ffffff;
+        width: 100%;
+        text-align: left;
+      }
+
+      .card-footer {
+        display: flex;
+        justify-content: flex-start;
+        gap: 3rem;
+        width: 100%;
+        font-size: 0.75rem;
+        color: #ffffff;
+      }
+
+      .card-footer .label {
+        text-transform: uppercase;
+        opacity: 0.6;
+        font-weight: 500;
+        letter-spacing: 0.05rem;
+        font-size: 0.65rem;
+      }
+
+      .card-holder,
+      .card-expiry {
+        display: flex;
+        flex-direction: column;
+        gap: 0.05rem;
+      }
+
+      .value {
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.02rem;
+        color: #ffffff;
       }
 
       .name {
@@ -489,7 +382,7 @@ Author: Nabeel
         display: inline-block;
         width: 1.5px;
         height: 0.85em;
-        background: #4b4b52;
+        background: #ffffff;
         margin-left: 5px;
         vertical-align: -0.06em;
         animation: blink 1.1s step-end infinite;
@@ -594,126 +487,23 @@ Author: Nabeel
 
     <div class="content-wrapper">
       <div class="card liquidGL" id="card">
-        <div class="metal"></div>
-        <div class="ghost"></div>
-        <div class="lace"></div>
-        <div class="frame"></div>
-        <div class="card-word engraved name" id="name"
-          ><span id="name-text"></span><span class="caret" id="caret"></span
-        ></div>
-        <img src="assets/card-chip.svg" alt="Chip" class="card-chip" />
-        <div class="emblem reveal">
-          <svg viewBox="0 0 100 124" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern
-                id="hatch"
-                width="2.4"
-                height="2.4"
-                patternUnits="userSpaceOnUse"
-              >
-                <path d="M0 2.4L2.4 0" stroke="#4b4b52" stroke-width="0.5" />
-              </pattern>
-              <clipPath id="oval-clip">
-                <ellipse cx="50" cy="62" rx="31" ry="45" />
-              </clipPath>
-            </defs>
-            <ellipse
-              cx="50"
-              cy="62"
-              rx="36"
-              ry="50"
-              stroke="#4b4b52"
-              stroke-width="1.6"
-            />
-            <ellipse
-              cx="50"
-              cy="62"
-              rx="31"
-              ry="45"
-              stroke="#4b4b52"
-              stroke-width="0.7"
-              opacity="0.6"
-            />
-            <g clip-path="url(#oval-clip)">
-              <path
-                fill="url(#hatch)"
-                stroke="#4b4b52"
-                stroke-width="1.2"
-                d="M40 107 C38 92 39 80 44 71 C40 64 40 52 46 45 C52 38 63 37 69 44 C73 49 74 55 72 60 L77 65 L72 67 C74 71 72 74 68 74 L68 78 C68 82 64 84 61 82 L61 88 C57 92 50 92 46 89 C43 94 41 100 41 107 Z"
-              />
-              <path
-                d="M43 44 C49 33 65 33 71 44"
-                stroke="#4b4b52"
-                stroke-width="2.4"
-                fill="none"
-              />
-            </g>
-          </svg>
+        <div class="card-top">
+          <img src="assets/card-chip.svg" alt="Chip" class="card-chip" />
+          <img src="assets/visa.png" alt="Visa" class="card-brand" />
         </div>
-        <div class="tap-row engraved reveal">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#4b4b52" stroke-width="2" stroke-linecap="round">
-            <path d="M6 8.8a6.5 6.5 0 0 1 0 6.4" />
-            <path d="M10 6.6a10 10 0 0 1 0 10.8" />
-            <path d="M14 4.4a13.5 13.5 0 0 1 0 15.2" />
-          </svg>
-          <span>2026</span>
+        <div class="card-number reveal">**** **** **** 5482</div>
+        <div class="card-footer">
+          <div class="card-holder">
+            <span class="label">Card Holder</span>
+            <span class="value name" id="name"
+              ><span id="name-text"></span><span class="caret" id="caret"></span
+            ></span>
+          </div>
+          <div class="card-expiry reveal">
+            <span class="label">Expires</span>
+            <span class="value">12/28</span>
+          </div>
         </div>
-        <div class="member reveal">
-          <svg viewBox="0 0 158 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <path id="member-arc" d="M18 33 Q79 13 140 33" />
-            </defs>
-            <!-- folded ribbon ends -->
-            <path
-              d="M14 28 L4 24 L9 33 L4 43 L14 42 Z"
-              fill="rgba(240,240,244,0.85)"
-              stroke="#4b4b52"
-              stroke-width="1"
-            />
-            <path
-              d="M144 28 L154 24 L149 33 L154 43 L144 42 Z"
-              fill="rgba(240,240,244,0.85)"
-              stroke="#4b4b52"
-              stroke-width="1"
-            />
-            <!-- ribbon band with double outline -->
-            <path
-              d="M14 28 Q79 6 144 28 L144 42 Q79 20 14 42 Z"
-              fill="rgba(240,240,244,0.9)"
-              stroke="#4b4b52"
-              stroke-width="1.2"
-            />
-            <path
-              d="M17 30.5 Q79 9 141 30.5 L141 39.5 Q79 18 17 39.5 Z"
-              stroke="#4b4b52"
-              stroke-width="0.55"
-              opacity="0.75"
-            />
-            <text
-              font-size="9"
-              font-weight="600"
-              letter-spacing="1.8"
-              fill="#4b4b52"
-            >
-              <textPath href="#member-arc" startOffset="50%" text-anchor="middle">
-                MEMBER SINCE
-              </textPath>
-            </text>
-            <text
-              x="79"
-              y="58"
-              text-anchor="middle"
-              font-family="Georgia, serif"
-              font-size="17"
-              font-weight="700"
-              fill="#4b4b52"
-            >
-              26
-            </text>
-          </svg>
-        </div>
-        <div class="holder engraved reveal">N Syed</div>
-        <div class="card-copyright engraved reveal">© Nabeel</div>
       </div>
     </div>
 
