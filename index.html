@@ -212,12 +212,8 @@ Author: Nabeel
           transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
           background 0.4s ease;
       }
-      #theme-toggle:hover {
-        transform: scale(1.08);
-        background: var(--glass-bg-strong);
-      }
       #theme-toggle:active {
-        transform: scale(0.94);
+        opacity: 0.8;
       }
 
       #theme-toggle svg {
@@ -264,6 +260,9 @@ Author: Nabeel
         justify-content: center;
         align-items: center;
         gap: 36px;
+        /* keep the glass over the saturated part of the wallpaper,
+           not the washed-out bright blob lower down */
+        padding-bottom: 140px;
         pointer-events: none;
         mix-blend-mode: difference;
       }
@@ -279,6 +278,7 @@ Author: Nabeel
         display: flex;
         justify-content: center;
         align-items: center;
+        padding-bottom: 140px;
         pointer-events: none;
       }
       .pill-anchor a {
@@ -743,7 +743,9 @@ Author: Nabeel
           const lenses = Array.isArray(effect) ? effect : [effect];
           lenses.forEach((lens) => {
             if (lens && lens.el && !lens.el.classList.contains("card")) {
+              // footer, pill, toggle: no tilt, no cursor-tracking highlight
               lens.setTilt(false);
+              lens.options.specular = false;
             }
           });
         }
