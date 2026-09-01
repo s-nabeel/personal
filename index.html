@@ -727,11 +727,13 @@ Author: Nabeel
       // Cursor tilt only — no device sensors, no permission prompts, ever.
       document.addEventListener("DOMContentLoaded", () => {
         if (typeof liquidGL === "function") {
-          // one renderer for all lenses (demo-2 card params); the cursor
-          // tilt stays on the card only
-          const effect = liquidGL({
+          // two calls share one renderer but keep separate options
+          // (the library hands every lens of a call the SAME options
+          // object, so per-lens mutation corrupts the others)
+          // card: demo-2 params, cursor tilt + moving specular
+          liquidGL({
             snapshot: ".ambient",
-            target: ".liquidGL, .liquidGL-flat",
+            target: ".liquidGL",
             refraction: 0,
             bevelDepth: 0.1,
             bevelWidth: 0.17,
@@ -742,13 +744,18 @@ Author: Nabeel
             tilt: true,
             tiltFactor: 25,
           });
-          const lenses = Array.isArray(effect) ? effect : [effect];
-          lenses.forEach((lens) => {
-            if (lens && lens.el && !lens.el.classList.contains("card")) {
-              // footer, pill, toggle: no tilt, no cursor-tracking highlight
-              lens.setTilt(false);
-              lens.options.specular = false;
-            }
+          // toggle, pill, footer: same glass, completely inert
+          liquidGL({
+            snapshot: ".ambient",
+            target: ".liquidGL-flat",
+            refraction: 0,
+            bevelDepth: 0.1,
+            bevelWidth: 0.17,
+            frost: 2,
+            shadow: true,
+            specular: false,
+            reveal: "fade",
+            tilt: false,
           });
         }
 
