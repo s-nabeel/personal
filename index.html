@@ -189,11 +189,15 @@ Author: Nabeel
         top: 0;
         right: 0;
         padding: 32px 40px;
-        z-index: 100;
+        z-index: 9999;
       }
 
       #theme-toggle {
         z-index: 5;
+        /* stay clickable even though the lens disables pointer events */
+        pointer-events: auto !important;
+        overflow: clip;
+        will-change: transform;
         border-radius: 999px;
         color: var(--text-color);
         cursor: pointer;
@@ -265,6 +269,21 @@ Author: Nabeel
       }
       .card-anchor a {
         pointer-events: auto;
+      }
+
+      /* pill lives outside the blended anchor so its text stays uniform */
+      .pill-anchor {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+      }
+      .pill-anchor a {
+        pointer-events: auto;
+        transform: translateY(160px);
       }
 
       /* ————— the bank card (liquidGL demo-2, 1:1) ————— */
@@ -378,7 +397,8 @@ Author: Nabeel
       .email-pill span {
         position: relative;
         z-index: 3;
-        color: #ffffff;
+        color: #16161a;
+        text-shadow: 0 1px 6px rgba(255, 255, 255, 0.5);
         font-size: 0.92rem;
         font-weight: 600;
         letter-spacing: 0.03em;
@@ -417,16 +437,11 @@ Author: Nabeel
         }
       }
 
+      /* the custom reveal fade is disabled: inside the blended fixed
+         anchor Chrome fails to repaint after the transition, and
+         liquidGL already fades its lenses in */
       .reveal {
-        opacity: 0;
-        transform: translateY(8px);
-        transition:
-          opacity 0.9s ease,
-          transform 0.9s ease;
-      }
-      .reveal.shown {
         opacity: 1;
-        transform: translateY(0);
       }
 
       /* retro six-color Apple stripes — secret */
@@ -470,6 +485,12 @@ Author: Nabeel
         position: relative;
         z-index: 3;
       }
+      /* the lens disables pointer events on the footer; the clock stays
+         clickable to flip SF ↔ UTC */
+      #clock-wrap {
+        pointer-events: auto;
+        cursor: pointer;
+      }
 
       @media (max-width: 768px) {
         .top-nav {
@@ -492,7 +513,7 @@ Author: Nabeel
     </div>
 
     <div class="top-nav">
-      <button id="theme-toggle" class="glass" aria-label="Toggle Theme">
+      <button id="theme-toggle" class="liquidGL-flat" aria-label="Toggle Theme">
         <svg id="sun-icon" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="5"></circle>
           <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -531,6 +552,9 @@ Author: Nabeel
         </div>
       </div>
 
+    </div>
+
+    <div class="pill-anchor">
       <a href="mailto:x@nabeel.ca" class="email-wrap reveal">
         <div class="email-pill liquidGL-flat">
           <span>x@nabeel.ca</span>
