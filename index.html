@@ -301,8 +301,7 @@ Author: Nabeel
         position: absolute;
         z-index: 3;
       }
-      .card a,
-      .card .name {
+      .card a {
         pointer-events: auto;
       }
 
@@ -328,16 +327,43 @@ Author: Nabeel
         opacity: 0.82;
         pointer-events: none;
       }
+      /* faint guilloché-style engraving over the metal */
+      .metal::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background:
+          repeating-radial-gradient(
+            circle at 30% 20%,
+            rgba(90, 90, 100, 0.05) 0 1px,
+            transparent 1px 9px
+          ),
+          repeating-radial-gradient(
+            circle at 75% 85%,
+            rgba(90, 90, 100, 0.05) 0 1px,
+            transparent 1px 11px
+          );
+      }
+
+      /* ornate lace border, like an engraved chain frame */
+      .lace {
+        inset: 3px;
+        z-index: 3;
+        border-radius: calc(1rem - 3px);
+        border: 7px solid transparent;
+        border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path d="M7 2L12 7L7 12L2 7Z" fill="none" stroke="%23515158" stroke-width="1.2"/><circle cx="7" cy="7" r="1" fill="%23515158"/></svg>')
+          14 round;
+        opacity: 0.7;
+        pointer-events: none;
+      }
 
       /* double hairline engraved frame */
       .frame {
-        inset: 7px;
+        inset: 11px;
         z-index: 3;
-        border-radius: calc(1rem - 6px);
-        border: 1px solid rgba(70, 70, 78, 0.35);
-        box-shadow:
-          inset 0 0 0 3px rgba(255, 255, 255, 0.35),
-          inset 0 0 0 4px rgba(70, 70, 78, 0.22);
+        border-radius: calc(1rem - 10px);
+        border: 1px solid rgba(70, 70, 78, 0.3);
         pointer-events: none;
       }
 
@@ -348,15 +374,25 @@ Author: Nabeel
 
       /* top wordmark */
       .card-word {
-        top: 22px;
+        top: 18px;
         left: 0;
         right: 0;
         text-align: center;
-        font-size: 1.05rem;
-        font-weight: 700;
-        letter-spacing: 0.42em;
-        text-indent: 0.42em;
+        font-size: 1.45rem;
+        font-weight: 800;
+        letter-spacing: 0.3em;
+        text-indent: 0.3em;
         text-transform: uppercase;
+        color: #2d2d33;
+      }
+
+      /* ghost brand lettering in the metal, like the reference */
+      .ghost {
+        inset: 0;
+        z-index: 2;
+        border-radius: inherit;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="240" height="150"><g fill="rgba(80,80,92,0.08)" font-family="Helvetica,Arial" font-weight="700" letter-spacing="6"><text x="6" y="42" font-size="15" transform="rotate(-4 6 42)">NABEEL</text><text x="120" y="108" font-size="13" transform="rotate(3 120 108)">NABEEL</text><text x="30" y="140" font-size="11">NABEEL</text></g></svg>');
+        pointer-events: none;
       }
 
       .card-chip {
@@ -371,7 +407,7 @@ Author: Nabeel
       /* engraved leaf emblem */
       .emblem {
         top: 47%;
-        left: 50%;
+        left: 42%;
         transform: translate(-50%, -50%);
         width: 66px;
         height: 82px;
@@ -399,27 +435,29 @@ Author: Nabeel
         opacity: 0.75;
       }
 
+      /* curved member-since scroll ribbon */
       .member {
-        top: 150px;
-        right: 26px;
-        text-align: center;
-        font-size: 0.56rem;
-        font-weight: 600;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        border-top: 1px solid rgba(70, 70, 78, 0.4);
-        border-bottom: 1px solid rgba(70, 70, 78, 0.4);
-        padding: 3px 6px;
+        top: 138px;
+        right: 20px;
+        width: 118px;
+        height: 40px;
+        pointer-events: none;
+      }
+      .member svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
       }
 
       .holder {
-        bottom: 18px;
+        bottom: 16px;
         left: 26px;
-        font-size: 0.95rem;
-        font-weight: 500;
-        letter-spacing: 0.16em;
+        font-size: 1.15rem;
+        font-weight: 400;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
         text-decoration: none;
+        color: #55555c;
       }
 
       .card-copyright {
@@ -438,9 +476,6 @@ Author: Nabeel
       }
 
       .name {
-        cursor: pointer;
-        touch-action: manipulation;
-        -webkit-tap-highlight-color: transparent;
         transition: opacity 0.3s ease;
       }
       .name.fading {
@@ -560,6 +595,8 @@ Author: Nabeel
     <div class="content-wrapper">
       <div class="card liquidGL" id="card">
         <div class="metal"></div>
+        <div class="ghost"></div>
+        <div class="lace"></div>
         <div class="frame"></div>
         <div class="card-word engraved name" id="name"
           ><span id="name-text"></span><span class="caret" id="caret"></span
@@ -584,12 +621,17 @@ Author: Nabeel
               stroke-width="0.7"
               opacity="0.6"
             />
-            <g transform="translate(29, 38) scale(0.5)">
-              <path
-                fill="#4b4b52"
-                d="M62.2 66.8c14.6-17.7 24.5-42.3 21.8-66.8-21.1.9-46.6 14.1-61.7 31.8-13.5 15.7-25.3 40.7-22.1 64.7 23.5 1.8 47.4-12 62-29.7z"
-              />
-            </g>
+            <text
+              x="50"
+              y="80"
+              text-anchor="middle"
+              font-family="Georgia, serif"
+              font-size="52"
+              font-weight="600"
+              fill="#4b4b52"
+            >
+              N
+            </text>
           </svg>
         </div>
         <div class="tap-row engraved reveal">
@@ -600,8 +642,41 @@ Author: Nabeel
           </svg>
           <span>2026</span>
         </div>
-        <div class="member engraved reveal">Member Since<br />26</div>
-        <a href="mailto:x@nabeel.ca" class="holder engraved reveal">x@nabeel.ca</a>
+        <div class="member reveal">
+          <svg viewBox="0 0 158 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <path id="member-arc" d="M14 32 Q79 10 144 32" />
+            </defs>
+            <path
+              d="M6 36 Q79 8 152 36 L152 44 Q79 16 6 44 Z"
+              fill="rgba(240,240,244,0.85)"
+              stroke="#4b4b52"
+              stroke-width="1"
+            />
+            <text
+              font-size="9.5"
+              font-weight="600"
+              letter-spacing="2"
+              fill="#4b4b52"
+            >
+              <textPath href="#member-arc" startOffset="50%" text-anchor="middle">
+                MEMBER SINCE
+              </textPath>
+            </text>
+            <text
+              x="79"
+              y="52"
+              text-anchor="middle"
+              font-size="12"
+              font-weight="600"
+              letter-spacing="1"
+              fill="#4b4b52"
+            >
+              26
+            </text>
+          </svg>
+        </div>
+        <div class="holder engraved reveal">N Syed</div>
         <div class="card-copyright engraved reveal">© Nabeel</div>
       </div>
     </div>
