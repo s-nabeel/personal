@@ -11,8 +11,9 @@ Author: Nabeel
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
+    <meta name="theme-color" id="theme-color" content="#1a0a12" />
     <title>Nabeel</title>
 
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -36,7 +37,7 @@ Author: Nabeel
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=EB+Garamond:wght@500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -107,6 +108,7 @@ Author: Nabeel
       html,
       body {
         height: 100%;
+        height: 100dvh;
         width: 100%;
         overflow: hidden;
         position: fixed;
@@ -332,9 +334,19 @@ Author: Nabeel
         filter: grayscale(1) invert(1);
       }
 
+      /* card text in Space Mono — the machine-printed card look */
+      .card-number,
+      .card-footer .label,
+      .card-footer .value,
+      .card-footer .value span,
+      .email-pill span {
+        font-family: "Space Mono", "SF Mono", Menlo, monospace;
+      }
+
       .card-number {
-        font-size: 1.2rem;
-        letter-spacing: 0.33rem;
+        font-size: 1.05rem;
+        white-space: nowrap;
+        letter-spacing: 0.16rem;
         font-weight: 600;
         color: #ffffff;
         width: 100%;
@@ -500,11 +512,11 @@ Author: Nabeel
 
       @media (max-width: 768px) {
         .top-nav {
-          padding: 18px 20px;
+          padding: calc(14px + env(safe-area-inset-top)) 20px 18px;
         }
         footer {
           width: calc(100% - 24px);
-          margin: 0 12px 12px;
+          margin: 0 12px calc(12px + env(safe-area-inset-bottom));
           padding: 11px 18px;
           font-size: 0.6rem;
         }
@@ -591,6 +603,13 @@ Author: Nabeel
             ? WALLPAPERS.light
             : WALLPAPERS.dark;
         wallpaper.src = next;
+        // tint the browser chrome to match the wallpaper
+        document
+          .getElementById("theme-color")
+          .setAttribute(
+            "content",
+            body.getAttribute("data-theme") === "light" ? "#e9c7dc" : "#1a0a12",
+          );
         // re-photograph the page so the glass refracts the new wallpaper
         wallpaper.onload = () => {
           const r = window.__liquidGLRenderer__;
@@ -618,24 +637,10 @@ Author: Nabeel
       const caret = document.getElementById("caret");
       const NAME_HTML = "Nabeel";
 
-      // LoveFrom-style typewriter intro
-      const NAME = "Nabeel";
-      let typeIndex = 0;
-      function typeNext() {
-        if (typeIndex < NAME.length) {
-          nameText.textContent = NAME.slice(0, ++typeIndex);
-          setTimeout(typeNext, 140 + Math.random() * 90);
-        } else {
-          nameText.innerHTML = NAME_HTML;
-          caret.classList.add("done");
-          document
-            .querySelectorAll(".reveal")
-            .forEach((el, i) =>
-              setTimeout(() => el.classList.add("shown"), 250 + i * 180),
-            );
-        }
-      }
-      setTimeout(typeNext, 600);
+      // no typewriter — name renders immediately
+      nameText.textContent = NAME_HTML;
+      caret.remove();
+      document.querySelectorAll(".reveal").forEach((el) => el.classList.add("shown"));
 
       const greetings = [
         "Nabeel",
@@ -744,6 +749,7 @@ Author: Nabeel
           liquidGL({
             snapshot: ".ambient",
             target: ".liquidGL",
+            resolution: 1.5,
             refraction: 0,
             bevelDepth: 0.1,
             bevelWidth: 0.17,
@@ -753,6 +759,7 @@ Author: Nabeel
             reveal: "fade",
             tilt: true,
             tiltFactor: 25,
+            tiltEase: 550,
           });
           // toggle, pill, footer: same glass, completely inert
           liquidGL({
