@@ -13,7 +13,7 @@ Author: Nabeel
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
-    <meta name="theme-color" id="theme-color" content="#eef0f8" />
+    <meta name="theme-color" id="theme-color" content="#f4f5fb" />
     <title>Nabeel</title>
 
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -130,9 +130,15 @@ Author: Nabeel
          rasteriser captures it; static, the lenses provide the motion */
       .ambient {
         /* absolute, NOT fixed: liquidGL's rasteriser skips fixed elements,
-           which left the lenses refracting an empty snapshot */
+           which left the lenses refracting an empty snapshot.
+           100lvh spans the LARGE viewport so the wallpaper spills under
+           iOS's status/address bars like apple.com */
         position: absolute;
-        inset: 0;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        height: 100lvh;
         z-index: 0;
         pointer-events: none;
         overflow: hidden;
@@ -585,7 +591,7 @@ Author: Nabeel
           .getElementById("theme-color")
           .setAttribute(
             "content",
-            body.getAttribute("data-theme") === "light" ? "#eef0f8" : "#14163a",
+            body.getAttribute("data-theme") === "light" ? "#f4f5fb" : "#0c0e24",
           );
         // re-photograph the page so the glass refracts the new wallpaper
         wallpaper.onload = () => {
@@ -770,16 +776,17 @@ Author: Nabeel
             tiltFactor: 25,
             tiltEase: 550,
           });
-          // toggle, pill, footer: same glass, completely inert
+          // toggle, pill, footer: demo-3 pill glass (thick frost, specular
+          // sheen) but no tilt — glassy at rest, inert to the cursor
           liquidGL({
             snapshot: ".ambient",
             target: ".liquidGL-flat",
             refraction: 0,
             bevelDepth: 0.1,
             bevelWidth: 0.17,
-            frost: 2,
+            frost: 7,
             shadow: true,
-            specular: false,
+            specular: true,
             reveal: "fade",
             tilt: false,
           });
