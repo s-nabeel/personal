@@ -6,7 +6,7 @@ Last updated: 2026-09-01
 Author: Nabeel
 -->
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta
@@ -111,6 +111,9 @@ Author: Nabeel
          bars and the page bleeds edge to edge like apple.com */
       html {
         height: 100%;
+        /* Safari paints beyond-page areas (behind its bars) with this */
+        background-color: var(--bg-color);
+        transition: background-color 0.4s ease;
       }
       body {
         height: 100vh;
@@ -156,18 +159,43 @@ Author: Nabeel
         background: #f8f8fb url("assets/wallpaper_light_v4.jpg") center / cover
           no-repeat;
       }
-      .ambient img,
       .ambient video {
+        position: absolute;
+        inset: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
         display: block;
-        /* hidden until truly playing so a stalled video never covers the poster */
+        /* theme change is a pure crossfade between the two videos */
         opacity: 0;
-        transition: opacity 0.5s ease;
+        transition: opacity 0.8s ease;
       }
       .ambient video.live {
         opacity: 1;
+      }
+
+      /* specular finish painted on every glass face — the diagonal sheen
+         that makes glass read even over plain backgrounds */
+      .card::before,
+      .email-pill::before,
+      #theme-toggle::before,
+      footer::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        z-index: 2;
+        pointer-events: none;
+        background: linear-gradient(
+          125deg,
+          rgba(255, 255, 255, 0.32) 0%,
+          rgba(255, 255, 255, 0.08) 30%,
+          rgba(255, 255, 255, 0) 55%,
+          rgba(110, 110, 135, 0.05) 100%
+        );
+        box-shadow:
+          inset 0 1px 1px rgba(255, 255, 255, 0.7),
+          inset 0 -1px 1px rgba(0, 0, 0, 0.04);
       }
 
       /* shared liquid glass recipe */
@@ -532,9 +560,18 @@ Author: Nabeel
   <body>
     <div class="ambient">
       <video
-        id="wallpaper"
+        id="wp-light"
         src="assets/wallpaper_light_v4.mp4"
         poster="assets/wallpaper_light_v4.jpg"
+        autoplay
+        muted
+        loop
+        playsinline
+      ></video>
+      <video
+        id="wp-dark"
+        src="assets/wallpaper_dark_v4.mp4"
+        poster="assets/wallpaper_dark_v4.jpg"
         autoplay
         muted
         loop
@@ -581,7 +618,7 @@ Author: Nabeel
       </a>
     </div>
 
-    <footer class="liquidGL-flat">
+    <footer class="liquidGL-footer">
       <div class="footer-left">
         © <span id="year"></span> Nabeel. All rights reserved
       </div>
@@ -593,53 +630,51 @@ Author: Nabeel
     <script>
       const themeToggle = document.getElementById("theme-toggle");
       const body = document.body;
-      const wallpaper = document.getElementById("wallpaper");
-      const WALLPAPERS = {
-        dark: "assets/wallpaper_dark_v4.mp4",
-        light: "assets/wallpaper_light_v4.mp4",
-      };
-      // reveal the video only once frames are actually rendering
-      wallpaper.addEventListener("timeupdate", () => {
-        if (wallpaper.currentTime > 0.05) wallpaper.classList.add("live");
+      const root = document.documentElement;
+      // both wallpapers stay loaded and playing; theme change is a pure
+      // opacity crossfade — no reload, no jank. The inactive video gets
+      // data-liquid-ignore so the glass refracts only the visible one.
+      const wpLight = document.getElementById("wp-light");
+      const wpDark = document.getElementById("wp-dark");
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      [wpLight, wpDark].forEach((v) => {
+        if (reducedMotion) {
+          v.autoplay = false;
+          v.addEventListener("canplay", () => v.pause());
+        }
       });
-      // honour reduced motion: freeze the drifting wallpaper
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        wallpaper.autoplay = false;
-        wallpaper.addEventListener("canplay", () => wallpaper.pause());
-      }
       function applyWallpaper() {
-        const next =
-          body.getAttribute("data-theme") === "light"
-            ? WALLPAPERS.light
-            : WALLPAPERS.dark;
-        wallpaper.classList.remove("live");
-        wallpaper.src = next;
-        const playAttempt = wallpaper.play();
-        if (playAttempt && playAttempt.catch) playAttempt.catch(() => {});
+        const light = root.getAttribute("data-theme") === "light";
+        const active = light ? wpLight : wpDark;
+        const inactive = light ? wpDark : wpLight;
+        active.classList.add("live");
+        inactive.classList.remove("live");
+        // only mark ignores once the renderer has registered both videos —
+        // an ignore present at init would exclude that video permanently
+        if (window.__liquidGLRenderer__) {
+          active.removeAttribute("data-liquid-ignore");
+          inactive.setAttribute("data-liquid-ignore", "");
+        }
+        const p = active.play();
+        if (p && p.catch) p.catch(() => {});
         // tint the browser chrome to match the wallpaper
         document
           .getElementById("theme-color")
-          .setAttribute(
-            "content",
-            body.getAttribute("data-theme") === "light" ? "#f8f8fb" : "#0e0f1a",
-          );
-        // re-photograph the page so the glass refracts the new wallpaper
-        wallpaper.onload = () => {
-          const r = window.__liquidGLRenderer__;
-          if (r && r.captureSnapshot) r.captureSnapshot();
-        };
+          .setAttribute("content", light ? "#f8f8fb" : "#0e0f1a");
       }
-      // light is the default; dark only when explicitly chosen
-      if (localStorage.getItem("theme") !== "dark")
-        body.setAttribute("data-theme", "light");
+      // light is the default (set in markup); dark only when chosen
+      if (localStorage.getItem("theme") === "dark")
+        root.removeAttribute("data-theme");
       applyWallpaper();
 
       themeToggle.addEventListener("click", () => {
-        if (body.getAttribute("data-theme") === "light") {
-          body.removeAttribute("data-theme");
+        if (root.getAttribute("data-theme") === "light") {
+          root.removeAttribute("data-theme");
           localStorage.setItem("theme", "dark");
         } else {
-          body.setAttribute("data-theme", "light");
+          root.setAttribute("data-theme", "light");
           localStorage.setItem("theme", "light");
         }
         applyWallpaper();
@@ -730,11 +765,11 @@ Author: Nabeel
       let inputBuffer = "";
       const secrets = {
         dark: () => {
-          body.removeAttribute("data-theme");
+          root.removeAttribute("data-theme");
           localStorage.setItem("theme", "dark");
         },
         light: () => {
-          body.setAttribute("data-theme", "light");
+          root.setAttribute("data-theme", "light");
           localStorage.setItem("theme", "light");
         },
         nabeel: () => {
@@ -819,6 +854,21 @@ Author: Nabeel
             reveal: "fade",
             tilt: false,
           });
+          // footer: slightly thicker glass so it reads over plain regions
+          liquidGL({
+            snapshot: ".ambient",
+            target: ".liquidGL-footer",
+            refraction: 0,
+            bevelDepth: 0.16,
+            bevelWidth: 0.24,
+            frost: 4,
+            shadow: true,
+            specular: true,
+            reveal: "fade",
+            tilt: false,
+          });
+          // now that both wallpapers are registered, mark the inactive one
+          applyWallpaper();
         }
 
       });
