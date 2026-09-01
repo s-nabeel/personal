@@ -447,6 +447,7 @@ Author: Nabeel
         text-shadow: none;
       }
 
+      /* long glass button spanning the bottom, matching the email pill */
       footer {
         position: relative;
         z-index: 9999;
@@ -455,11 +456,19 @@ Author: Nabeel
         align-items: center;
         width: calc(100% - 48px);
         margin: 0 24px 24px;
-        padding: 15px 26px;
+        padding: 1.05rem 2rem;
         border-radius: 999px;
-        color: var(--footer-color);
-        font-size: 0.76rem;
-        letter-spacing: 0.01em;
+        overflow: clip;
+        will-change: transform;
+        mix-blend-mode: difference;
+        color: #ffffff;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+      footer > * {
+        position: relative;
+        z-index: 3;
       }
 
       @media (max-width: 768px) {
@@ -529,7 +538,7 @@ Author: Nabeel
       </a>
     </div>
 
-    <footer class="glass liquidGL-flat">
+    <footer class="liquidGL-flat">
       <div class="footer-left">
         © <span id="year"></span> Nabeel. All rights reserved
       </div>
@@ -715,21 +724,6 @@ Author: Nabeel
           });
         }
 
-        // demo-3 style motion: drift the pill lens over the static wallpaper
-        const emailWrap = document.querySelector(".email-wrap");
-        const reducedMotion = window.matchMedia(
-          "(prefers-reduced-motion: reduce)",
-        ).matches;
-        if (emailWrap && !reducedMotion) {
-          const t0 = performance.now();
-          (function drift(now) {
-            const t = (now - t0) / 1000;
-            const x = Math.sin(t * 0.55) * 14;
-            const y = Math.sin(t * 0.8 + 1.3) * 8;
-            emailWrap.style.transform = `translate(${x}px, ${y}px)`;
-            requestAnimationFrame(drift);
-          })(t0);
-        }
       });
 
       // rim glint tracking on small glass elements
