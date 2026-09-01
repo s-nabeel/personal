@@ -190,6 +190,8 @@ Author: Nabeel
         right: 0;
         padding: 32px 40px;
         z-index: 9999;
+        /* blend lives on the nav so the icon adapts to the backdrop */
+        mix-blend-mode: difference;
       }
 
       /* same glass treatment as the email pill, just round */
@@ -202,7 +204,7 @@ Author: Nabeel
         border: none;
         background: none;
         border-radius: 999px;
-        color: #16161a;
+        color: #ffffff;
         cursor: pointer;
         width: 53px;
         height: 53px;
@@ -223,7 +225,6 @@ Author: Nabeel
         height: 17px;
         fill: none;
         stroke: currentColor;
-        filter: drop-shadow(0 1px 4px rgba(255, 255, 255, 0.5));
         stroke-width: 1.8;
         stroke-linecap: round;
         stroke-linejoin: round;
@@ -282,6 +283,8 @@ Author: Nabeel
         align-items: center;
         padding-bottom: 140px;
         pointer-events: none;
+        /* text adapts to whatever the glass sits over, like the card */
+        mix-blend-mode: difference;
       }
       .pill-anchor a {
         pointer-events: auto;
@@ -399,8 +402,7 @@ Author: Nabeel
       .email-pill span {
         position: relative;
         z-index: 3;
-        color: #16161a;
-        text-shadow: 0 1px 6px rgba(255, 255, 255, 0.5);
+        color: #ffffff;
         font-size: 0.92rem;
         font-weight: 600;
         letter-spacing: 0.03em;
