@@ -124,17 +124,20 @@ Author: Nabeel
           color 0.4s ease;
       }
 
-      /* demo-3 wallpaper the glass refracts — static so the snapshot
-         stays in sync; the lenses provide the motion */
+      /* demo wallpaper the glass refracts — a real <img> so liquidGL's
+         rasteriser captures it; static, the lenses provide the motion */
       .ambient {
         position: fixed;
         inset: 0;
         z-index: 0;
         pointer-events: none;
-        background: url("assets/bg_0000_Comp-33.webp") center / cover no-repeat;
+        overflow: hidden;
       }
-      [data-theme="light"] .ambient {
-        background-image: url("assets/bg_0004_Comp-13.webp");
+      .ambient img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
       }
 
       /* shared liquid glass recipe */
@@ -469,7 +472,9 @@ Author: Nabeel
     <script src="scripts/liquidGL.js" defer></script>
   </head>
   <body>
-    <div class="ambient"></div>
+    <div class="ambient">
+      <img id="wallpaper" src="assets/bg_0000_Comp-33.webp" alt="" />
+    </div>
 
     <div class="top-nav">
       <button id="theme-toggle" class="glass" aria-label="Toggle Theme">
@@ -532,9 +537,21 @@ Author: Nabeel
     <script>
       const themeToggle = document.getElementById("theme-toggle");
       const body = document.body;
+      const wallpaper = document.getElementById("wallpaper");
+      const WALLPAPERS = {
+        dark: "assets/bg_0000_Comp-33.webp",
+        light: "assets/bg_0004_Comp-13.webp",
+      };
+      function applyWallpaper() {
+        wallpaper.src =
+          body.getAttribute("data-theme") === "light"
+            ? WALLPAPERS.light
+            : WALLPAPERS.dark;
+      }
       // light is the default; dark only when explicitly chosen
       if (localStorage.getItem("theme") !== "dark")
         body.setAttribute("data-theme", "light");
+      applyWallpaper();
 
       themeToggle.addEventListener("click", () => {
         if (body.getAttribute("data-theme") === "light") {
@@ -544,6 +561,7 @@ Author: Nabeel
           body.setAttribute("data-theme", "light");
           localStorage.setItem("theme", "light");
         }
+        applyWallpaper();
       });
 
       const nameEl = document.getElementById("name");
@@ -673,7 +691,7 @@ Author: Nabeel
           // one renderer for all lenses (demo-2 card params); the cursor
           // tilt stays on the card only
           const effect = liquidGL({
-            snapshot: "body",
+            snapshot: ".ambient",
             target: ".liquidGL, .liquidGL-flat",
             refraction: 0,
             bevelDepth: 0.1,
