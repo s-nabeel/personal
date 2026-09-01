@@ -13,7 +13,7 @@ Author: Nabeel
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
-    <meta name="theme-color" id="theme-color" content="#f4f5fb" />
+    <meta name="theme-color" id="theme-color" content="#f4f5fa" />
     <title>Nabeel</title>
 
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -42,7 +42,8 @@ Author: Nabeel
     />
     <style>
       :root {
-        --bg-color: #08080b;
+        /* exact video base colour so iOS bar areas continue the wallpaper */
+        --bg-color: #0c0e24;
         --text-color: #f5f5f7;
         --muted-color: #9a9aa2;
         --footer-color: #86868b;
@@ -68,7 +69,7 @@ Author: Nabeel
       }
 
       [data-theme="light"] {
-        --bg-color: #f0f0f4;
+        --bg-color: #f4f5fa;
         --text-color: #101014;
         --muted-color: #55555c;
         --footer-color: #6b6b72;
@@ -142,6 +143,13 @@ Author: Nabeel
         z-index: 0;
         pointer-events: none;
         overflow: hidden;
+        /* poster painted underneath so a stalled video never shows black */
+        background: #0c0e24 url("assets/apple_dark.jpg") center / cover
+          no-repeat;
+      }
+      [data-theme="light"] .ambient {
+        background: #f4f5fa url("assets/apple_light.jpg") center / cover
+          no-repeat;
       }
       .ambient img,
       .ambient video {
@@ -149,6 +157,12 @@ Author: Nabeel
         height: 100%;
         object-fit: cover;
         display: block;
+        /* hidden until truly playing so a stalled video never covers the poster */
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+      .ambient video.live {
+        opacity: 1;
       }
 
       /* shared liquid glass recipe */
@@ -575,6 +589,10 @@ Author: Nabeel
         dark: "assets/apple_dark.mp4",
         light: "assets/apple_light.mp4",
       };
+      // reveal the video only once frames are actually rendering
+      wallpaper.addEventListener("timeupdate", () => {
+        if (wallpaper.currentTime > 0.05) wallpaper.classList.add("live");
+      });
       // honour reduced motion: freeze the drifting wallpaper
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         wallpaper.autoplay = false;
@@ -585,13 +603,16 @@ Author: Nabeel
           body.getAttribute("data-theme") === "light"
             ? WALLPAPERS.light
             : WALLPAPERS.dark;
+        wallpaper.classList.remove("live");
         wallpaper.src = next;
+        const playAttempt = wallpaper.play();
+        if (playAttempt && playAttempt.catch) playAttempt.catch(() => {});
         // tint the browser chrome to match the wallpaper
         document
           .getElementById("theme-color")
           .setAttribute(
             "content",
-            body.getAttribute("data-theme") === "light" ? "#f4f5fb" : "#0c0e24",
+            body.getAttribute("data-theme") === "light" ? "#f4f5fa" : "#0c0e24",
           );
         // re-photograph the page so the glass refracts the new wallpaper
         wallpaper.onload = () => {
