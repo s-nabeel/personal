@@ -652,13 +652,29 @@ Author: Nabeel
       let greetIndex = 0;
       let nameClicks = 0;
 
+      // fireworks show, rendered in front of the glass
+      // (main-thread canvas: the worker/OffscreenCanvas path can fail silently)
+      const fireworks = confetti.create(null, { resize: true, useWorker: false });
       const triggerHello = () => {
-        confetti({
-          particleCount: 60,
-          spread: 60,
-          origin: { y: 0.6 },
-          disableForReducedMotion: true,
-        });
+        const end = Date.now() + 2500;
+        const colors = ["#ff2d78", "#ff7a1a", "#b06bff", "#4db8ff", "#ffffff"];
+        (function fire() {
+          fireworks({
+            particleCount: 45,
+            startVelocity: 32,
+            spread: 360,
+            ticks: 70,
+            gravity: 0.9,
+            origin: {
+              x: 0.15 + Math.random() * 0.7,
+              y: 0.15 + Math.random() * 0.4,
+            },
+            colors,
+            zIndex: 20000,
+            disableForReducedMotion: true,
+          });
+          if (Date.now() < end) setTimeout(fire, 180 + Math.random() * 140);
+        })();
       };
 
       // name-click greeting easter egg — disabled for now
