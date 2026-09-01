@@ -137,7 +137,8 @@ Author: Nabeel
         pointer-events: none;
         overflow: hidden;
       }
-      .ambient img {
+      .ambient img,
+      .ambient video {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -324,7 +325,7 @@ Author: Nabeel
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 10px;
+        gap: 18px;
         text-align: center;
       }
 
@@ -506,7 +507,15 @@ Author: Nabeel
   </head>
   <body>
     <div class="ambient">
-      <img id="wallpaper" src="assets/bg_0000_Comp-33.webp" alt="" />
+      <video
+        id="wallpaper"
+        src="assets/bg_0000_Comp-33.mp4"
+        poster="assets/bg_0000_Comp-33.webp"
+        autoplay
+        muted
+        loop
+        playsinline
+      ></video>
     </div>
 
     <div class="top-nav">
@@ -562,9 +571,14 @@ Author: Nabeel
       const body = document.body;
       const wallpaper = document.getElementById("wallpaper");
       const WALLPAPERS = {
-        dark: "assets/bg_0000_Comp-33.webp",
-        light: "assets/bg_0004_Comp-13.webp",
+        dark: "assets/bg_0000_Comp-33.mp4",
+        light: "assets/bg_0004_Comp-13.mp4",
       };
+      // honour reduced motion: freeze the drifting wallpaper
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        wallpaper.autoplay = false;
+        wallpaper.addEventListener("canplay", () => wallpaper.pause());
+      }
       function applyWallpaper() {
         const next =
           body.getAttribute("data-theme") === "light"
