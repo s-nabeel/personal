@@ -13,7 +13,7 @@ Author: Nabeel
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
-    <meta name="theme-color" id="theme-color" content="#f4f5fa" />
+    <meta name="theme-color" id="theme-color" content="#f8f8fb" />
     <title>Nabeel</title>
 
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -43,7 +43,7 @@ Author: Nabeel
     <style>
       :root {
         /* exact video base colour so iOS bar areas continue the wallpaper */
-        --bg-color: #0c0e24;
+        --bg-color: #0e0f1a;
         --text-color: #f5f5f7;
         --muted-color: #9a9aa2;
         --footer-color: #86868b;
@@ -69,7 +69,7 @@ Author: Nabeel
       }
 
       [data-theme="light"] {
-        --bg-color: #f4f5fa;
+        --bg-color: #f8f8fb;
         --text-color: #101014;
         --muted-color: #55555c;
         --footer-color: #6b6b72;
@@ -144,11 +144,11 @@ Author: Nabeel
         pointer-events: none;
         overflow: hidden;
         /* poster painted underneath so a stalled video never shows black */
-        background: #0c0e24 url("assets/wallpaper_dark_v3.jpg") center / cover
+        background: #0e0f1a url("assets/wallpaper_dark_v4.jpg") center / cover
           no-repeat;
       }
       [data-theme="light"] .ambient {
-        background: #f4f5fa url("assets/wallpaper_light_v3.jpg") center / cover
+        background: #f8f8fb url("assets/wallpaper_light_v4.jpg") center / cover
           no-repeat;
       }
       .ambient img,
@@ -369,7 +369,7 @@ Author: Nabeel
         font-weight: 400;
         letter-spacing: 0.002em;
         color: #ffffff;
-        opacity: 0.8;
+        opacity: 0.55;
         margin: 0;
       }
 
@@ -524,8 +524,8 @@ Author: Nabeel
     <div class="ambient">
       <video
         id="wallpaper"
-        src="assets/wallpaper_light_v3.mp4"
-        poster="assets/wallpaper_light_v3.jpg"
+        src="assets/wallpaper_light_v4.mp4"
+        poster="assets/wallpaper_light_v4.jpg"
         autoplay
         muted
         loop
@@ -586,8 +586,8 @@ Author: Nabeel
       const body = document.body;
       const wallpaper = document.getElementById("wallpaper");
       const WALLPAPERS = {
-        dark: "assets/wallpaper_dark_v3.mp4",
-        light: "assets/wallpaper_light_v3.mp4",
+        dark: "assets/wallpaper_dark_v4.mp4",
+        light: "assets/wallpaper_light_v4.mp4",
       };
       // reveal the video only once frames are actually rendering
       wallpaper.addEventListener("timeupdate", () => {
@@ -612,7 +612,7 @@ Author: Nabeel
           .getElementById("theme-color")
           .setAttribute(
             "content",
-            body.getAttribute("data-theme") === "light" ? "#f4f5fa" : "#0c0e24",
+            body.getAttribute("data-theme") === "light" ? "#f8f8fb" : "#0e0f1a",
           );
         // re-photograph the page so the glass refracts the new wallpaper
         wallpaper.onload = () => {
