@@ -315,73 +315,40 @@ Author: Nabeel
         z-index: 3;
       }
 
-      .card-top {
-        display: flex;
-        justify-content: space-between;
+      /* clean personal card face */
+      .card {
+        justify-content: center;
         align-items: center;
-        width: 100%;
+      }
+      .card-face {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        text-align: center;
       }
 
-      .card-chip {
-        width: 44px;
-        height: auto;
-        opacity: 0.8;
-      }
-
-      .card-brand {
-        width: 56px;
-        height: auto;
-        filter: grayscale(1) invert(1);
-      }
-
-      /* card text in Space Mono — the machine-printed card look */
-      .card-number,
-      .card-footer .label,
-      .card-footer .value,
-      .card-footer .value span,
+      .name,
+      .tagline,
       .email-pill span {
         font-family: "Space Mono", "SF Mono", Menlo, monospace;
       }
 
-      .card-number {
-        font-size: 1.05rem;
-        white-space: nowrap;
-        letter-spacing: 0.16rem;
-        font-weight: 600;
+      .name {
+        font-size: 1.9rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
         color: #ffffff;
-        width: 100%;
-        text-align: left;
+        margin: 0;
       }
 
-      .card-footer {
-        display: flex;
-        justify-content: flex-start;
-        gap: 3rem;
-        width: 100%;
-        font-size: 0.75rem;
+      .tagline {
+        font-size: 0.72rem;
+        font-weight: 400;
+        letter-spacing: 0.08em;
         color: #ffffff;
-      }
-
-      .card-footer .label {
-        text-transform: uppercase;
-        opacity: 0.6;
-        font-weight: 500;
-        letter-spacing: 0.05rem;
-        font-size: 0.65rem;
-      }
-
-      .card-holder,
-      .card-expiry {
-        display: flex;
-        flex-direction: column;
-        gap: 0.05rem;
-      }
-
-      .value {
-        font-size: 0.75rem;
-        font-weight: 600;
-        letter-spacing: 0.02rem;
-        color: #ffffff;
+        opacity: 0.75;
+        margin: 0;
       }
 
       .stack {
@@ -557,22 +524,11 @@ Author: Nabeel
 
     <div class="card-anchor">
       <div class="card liquidGL" id="card">
-        <div class="card-top">
-          <img src="assets/card-chip.svg" alt="Chip" class="card-chip" />
-          <img src="assets/visa.png" alt="Visa" class="card-brand" />
-        </div>
-        <div class="card-number reveal">**** **** **** 5482</div>
-        <div class="card-footer">
-          <div class="card-holder">
-            <span class="label">Card Holder</span>
-            <span class="value name" id="name"
-              ><span id="name-text"></span><span class="caret" id="caret"></span
-            ></span>
-          </div>
-          <div class="card-expiry reveal">
-            <span class="label">Expires</span>
-            <span class="value">12/28</span>
-          </div>
+        <div class="card-face">
+          <h1 class="name" id="name"
+            ><span id="name-text"></span><span class="caret" id="caret"></span
+          ></h1>
+          <p class="tagline reveal">building things on the internet</p>
         </div>
       </div>
 
