@@ -13,7 +13,7 @@ Author: Nabeel
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
-    <meta name="theme-color" id="theme-color" content="#1a0a12" />
+    <meta name="theme-color" id="theme-color" content="#eef0f8" />
     <title>Nabeel</title>
 
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -509,8 +509,8 @@ Author: Nabeel
     <div class="ambient">
       <video
         id="wallpaper"
-        src="assets/bg_0000_Comp-33.mp4"
-        poster="assets/bg_0000_Comp-33.webp"
+        src="assets/apple_light.mp4"
+        poster="assets/apple_light.jpg"
         autoplay
         muted
         loop
@@ -571,8 +571,8 @@ Author: Nabeel
       const body = document.body;
       const wallpaper = document.getElementById("wallpaper");
       const WALLPAPERS = {
-        dark: "assets/bg_0000_Comp-33.mp4",
-        light: "assets/bg_0004_Comp-13.mp4",
+        dark: "assets/apple_dark.mp4",
+        light: "assets/apple_light.mp4",
       };
       // honour reduced motion: freeze the drifting wallpaper
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -590,7 +590,7 @@ Author: Nabeel
           .getElementById("theme-color")
           .setAttribute(
             "content",
-            body.getAttribute("data-theme") === "light" ? "#e9c7dc" : "#1a0a12",
+            body.getAttribute("data-theme") === "light" ? "#eef0f8" : "#14163a",
           );
         // re-photograph the page so the glass refracts the new wallpaper
         wallpaper.onload = () => {
