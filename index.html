@@ -437,10 +437,10 @@ Author: Nabeel
 
       /* curved member-since scroll ribbon */
       .member {
-        top: 138px;
-        right: 20px;
-        width: 118px;
-        height: 40px;
+        top: 132px;
+        right: 18px;
+        width: 122px;
+        height: 46px;
         pointer-events: none;
       }
       .member svg {
@@ -604,6 +604,19 @@ Author: Nabeel
         <img src="assets/card-chip.svg" alt="Chip" class="card-chip" />
         <div class="emblem reveal">
           <svg viewBox="0 0 100 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern
+                id="hatch"
+                width="2.4"
+                height="2.4"
+                patternUnits="userSpaceOnUse"
+              >
+                <path d="M0 2.4L2.4 0" stroke="#4b4b52" stroke-width="0.5" />
+              </pattern>
+              <clipPath id="oval-clip">
+                <ellipse cx="50" cy="62" rx="31" ry="45" />
+              </clipPath>
+            </defs>
             <ellipse
               cx="50"
               cy="62"
@@ -621,17 +634,20 @@ Author: Nabeel
               stroke-width="0.7"
               opacity="0.6"
             />
-            <text
-              x="50"
-              y="80"
-              text-anchor="middle"
-              font-family="Georgia, serif"
-              font-size="52"
-              font-weight="600"
-              fill="#4b4b52"
-            >
-              N
-            </text>
+            <g clip-path="url(#oval-clip)">
+              <path
+                fill="url(#hatch)"
+                stroke="#4b4b52"
+                stroke-width="1.2"
+                d="M40 107 C38 92 39 80 44 71 C40 64 40 52 46 45 C52 38 63 37 69 44 C73 49 74 55 72 60 L77 65 L72 67 C74 71 72 74 68 74 L68 78 C68 82 64 84 61 82 L61 88 C57 92 50 92 46 89 C43 94 41 100 41 107 Z"
+              />
+              <path
+                d="M43 44 C49 33 65 33 71 44"
+                stroke="#4b4b52"
+                stroke-width="2.4"
+                fill="none"
+              />
+            </g>
           </svg>
         </div>
         <div class="tap-row engraved reveal">
@@ -643,20 +659,40 @@ Author: Nabeel
           <span>2026</span>
         </div>
         <div class="member reveal">
-          <svg viewBox="0 0 158 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 158 60" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <path id="member-arc" d="M14 32 Q79 10 144 32" />
+              <path id="member-arc" d="M18 33 Q79 13 140 33" />
             </defs>
+            <!-- folded ribbon ends -->
             <path
-              d="M6 36 Q79 8 152 36 L152 44 Q79 16 6 44 Z"
+              d="M14 28 L4 24 L9 33 L4 43 L14 42 Z"
               fill="rgba(240,240,244,0.85)"
               stroke="#4b4b52"
               stroke-width="1"
             />
+            <path
+              d="M144 28 L154 24 L149 33 L154 43 L144 42 Z"
+              fill="rgba(240,240,244,0.85)"
+              stroke="#4b4b52"
+              stroke-width="1"
+            />
+            <!-- ribbon band with double outline -->
+            <path
+              d="M14 28 Q79 6 144 28 L144 42 Q79 20 14 42 Z"
+              fill="rgba(240,240,244,0.9)"
+              stroke="#4b4b52"
+              stroke-width="1.2"
+            />
+            <path
+              d="M17 30.5 Q79 9 141 30.5 L141 39.5 Q79 18 17 39.5 Z"
+              stroke="#4b4b52"
+              stroke-width="0.55"
+              opacity="0.75"
+            />
             <text
-              font-size="9.5"
+              font-size="9"
               font-weight="600"
-              letter-spacing="2"
+              letter-spacing="1.8"
               fill="#4b4b52"
             >
               <textPath href="#member-arc" startOffset="50%" text-anchor="middle">
@@ -665,11 +701,11 @@ Author: Nabeel
             </text>
             <text
               x="79"
-              y="52"
+              y="58"
               text-anchor="middle"
-              font-size="12"
-              font-weight="600"
-              letter-spacing="1"
+              font-family="Georgia, serif"
+              font-size="17"
+              font-weight="700"
               fill="#4b4b52"
             >
               26
