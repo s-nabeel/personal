@@ -190,8 +190,9 @@ Author: Nabeel
         right: 0;
         padding: 32px 40px;
         z-index: 9999;
-        /* blend lives on the nav so the icon adapts to the backdrop */
-        mix-blend-mode: difference;
+        /* NOTE: no mix-blend here — the sun/moon icon animates, and
+           Chrome stalls repaints of dynamic content inside blended
+           fixed containers */
       }
 
       /* same glass treatment as the email pill, just round */
@@ -225,6 +226,7 @@ Author: Nabeel
         height: 17px;
         fill: none;
         stroke: currentColor;
+        filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.55));
         stroke-width: 1.8;
         stroke-linecap: round;
         stroke-linejoin: round;
@@ -584,10 +586,16 @@ Author: Nabeel
         light: "assets/bg_0004_Comp-13.webp",
       };
       function applyWallpaper() {
-        wallpaper.src =
+        const next =
           body.getAttribute("data-theme") === "light"
             ? WALLPAPERS.light
             : WALLPAPERS.dark;
+        wallpaper.src = next;
+        // re-photograph the page so the glass refracts the new wallpaper
+        wallpaper.onload = () => {
+          const r = window.__liquidGLRenderer__;
+          if (r && r.captureSnapshot) r.captureSnapshot();
+        };
       }
       // light is the default; dark only when explicitly chosen
       if (localStorage.getItem("theme") !== "dark")
