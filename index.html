@@ -144,11 +144,11 @@ Author: Nabeel
         pointer-events: none;
         overflow: hidden;
         /* poster painted underneath so a stalled video never shows black */
-        background: #0c0e24 url("assets/apple_dark.jpg") center / cover
+        background: #0c0e24 url("assets/wallpaper_dark_v3.jpg") center / cover
           no-repeat;
       }
       [data-theme="light"] .ambient {
-        background: #f4f5fa url("assets/apple_light.jpg") center / cover
+        background: #f4f5fa url("assets/wallpaper_light_v3.jpg") center / cover
           no-repeat;
       }
       .ambient img,
@@ -524,8 +524,8 @@ Author: Nabeel
     <div class="ambient">
       <video
         id="wallpaper"
-        src="assets/apple_light.mp4"
-        poster="assets/apple_light.jpg"
+        src="assets/wallpaper_light_v3.mp4"
+        poster="assets/wallpaper_light_v3.jpg"
         autoplay
         muted
         loop
@@ -586,8 +586,8 @@ Author: Nabeel
       const body = document.body;
       const wallpaper = document.getElementById("wallpaper");
       const WALLPAPERS = {
-        dark: "assets/apple_dark.mp4",
-        light: "assets/apple_light.mp4",
+        dark: "assets/wallpaper_dark_v3.mp4",
+        light: "assets/wallpaper_light_v3.mp4",
       };
       // reveal the video only once frames are actually rendering
       wallpaper.addEventListener("timeupdate", () => {
