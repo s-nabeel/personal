@@ -192,25 +192,25 @@ Author: Nabeel
         z-index: 9999;
       }
 
+      /* same glass treatment as the email pill, just round */
       #theme-toggle {
         z-index: 5;
         /* stay clickable even though the lens disables pointer events */
         pointer-events: auto !important;
         overflow: clip;
         will-change: transform;
+        border: none;
+        background: none;
         border-radius: 999px;
-        color: var(--text-color);
+        color: #16161a;
         cursor: pointer;
-        width: 44px;
-        height: 44px;
+        width: 53px;
+        height: 53px;
         display: flex;
         align-items: center;
         justify-content: center;
         outline: none;
         -webkit-tap-highlight-color: transparent;
-        transition:
-          transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
-          background 0.4s ease;
       }
       #theme-toggle:active {
         opacity: 0.8;
@@ -218,11 +218,13 @@ Author: Nabeel
 
       #theme-toggle svg {
         position: absolute;
-        width: 16px;
-        height: 16px;
+        z-index: 3;
+        width: 17px;
+        height: 17px;
         fill: none;
         stroke: currentColor;
-        stroke-width: 1.5;
+        filter: drop-shadow(0 1px 4px rgba(255, 255, 255, 0.5));
+        stroke-width: 1.8;
         stroke-linecap: round;
         stroke-linejoin: round;
         transition:
