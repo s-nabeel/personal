@@ -806,15 +806,14 @@ Author: Nabeel
             tiltFactor: 25,
             tiltEase: 550,
           });
-          // toggle, pill, footer: demo-3 pill glass (thick frost, specular
-          // sheen) but no tilt — glassy at rest, inert to the cursor
+          // toggle, pill, footer: the card's exact glass, minus the tilt
           liquidGL({
             snapshot: ".ambient",
             target: ".liquidGL-flat",
             refraction: 0,
             bevelDepth: 0.1,
             bevelWidth: 0.17,
-            frost: 7,
+            frost: 2,
             shadow: true,
             specular: true,
             reveal: "fade",
