@@ -127,7 +127,9 @@ Author: Nabeel
       /* demo wallpaper the glass refracts — a real <img> so liquidGL's
          rasteriser captures it; static, the lenses provide the motion */
       .ambient {
-        position: fixed;
+        /* absolute, NOT fixed: liquidGL's rasteriser skips fixed elements,
+           which left the lenses refracting an empty snapshot */
+        position: absolute;
         inset: 0;
         z-index: 0;
         pointer-events: none;
