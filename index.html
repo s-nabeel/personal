@@ -116,7 +116,7 @@ Author: Nabeel
         background-color: var(--bg-color);
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-end;
         align-items: center;
         color: var(--text-color);
         transition:
@@ -246,15 +246,23 @@ Author: Nabeel
         transform: rotate(0deg);
       }
 
-      .content-wrapper {
-        flex: 1;
+      /* fixed overlay directly on body, exactly like the demo's
+         card-anchor: no intermediate stacking context, so the
+         difference blend composites against the lens canvas */
+      .card-anchor {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
-        position: relative;
-        width: 100%;
-        z-index: 1;
-        perspective: 1400px;
+        gap: 36px;
+        pointer-events: none;
+        mix-blend-mode: difference;
+      }
+      .card-anchor a {
+        pointer-events: auto;
       }
 
       /* ————— the bank card (liquidGL demo-2, 1:1) ————— */
@@ -272,12 +280,9 @@ Author: Nabeel
         will-change: transform;
         z-index: 5;
       }
-      /* card content renders above the WebGL canvas and adapts to the
-         backdrop via difference blending */
       .card > * {
         position: relative;
         z-index: 3;
-        mix-blend-mode: difference;
       }
 
       .card-top {
@@ -371,7 +376,6 @@ Author: Nabeel
       .email-pill span {
         position: relative;
         z-index: 3;
-        mix-blend-mode: difference;
         color: #ffffff;
         font-size: 0.92rem;
         font-weight: 600;
@@ -443,7 +447,7 @@ Author: Nabeel
 
       footer {
         position: relative;
-        z-index: 5;
+        z-index: 9999;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -495,8 +499,7 @@ Author: Nabeel
       </button>
     </div>
 
-    <div class="content-wrapper">
-      <div class="stack">
+    <div class="card-anchor">
       <div class="card liquidGL" id="card">
         <div class="card-top">
           <img src="assets/card-chip.svg" alt="Chip" class="card-chip" />
@@ -522,7 +525,6 @@ Author: Nabeel
           <span>x@nabeel.ca</span>
         </div>
       </a>
-      </div>
     </div>
 
     <footer class="glass liquidGL-flat">
