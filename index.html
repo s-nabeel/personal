@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 6.12.0
+Version: 6.12.1
 Last updated: 2026-09-02
 Author: Nabeel
 -->
@@ -74,6 +74,8 @@ Author: Nabeel
 
       html {
         background-color: var(--bg-color);
+        touch-action: pan-y;
+        -webkit-text-size-adjust: 100%;
       }
       body {
         background-color: var(--bg-color);
@@ -1014,6 +1016,27 @@ Author: Nabeel
           }
         }
       });
+
+      ["gesturestart", "gesturechange", "gestureend"].forEach((t) =>
+        document.addEventListener(t, (e) => e.preventDefault(), { passive: false }),
+      );
+      document.addEventListener(
+        "touchmove",
+        (e) => {
+          if (e.scale !== undefined && e.scale !== 1) e.preventDefault();
+        },
+        { passive: false },
+      );
+      let lastTouchEnd = 0;
+      document.addEventListener(
+        "touchend",
+        (e) => {
+          const now = Date.now();
+          if (now - lastTouchEnd < 300) e.preventDefault();
+          lastTouchEnd = now;
+        },
+        { passive: false },
+      );
 
       document.getElementById("year").textContent = new Date().getFullYear();
       let clockZone = "America/Los_Angeles";
