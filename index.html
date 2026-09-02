@@ -209,12 +209,18 @@ Author: Nabeel
         padding: 32px 40px;
         z-index: 10000;
       }
+      /* CSS glass (not a WebGL lens): a lens here would refract the
+         scrolling text behind it. Same recipe as the email pill. */
       #theme-toggle {
-        pointer-events: auto !important;
         width: 53px;
         height: 53px;
         border: none;
-        background: transparent;
+        background: var(--pill-bg);
+        -webkit-backdrop-filter: blur(14px) saturate(160%);
+        backdrop-filter: blur(14px) saturate(160%);
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.1),
+          0 0 0 0.5px rgba(0, 0, 0, 0.05);
         border-radius: 999px;
         color: var(--text-color);
         cursor: pointer;
@@ -360,7 +366,8 @@ Author: Nabeel
         letter-spacing: -0.01em;
       }
 
-      /* footer: long glass pill pinned to the viewport */
+      /* footer: long glass pill pinned to the viewport (CSS glass, so the
+         scrolling text never shows through it) */
       footer.lens {
         position: fixed;
         left: 24px;
@@ -372,6 +379,12 @@ Author: Nabeel
         align-items: center;
         padding: 1.05rem 2rem;
         border-radius: 999px;
+        background: var(--pill-bg);
+        -webkit-backdrop-filter: blur(14px) saturate(160%);
+        backdrop-filter: blur(14px) saturate(160%);
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.1),
+          0 0 0 0.5px rgba(0, 0, 0, 0.05);
         color: var(--muted-color);
         font-size: 0.78rem;
         font-weight: 500;
@@ -454,7 +467,7 @@ Author: Nabeel
     <div class="shape"></div>
 
     <div class="top-nav">
-      <button id="theme-toggle" class="lens lg-flat" aria-label="Toggle Theme">
+      <button id="theme-toggle" class="lens" aria-label="Toggle Theme">
         <svg id="sun-icon" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="5"></circle>
           <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -485,7 +498,7 @@ Author: Nabeel
       </a>
     </div>
 
-    <footer class="lens lg-flat">
+    <footer class="lens">
       <div class="footer-left">
         © <span id="year"></span> Nabeel. All rights reserved
       </div>
@@ -641,20 +654,7 @@ Author: Nabeel
           shadow: true,
           reveal: "fade",
         });
-        // 2. small controls: the liquidGL homepage pill recipe
-        liquidGL({
-          target: ".lg-flat",
-          snapshot: ".main-content",
-          refraction: 0.01,
-          bevelDepth: 0.119,
-          bevelWidth: 0.057,
-          frost: 0,
-          specular: true,
-          shadow: true,
-          reveal: "fade",
-          tilt: false,
-        });
-        // 3. Lenis + GSAP ticker sync (demo-5)
+        // 2. Lenis + GSAP ticker sync (demo-5)
         window.addEventListener("load", () => liquidGL.syncWith());
         document.addEventListener("mousemove", () => {
           if (window.__liquidGLRenderer__) window.__liquidGLRenderer__.render();
