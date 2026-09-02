@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 6.7.3
+Version: 6.8.1
 Last updated: 2026-09-02
 Author: Nabeel
 -->
@@ -120,7 +120,7 @@ Author: Nabeel
       .banner-text {
         width: 100%;
         text-align: center;
-        margin: 20vh auto;
+        margin: 0 auto calc(100vh - 20vw + 8vh);
         font-family:
           -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter",
           "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -184,7 +184,7 @@ Author: Nabeel
       .band:nth-child(6) > span { top: -500%; }
       #name {
         padding: 0.4em 0 0.8em;
-        margin: calc(20vh - 0.4em) auto calc(20vh - 0.8em);
+        margin: 0 auto calc(100vh - 20vw + 8vh - 0.8em);
       }
       .banner-text .word {
         position: relative;
@@ -408,15 +408,29 @@ Author: Nabeel
         position: relative;
         width: 12rem;
         height: 3.2rem;
-        margin: 24vh auto 0;
+        margin: 0 auto;
         color: var(--text-color);
         text-decoration: none;
+        transition:
+          width 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+          height 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+          margin 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
         pointer-events: auto;
         cursor: pointer;
       }
       .email-wrap:hover {
         --pill-bg: rgba(255, 255, 255, 0.12);
         --sheen-rim: rgba(255, 255, 255, 0.38);
+        width: 12.48rem;
+        height: 3.328rem;
+        margin-top: -0.064rem;
+        margin-bottom: -0.128rem;
+      }
+      .email-wrap:active {
+        width: 11.64rem;
+        height: 3.104rem;
+        margin-top: 0.048rem;
+        margin-bottom: 0.096rem;
       }
       [data-theme="light"] .email-wrap:hover {
         --pill-bg: rgba(255, 255, 255, 0.8);
@@ -493,10 +507,10 @@ Author: Nabeel
         }
         .banner-text {
           font-size: 14vw;
-          margin: 16vh auto;
+          margin: 0 auto 58vh;
         }
         #name {
-          margin: calc(16vh - 0.4em) auto calc(16vh - 0.8em);
+          margin: 0 auto calc(58vh - 0.8em);
         }
         .banner-text.small {
           font-size: 5.2vw;
@@ -517,7 +531,13 @@ Author: Nabeel
         .email-wrap {
           width: 10.5rem;
           height: 3rem;
-          margin-top: 18vh;
+        }
+        .email-wrap:hover,
+        .email-wrap:active {
+          width: 10.5rem;
+          height: 3rem;
+          margin-top: 0;
+          margin-bottom: 0;
         }
         .email-wrap span {
           font-size: 0.92rem;
@@ -720,7 +740,11 @@ Author: Nabeel
         if (r) await r.captureSnapshot();
         liveNode(nameEl, true);
         liveNode(runner, true);
+        const textColor = getComputedStyle(nameEl).color;
         nameEl.classList.add("retro");
+        wordEl.animate([{ color: textColor }, { color: "transparent" }], { duration: 520, easing: "ease-in-out" });
+        nameEl.querySelector(".stripes").animate([{ opacity: 0 }, { opacity: 1 }], { duration: 520, easing: "ease-in-out" });
+        leafEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 420, delay: 160, easing: "ease-out", fill: "backwards" });
 
         let animating = true;
         (function tick() {
@@ -829,8 +853,8 @@ Author: Nabeel
           const startX = aBox.width / 2 - 0.09 * em;
           const startY = -0.31 * em;
           const groundY = 0.96 * em;
-          const total = 2500;
-          const omega = (Math.PI * 2) / 950;
+          const total = 2100;
+          const omega = (Math.PI * 2) / 860;
           let t0 = null;
           let landed = null;
           let restX = 0;
