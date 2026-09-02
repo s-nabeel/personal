@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 6.5.0
+Version: 6.6.0
 Last updated: 2026-09-02
 Author: Nabeel
 -->
@@ -529,7 +529,7 @@ Author: Nabeel
       </div>
       <div class="banner-text-container">
         <div class="banner-text" id="name">
-          <span class="word"><span class="i">i</span>N<span class="a">a<svg class="leaf" viewBox="0 0 85 98" aria-hidden="true"><path fill="#61bb46" d="M62.2 66.8c14.6-17.7 24.5-42.3 21.8-66.8-21.1.9-46.6 14.1-61.7 31.8-13.5 15.7-25.3 40.7-22.1 64.7 23.5 1.8 47.4-12 62-29.7z"/></svg></span>beel</span>
+          <span class="word"><span class="i">i</span>N<span class="a">a<svg class="leaf" viewBox="0 0 85 98" aria-hidden="true"><g class="lg"><path fill="#61bb46" d="M62.2 66.8c14.6-17.7 24.5-42.3 21.8-66.8-21.1.9-46.6 14.1-61.7 31.8-13.5 15.7-25.3 40.7-22.1 64.7 23.5 1.8 47.4-12 62-29.7z"/></g></svg></span>beel</span>
           <span class="stripes" aria-hidden="true">
             <span class="band"><span><span class="i">i</span>Nabeel</span></span>
             <span class="band"><span><span class="i">i</span>Nabeel</span></span>
@@ -710,13 +710,11 @@ Author: Nabeel
           return;
         }
         await bringNameIntoPane();
-        await transitionWith(() => nameEl.classList.add("retro"));
-        await sleep(80);
-
         nameEl.setAttribute("data-liquidgl-hide", "");
         if (r) await r.captureSnapshot();
         liveNode(nameEl, true);
         liveNode(runner, true);
+        nameEl.classList.add("retro");
 
         let animating = true;
         (function tick() {
@@ -773,6 +771,85 @@ Author: Nabeel
         crashBusy = false;
       }
 
+      const leafG = leafEl.querySelector(".lg");
+      function resetLeaf() {
+        leafEl.style.left = "";
+        leafEl.style.top = "";
+        leafEl.setAttribute("class", "leaf");
+        leafG.removeAttribute("transform");
+      }
+      function fallLeaf() {
+        return new Promise((resolve) => {
+          const em = parseFloat(getComputedStyle(nameEl).fontSize);
+          const aBox = nameEl.querySelector(".a").getBoundingClientRect();
+          const startX = aBox.width / 2 - 0.09 * em;
+          const startY = -0.31 * em;
+          const groundY = 0.96 * em;
+          const total = 3600;
+          const omega = (Math.PI * 2) / 1350;
+          let t0 = null;
+          let frame = 0;
+          let lastStamp = -1000;
+          let landed = null;
+          let restX = 0;
+          let restAngle = 0;
+          const step = (ts) => {
+            if (t0 === null) t0 = ts;
+            const t = ts - t0;
+            const u = Math.min(t / total, 1);
+            const lift = Math.min(t / 420, 1);
+            const amp = (0.55 + 0.75 * u) * em;
+            const drift = (-0.15 + 1.35 * u * u) * em;
+            const sway = Math.sin(omega * t);
+            const swayV = Math.cos(omega * t);
+            let x = startX + drift + amp * sway * lift;
+            const rise = -0.22 * em * Math.sin(Math.PI * Math.min(t / 700, 1));
+            const speed = 0.12 + 0.34 * Math.abs(swayV);
+            const fallY = (groundY - startY) * Math.pow(u, 1.25) * (0.7 + 0.3 * speed / 0.46);
+            let y = startY + rise + fallY;
+            const vx = amp * omega * swayV;
+            const angle = -swayV * 42 + 8 * Math.sin(omega * 2.3 * t);
+            const flip = 0.35 + 0.65 * Math.abs(Math.cos(omega * 0.5 * t + 0.6));
+            if (y >= groundY || u >= 1) {
+              if (landed === null) {
+                landed = t;
+                restX = x;
+                restAngle = angle > 0 ? 58 : -58;
+              }
+              const k = Math.min((t - landed) / 260, 1);
+              const ease = 1 - Math.pow(1 - k, 3);
+              y = groundY;
+              x = restX + 0.08 * em * ease * Math.sign(vx || 1);
+              leafEl.style.left = `${x}px`;
+              leafEl.style.top = `${y}px`;
+              if (t - lastStamp > 90) {
+                lastStamp = t;
+                leafG.setAttribute(
+                  "transform",
+                  `rotate(${angle + (restAngle - angle) * ease} 42.5 49)`,
+                );
+                leafEl.setAttribute("class", `leaf f${frame++}`);
+              }
+              if (k >= 1 && t - landed > 700) return resolve();
+              requestAnimationFrame(step);
+              return;
+            }
+            leafEl.style.left = `${x}px`;
+            leafEl.style.top = `${y}px`;
+            if (t - lastStamp > 90) {
+              lastStamp = t;
+              leafG.setAttribute(
+                "transform",
+                `translate(42.5 49) rotate(${angle}) scale(${flip} 1) translate(-42.5 -49)`,
+              );
+              leafEl.setAttribute("class", `leaf f${frame++}`);
+            }
+            requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        });
+      }
+
       async function appleUndo() {
         const r = window.__liquidGLRenderer__;
         await bringNameIntoPane();
@@ -800,19 +877,7 @@ Author: Nabeel
           [{ left: "0px" }, { left: "-0.14em", offset: 0.25 }, { left: "0px" }],
           { duration: 520, easing: "ease-out" },
         );
-        const drop = leafEl.animate(
-          [
-            { top: "-0.31em", left: "calc(50% - 0.09em)", easing: "ease-out" },
-            { top: "-0.48em", left: "calc(50% - 0.55em)", offset: 0.12, easing: "ease-in-out" },
-            { top: "-0.2em", left: "calc(50% - 1.15em)", offset: 0.28, easing: "ease-in-out" },
-            { top: "0.1em", left: "calc(50% - 0.35em)", offset: 0.44, easing: "ease-in-out" },
-            { top: "0.36em", left: "calc(50% + 0.65em)", offset: 0.6, easing: "ease-in-out" },
-            { top: "0.62em", left: "calc(50% + 1.02em)", offset: 0.78, easing: "ease-in-out" },
-            { top: "0.9em", left: "calc(50% + 1.12em)", offset: 0.93, easing: "ease-out" },
-            { top: "0.96em", left: "calc(50% + 1.18em)" },
-          ],
-          { duration: 2800, delay: 150, fill: "forwards" },
-        ).finished;
+        const drop = fallLeaf();
         await leave;
         runner.classList.remove("running");
         runner.style.left = "";
@@ -825,6 +890,7 @@ Author: Nabeel
         await transitionWith(() => {
           nameEl.classList.remove("retro");
           leafEl.getAnimations().forEach((a) => a.cancel());
+          resetLeaf();
         });
       }
 
