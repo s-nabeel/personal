@@ -103,7 +103,28 @@ Author: Nabeel
         margin: 0 auto;
         /* start just below the fold so the name arrives after a short scroll */
         padding-top: 96svh;
-        padding-bottom: 110svh;
+        padding-bottom: 70svh;
+      }
+      /* iOS Safari: fixed layers stop at the small viewport, so the strip
+         under the expanded toolbar shows raw page content. This in-flow
+         sticky sheet paints the background colour over exactly that strip
+         (its height is zero on desktop). */
+      .toolbar-cover {
+        position: sticky;
+        top: 0;
+        height: 100lvh;
+        margin-bottom: -100lvh;
+        z-index: 5;
+        pointer-events: none;
+      }
+      .toolbar-cover::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: calc(100lvh - 100svh);
+        background: var(--bg-color);
       }
       .banner-text {
         width: 100%;
@@ -175,6 +196,29 @@ Author: Nabeel
       .band:nth-child(4) > span { top: -300%; }
       .band:nth-child(5) > span { top: -400%; }
       .band:nth-child(6) > span { top: -500%; }
+      /* the leaf on the A (retro only) */
+      .banner-text .word {
+        position: relative;
+        z-index: 1;
+      }
+      .banner-text .a {
+        position: relative;
+        display: inline-block;
+      }
+      .banner-text .leaf {
+        display: none;
+        position: absolute;
+        /* no transform here: the snapshot rasteriser inlines computed
+           styles into the SVG it paints, and a transform would shift the
+           leaf out of its own frame */
+        left: calc(50% - 0.09em);
+        top: -0.31em;
+        width: 0.26em;
+        height: 0.3em;
+      }
+      .banner-text.retro .leaf {
+        display: block;
+      }
 
       /* ————— the single fixed lens (demo-5 .shape, verbatim) ————— */
       .shape {
@@ -486,9 +530,10 @@ Author: Nabeel
   <body>
     <!-- everything that scrolls under the pane lives in here -->
     <div class="main-content">
+      <div class="toolbar-cover" data-liquid-ignore aria-hidden="true"></div>
       <div class="banner-text-container">
         <div class="banner-text" id="name">
-          <span class="word">Nabeel</span>
+          <span class="word">N<span class="a">a<svg class="leaf" viewBox="0 0 85 98" aria-hidden="true"><path fill="#61bb46" d="M62.2 66.8c14.6-17.7 24.5-42.3 21.8-66.8-21.1.9-46.6 14.1-61.7 31.8-13.5 15.7-25.3 40.7-22.1 64.7 23.5 1.8 47.4-12 62-29.7z"/></svg></span>beel</span>
           <span class="stripes" aria-hidden="true">
             <span class="band"><span>Nabeel</span></span>
             <span class="band"><span>Nabeel</span></span>
@@ -575,11 +620,10 @@ Author: Nabeel
             apply();
             await recapture();
           });
-          vt.finished.finally(() => (transitionBusy = false));
-        } else {
-          apply();
-          recapture();
+          return vt.finished.finally(() => (transitionBusy = false));
         }
+        apply();
+        return recapture();
       }
       function setTheme(theme) {
         transitionWith(() => {
@@ -645,7 +689,11 @@ Author: Nabeel
         dark: () => setTheme("dark"),
         light: () => setTheme("light"),
         nabeel: fireworksShow,
-        apple: () => transitionWith(() => nameEl.classList.toggle("retro")),
+        apple: async () => {
+          await transitionWith(() => nameEl.classList.toggle("retro"));
+          // the leaf SVG is rasterised asynchronously; snapshot once more
+          setTimeout(() => window.__liquidGLRenderer__?.captureSnapshot(), 400);
+        },
       };
       window.addEventListener("keydown", (e) => {
         if (e.key.length !== 1) return;
