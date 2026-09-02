@@ -6,14 +6,14 @@ Last updated: 2026-09-02
 Author: Nabeel
 -->
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
-    <meta name="theme-color" id="theme-color" content="#ececee" />
+    <meta name="theme-color" id="theme-color" content="#101014" />
     <title>Nabeel</title>
 
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -545,7 +545,8 @@ Author: Nabeel
           recapture();
         }
       }
-      if (localStorage.getItem("theme") === "dark") root.removeAttribute("data-theme");
+      // dark is the default; light only when chosen
+      if (localStorage.getItem("theme") === "light") root.setAttribute("data-theme", "light");
       syncChrome();
       themeToggle.addEventListener("click", () =>
         setTheme(root.getAttribute("data-theme") === "light" ? "dark" : "light"),
