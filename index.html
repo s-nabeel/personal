@@ -101,13 +101,14 @@ Author: Nabeel
         align-items: center;
         max-width: 60%;
         margin: 0 auto;
-        padding-top: 150svh;
-        padding-bottom: 120svh;
+        /* start just below the fold so the name arrives after a short scroll */
+        padding-top: 96svh;
+        padding-bottom: 110svh;
       }
       .banner-text {
         width: 100%;
         text-align: center;
-        margin: 40vh auto;
+        margin: 28vh auto;
         font-family:
           -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter",
           "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -126,22 +127,54 @@ Author: Nabeel
         line-height: 1;
         color: var(--muted-color);
       }
-      /* retro six-colour Apple stripes — secret (type "apple") */
-      .banner-text.retro {
-        background: linear-gradient(
-          180deg,
-          #61bb46 0% 16.6%,
-          #fdb827 16.6% 33.3%,
-          #f5821f 33.3% 50%,
-          #e03a3e 50% 66.6%,
-          #963d97 66.6% 83.3%,
-          #009ddc 83.3% 100%
-        );
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
+      /* retro Apple-logo stripes — secret (type "apple").
+         The glass snapshot rasteriser can't paint gradient-clipped text, but
+         it does clip overflow:hidden boxes — so the striped name is six
+         copies of the word, each clipped to one horizontal band in its
+         logo colour (green, yellow, orange, red, purple, blue). */
+      .banner-text {
+        position: relative;
+      }
+      .banner-text span {
+        font-family: inherit;
+      }
+      .banner-text .stripes {
+        display: none;
+        position: absolute;
+        inset: 0;
+      }
+      .banner-text.retro .word {
         color: transparent;
       }
+      .banner-text.retro .stripes {
+        display: block;
+      }
+      .band {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: calc(100% / 6);
+        overflow: hidden;
+        text-align: center;
+      }
+      .band > span {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 600%;
+      }
+      .band:nth-child(1) { top: 0;                 color: #61bb46; }
+      .band:nth-child(2) { top: calc(100% / 6);     color: #fdb827; }
+      .band:nth-child(3) { top: calc(200% / 6);     color: #f5821f; }
+      .band:nth-child(4) { top: calc(300% / 6);     color: #e03a3e; }
+      .band:nth-child(5) { top: calc(400% / 6);     color: #963d97; }
+      .band:nth-child(6) { top: calc(500% / 6);     color: #009ddc; }
+      .band:nth-child(1) > span { top: 0; }
+      .band:nth-child(2) > span { top: -100%; }
+      .band:nth-child(3) > span { top: -200%; }
+      .band:nth-child(4) > span { top: -300%; }
+      .band:nth-child(5) > span { top: -400%; }
+      .band:nth-child(6) > span { top: -500%; }
 
       /* ————— the single fixed lens (demo-5 .shape, verbatim) ————— */
       .shape {
@@ -412,7 +445,7 @@ Author: Nabeel
         }
         .banner-text {
           font-size: 14vw;
-          margin: 34vh auto;
+          margin: 22vh auto;
         }
         .banner-text.small {
           font-size: 6.4vw;
@@ -454,7 +487,17 @@ Author: Nabeel
     <!-- everything that scrolls under the pane lives in here -->
     <div class="main-content">
       <div class="banner-text-container">
-        <div class="banner-text" id="name">Nabeel</div>
+        <div class="banner-text" id="name">
+          <span class="word">Nabeel</span>
+          <span class="stripes" aria-hidden="true">
+            <span class="band"><span>Nabeel</span></span>
+            <span class="band"><span>Nabeel</span></span>
+            <span class="band"><span>Nabeel</span></span>
+            <span class="band"><span>Nabeel</span></span>
+            <span class="band"><span>Nabeel</span></span>
+            <span class="band"><span>Nabeel</span></span>
+          </span>
+        </div>
         <div class="banner-text small">building things on the internet</div>
         <div id="end-sentinel" aria-hidden="true"></div>
       </div>
@@ -517,33 +560,34 @@ Author: Nabeel
           .getElementById("theme-color")
           .setAttribute("content", light ? "#ececee" : "#101014");
       }
-      let themeBusy = false;
-      function setTheme(theme) {
-        if (themeBusy) return;
-        const apply = () => {
-          if (theme === "dark") root.removeAttribute("data-theme");
-          else root.setAttribute("data-theme", "light");
-          localStorage.setItem("theme", theme);
-          syncChrome();
-        };
-        // re-photograph the column so the glass takes the new colour; the
-        // library hides its canvas while capturing, so do it behind a
-        // frozen frame, never on screen
+      // Apply a visual change and re-photograph the column behind a frozen
+      // frame (the library hides its canvas while capturing), then crossfade.
+      let transitionBusy = false;
+      function transitionWith(apply) {
+        if (transitionBusy) return;
         const recapture = async () => {
           const r = window.__liquidGLRenderer__;
           if (r && r.captureSnapshot) await r.captureSnapshot();
         };
         if (document.startViewTransition) {
-          themeBusy = true;
+          transitionBusy = true;
           const vt = document.startViewTransition(async () => {
             apply();
             await recapture();
           });
-          vt.finished.finally(() => (themeBusy = false));
+          vt.finished.finally(() => (transitionBusy = false));
         } else {
           apply();
           recapture();
         }
+      }
+      function setTheme(theme) {
+        transitionWith(() => {
+          if (theme === "dark") root.removeAttribute("data-theme");
+          else root.setAttribute("data-theme", "light");
+          localStorage.setItem("theme", theme);
+          syncChrome();
+        });
       }
       // dark is the default; light only when chosen
       if (localStorage.getItem("theme") === "light") root.setAttribute("data-theme", "light");
@@ -601,11 +645,7 @@ Author: Nabeel
         dark: () => setTheme("dark"),
         light: () => setTheme("light"),
         nabeel: fireworksShow,
-        apple: () => {
-          nameEl.classList.toggle("retro");
-          const r = window.__liquidGLRenderer__;
-          if (r && r.captureSnapshot) r.captureSnapshot();
-        },
+        apple: () => transitionWith(() => nameEl.classList.toggle("retro")),
       };
       window.addEventListener("keydown", (e) => {
         if (e.key.length !== 1) return;
