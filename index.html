@@ -77,7 +77,6 @@ Author: Nabeel
       html {
         height: 100%;
         background-color: var(--bg-color);
-        transition: background-color 0.5s ease;
       }
       body {
         height: 100vh;
@@ -87,9 +86,15 @@ Author: Nabeel
         overscroll-behavior: none;
         background-color: var(--bg-color);
         color: var(--text-color);
-        transition:
-          background-color 0.5s ease,
-          color 0.5s ease;
+      }
+
+      /* theme switch = one crossfade of the whole rendered page (glass
+         canvas included) via the View Transitions API. Nothing else
+         animates, so the glass can never lag the background. */
+      ::view-transition-old(root),
+      ::view-transition-new(root) {
+        animation-duration: 0.45s;
+        animation-timing-function: ease-in-out;
       }
 
       /* flat field the glass refracts. Absolute, not fixed: liquidGL's
@@ -104,7 +109,6 @@ Author: Nabeel
         z-index: 0;
         pointer-events: none;
         background: var(--bg-color);
-        transition: background-color 0.5s ease;
       }
 
       /* ————— glass finish shared by every lens —————
@@ -130,7 +134,6 @@ Author: Nabeel
           rgba(255, 255, 255, 0) 62%
         );
         box-shadow: inset 0 1px 1px var(--sheen-rim);
-        transition: background 0.5s ease;
       }
       .lens > * {
         position: relative;
@@ -161,9 +164,7 @@ Author: Nabeel
         outline: none;
         -webkit-tap-highlight-color: transparent;
         /* same spring as the email pill */
-        transition:
-          color 0.5s ease,
-          transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
       #theme-toggle:hover {
         transform: scale(1.04);
@@ -245,7 +246,6 @@ Author: Nabeel
         font-weight: 700;
         letter-spacing: -0.022em;
         color: var(--text-color);
-        transition: color 0.5s ease;
       }
       .name span {
         font-family: inherit;
@@ -254,7 +254,6 @@ Author: Nabeel
         font-size: 1.02rem;
         font-weight: 400;
         color: var(--muted-color);
-        transition: color 0.5s ease;
       }
 
       .name .caret {
@@ -323,7 +322,6 @@ Author: Nabeel
         font-size: 0.98rem;
         font-weight: 500;
         letter-spacing: -0.01em;
-        transition: color 0.5s ease;
       }
 
       /* ————— footer: long glass pill pinned to the visual viewport ————— */
@@ -342,7 +340,6 @@ Author: Nabeel
         font-size: 0.78rem;
         font-weight: 500;
         letter-spacing: 0.01em;
-        transition: color 0.5s ease;
       }
       /* the lens disables pointer events on the footer; the clock stays
          clickable to flip SF ↔ UTC */
@@ -451,17 +448,32 @@ Author: Nabeel
           .getElementById("theme-color")
           .setAttribute("content", light ? "#ececee" : "#101014");
       }
+      let themeBusy = false;
       function setTheme(theme) {
-        if (theme === "dark") root.removeAttribute("data-theme");
-        else root.setAttribute("data-theme", "light");
-        localStorage.setItem("theme", theme);
-        syncChrome();
-        // re-photograph the flat field once the colour transition has
-        // finished (plus a safety pass), so the glass takes the new colour
-        const r = window.__liquidGLRenderer__;
-        if (r && r.captureSnapshot) {
-          setTimeout(() => r.captureSnapshot(), 560);
-          setTimeout(() => r.captureSnapshot(), 1100);
+        if (themeBusy) return;
+        const apply = () => {
+          if (theme === "dark") root.removeAttribute("data-theme");
+          else root.setAttribute("data-theme", "light");
+          localStorage.setItem("theme", theme);
+          syncChrome();
+        };
+        // re-photograph the flat field so the glass takes the new colour;
+        // the library hides its canvas while capturing, so this must happen
+        // behind a frozen frame, never on screen
+        const recapture = async () => {
+          const r = window.__liquidGLRenderer__;
+          if (r && r.captureSnapshot) await r.captureSnapshot();
+        };
+        if (document.startViewTransition) {
+          themeBusy = true;
+          const vt = document.startViewTransition(async () => {
+            apply();
+            await recapture();
+          });
+          vt.finished.finally(() => (themeBusy = false));
+        } else {
+          apply();
+          recapture();
         }
       }
       // light is the default (set in markup); dark only when chosen
