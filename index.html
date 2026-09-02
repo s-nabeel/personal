@@ -1,18 +1,9 @@
 <!--
 index.html
 
-Version: 6.2.1
+Version: 6.3.0
 Last updated: 2026-09-02
 Author: Nabeel
-
-Changelog
-  6.2.1  Apple egg: leaf on the A; iOS toolbar strip cover; shorter runway to email
-  6.2.0  Apple egg renders through the glass (banded stripes); shorter scroll runway
-  6.1.2  Dark theme is the default; light only when chosen
-  6.1.1  Footer and toggle are CSS glass so the scrolling text never refracts through them
-  6.1.0  Window mask like demo-5; scroll hint returns at top; frame-based scroll watch
-  6.0.0  Rebuild as scroll-reveal (liquidGL demo-5, 1:1 mechanics)
-  5.0.0  Clean rebuild: flat field, 1:1 liquidGL glass, Apple type; View Transitions theme switch
 -->
 <!doctype html>
 <html lang="en">
@@ -50,7 +41,6 @@ Changelog
       rel="stylesheet"
     />
     <style>
-      /* ————— theme tokens ————— */
       :root {
         --bg-color: #101014;
         --text-color: #f5f5f7;
@@ -91,15 +81,12 @@ Changelog
         overscroll-behavior-y: none;
       }
 
-      /* theme switch = one crossfade of the whole rendered page (glass
-         canvas included) via the View Transitions API */
       ::view-transition-old(root),
       ::view-transition-new(root) {
         animation-duration: 0.45s;
         animation-timing-function: ease-in-out;
       }
 
-      /* ————— the scrolling column the pane refracts (liquidGL demo-5) ————— */
       .main-content {
         position: relative;
         background: var(--bg-color);
@@ -110,14 +97,9 @@ Changelog
         align-items: center;
         max-width: 60%;
         margin: 0 auto;
-        /* start just below the fold so the name arrives after a short scroll */
         padding-top: 96svh;
         padding-bottom: 70svh;
       }
-      /* iOS Safari: fixed layers stop at the small viewport, so the strip
-         under the expanded toolbar shows raw page content. This in-flow
-         sticky sheet paints the background colour over exactly that strip
-         (its height is zero on desktop). */
       .toolbar-cover {
         position: sticky;
         top: 0;
@@ -157,11 +139,6 @@ Changelog
         line-height: 1;
         color: var(--muted-color);
       }
-      /* retro Apple-logo stripes — secret (type "apple").
-         The glass snapshot rasteriser can't paint gradient-clipped text, but
-         it does clip overflow:hidden boxes — so the striped name is six
-         copies of the word, each clipped to one horizontal band in its
-         logo colour (green, yellow, orange, red, purple, blue). */
       .banner-text {
         position: relative;
       }
@@ -205,7 +182,6 @@ Changelog
       .band:nth-child(4) > span { top: -300%; }
       .band:nth-child(5) > span { top: -400%; }
       .band:nth-child(6) > span { top: -500%; }
-      /* the leaf on the A (retro only) */
       .banner-text .word {
         position: relative;
         z-index: 1;
@@ -217,9 +193,6 @@ Changelog
       .banner-text .leaf {
         display: none;
         position: absolute;
-        /* no transform here: the snapshot rasteriser inlines computed
-           styles into the SVG it paints, and a transform would shift the
-           leaf out of its own frame */
         left: calc(50% - 0.09em);
         top: -0.31em;
         width: 0.26em;
@@ -229,7 +202,6 @@ Changelog
         display: block;
       }
 
-      /* ————— the single fixed lens (demo-5 .shape, verbatim) ————— */
       .shape {
         position: fixed;
         top: 10vw;
@@ -244,11 +216,6 @@ Changelog
         z-index: 9999;
       }
 
-      /* ————— window mask —————
-         Demo-5 hides its text outside the pane (the wallpaper sections paint
-         over it; only the glass snapshot still shows it). Same result here:
-         a pane-shaped hole with the background colour painted everywhere
-         else, sitting between the scrolling column and the glass canvas. */
       .mask {
         position: fixed;
         top: 10vw;
@@ -261,7 +228,6 @@ Changelog
         z-index: 9990;
       }
 
-      /* ————— small glass controls: sheen + rim like the liquidGL homepage pill ————— */
       .lens {
         position: relative;
         overflow: clip;
@@ -287,7 +253,6 @@ Changelog
         z-index: 3;
       }
 
-      /* theme toggle */
       .top-nav {
         position: fixed;
         top: 0;
@@ -295,8 +260,6 @@ Changelog
         padding: 32px 40px;
         z-index: 10000;
       }
-      /* CSS glass (not a WebGL lens): a lens here would refract the
-         scrolling text behind it. Same recipe as the email pill. */
       #theme-toggle {
         width: 53px;
         height: 53px;
@@ -354,31 +317,29 @@ Changelog
         transform: rotate(0deg);
       }
 
-      /* scroll hint below the pane; fades out once you scroll */
       .scroll-hint {
-        position: fixed;
-        left: 50%;
-        bottom: calc(10vw * 0.5 + 8px);
-        transform: translateX(-50%);
-        z-index: 10000;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50svh;
+        margin-top: -1.35em;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 6px;
+        gap: 0.35em;
         color: var(--muted-color);
-        font-size: 0.72rem;
+        font-size: clamp(16px, 1.9vw, 30px);
         font-weight: 500;
-        letter-spacing: 0.14em;
+        letter-spacing: 0.22em;
         text-transform: uppercase;
         pointer-events: none;
-        transition: opacity 0.6s ease;
       }
       .scroll-hint svg {
-        width: 14px;
-        height: 14px;
+        width: 1em;
+        height: 1em;
         stroke: currentColor;
         fill: none;
-        stroke-width: 1.8;
+        stroke-width: 1.6;
         stroke-linecap: round;
         stroke-linejoin: round;
         animation: nudge 1.8s ease-in-out infinite;
@@ -386,23 +347,14 @@ Changelog
       @keyframes nudge {
         0%,
         100% {
-          transform: translateY(0);
+          margin-top: 0;
           opacity: 0.9;
         }
         50% {
-          transform: translateY(5px);
+          margin-top: 0.3em;
           opacity: 0.4;
         }
       }
-      .scroll-hint.gone {
-        opacity: 0;
-      }
-
-      /* email pill: appears centred on the pane once you reach the end */
-      /* the pill is CSS glass (not a WebGL lens): the library has no per-lens
-         show/hide, and its canvas would draw the lens even while the pill is
-         hidden. On a flat field the look is identical: same sheen, same rim,
-         the library's own shadow values. */
       .pill-anchor {
         position: fixed;
         inset: 0;
@@ -452,8 +404,6 @@ Changelog
         letter-spacing: -0.01em;
       }
 
-      /* footer: long glass pill pinned to the viewport (CSS glass, so the
-         scrolling text never shows through it) */
       footer.lens {
         position: fixed;
         left: 24px;
@@ -482,7 +432,6 @@ Changelog
       }
 
       @media (max-width: 768px) {
-        /* demo-5 mobile pane, verbatim */
         .shape,
         .mask {
           position: fixed;
@@ -501,7 +450,13 @@ Changelog
           margin: 22vh auto;
         }
         .banner-text.small {
-          font-size: 6.4vw;
+          font-size: 5.2vw;
+          line-height: 1.12;
+          max-width: 60vw;
+          text-wrap: balance;
+        }
+        .scroll-hint {
+          font-size: 4.2vw;
         }
         .top-nav {
           padding: calc(14px + env(safe-area-inset-top)) 18px 18px;
@@ -509,10 +464,6 @@ Changelog
         #theme-toggle {
           width: 48px;
           height: 48px;
-        }
-        .scroll-hint {
-          /* between the pane's bottom edge (25vh) and the footer */
-          bottom: calc(25vh - 62px);
         }
         .email-pill {
           padding: 0.95rem 2.2rem;
@@ -537,9 +488,12 @@ Changelog
     <script src="scripts/liquidGL.js" defer></script>
   </head>
   <body>
-    <!-- everything that scrolls under the pane lives in here -->
     <div class="main-content">
       <div class="toolbar-cover" data-liquid-ignore aria-hidden="true"></div>
+      <div class="scroll-hint" id="scroll-hint" data-liquidgl-hide>
+        <span>scroll</span>
+        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>
+      </div>
       <div class="banner-text-container">
         <div class="banner-text" id="name">
           <span class="word">N<span class="a">a<svg class="leaf" viewBox="0 0 85 98" aria-hidden="true"><path fill="#61bb46" d="M62.2 66.8c14.6-17.7 24.5-42.3 21.8-66.8-21.1.9-46.6 14.1-61.7 31.8-13.5 15.7-25.3 40.7-22.1 64.7 23.5 1.8 47.4-12 62-29.7z"/></svg></span>beel</span>
@@ -557,10 +511,8 @@ Changelog
       </div>
     </div>
 
-    <!-- window mask: hides the column everywhere except through the pane -->
     <div class="mask" aria-hidden="true"></div>
 
-    <!-- the single lens (demo-5) -->
     <div class="shape"></div>
 
     <div class="top-nav">
@@ -582,11 +534,6 @@ Changelog
       </button>
     </div>
 
-    <div class="scroll-hint" id="scroll-hint">
-      <span>scroll</span>
-      <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>
-    </div>
-
     <div class="pill-anchor" id="pill-anchor">
       <a href="mailto:x@nabeel.ca" class="email-wrap">
         <div class="email-pill lens">
@@ -605,7 +552,6 @@ Changelog
     </footer>
 
     <script>
-      // ————— theme —————
       const root = document.documentElement;
       const themeToggle = document.getElementById("theme-toggle");
       function syncChrome() {
@@ -614,8 +560,6 @@ Changelog
           .getElementById("theme-color")
           .setAttribute("content", light ? "#ececee" : "#101014");
       }
-      // Apply a visual change and re-photograph the column behind a frozen
-      // frame (the library hides its canvas while capturing), then crossfade.
       let transitionBusy = false;
       function transitionWith(apply) {
         if (transitionBusy) return;
@@ -642,18 +586,13 @@ Changelog
           syncChrome();
         });
       }
-      // dark is the default; light only when chosen
       if (localStorage.getItem("theme") === "light") root.setAttribute("data-theme", "light");
       syncChrome();
       themeToggle.addEventListener("click", () =>
         setTheme(root.getAttribute("data-theme") === "light" ? "dark" : "light"),
       );
 
-      // ————— scroll hint + end-of-page email reveal —————
-      const scrollHint = document.getElementById("scroll-hint");
       const pillAnchor = document.getElementById("pill-anchor");
-      // Lenis (smooth scroll) delivers scroll events a step behind the real
-      // position, so poll the position each frame instead of listening
       let lastY = -1;
       let lastH = -1;
       (function watchScroll() {
@@ -662,15 +601,11 @@ Changelog
         if (y !== lastY || h !== lastH) {
           lastY = y;
           lastH = h;
-          // hint hides once you scroll and comes back at the top
-          scrollHint.classList.toggle("gone", y > 40);
-          // reveal the email only once the page is scrolled all the way down
           pillAnchor.classList.toggle("show", window.innerHeight + y >= h - 4);
         }
         requestAnimationFrame(watchScroll);
       })();
 
-      // ————— fireworks (type "nabeel"), rendered in front of the glass —————
       const fireworks = confetti.create(null, { resize: true, useWorker: false });
       function fireworksShow() {
         const end = Date.now() + 2500;
@@ -691,7 +626,6 @@ Changelog
         })();
       }
 
-      // ————— typed secrets —————
       const nameEl = document.getElementById("name");
       let inputBuffer = "";
       const secrets = {
@@ -700,7 +634,6 @@ Changelog
         nabeel: fireworksShow,
         apple: async () => {
           await transitionWith(() => nameEl.classList.toggle("retro"));
-          // the leaf SVG is rasterised asynchronously; snapshot once more
           setTimeout(() => window.__liquidGLRenderer__?.captureSnapshot(), 400);
         },
       };
@@ -715,7 +648,6 @@ Changelog
         }
       });
 
-      // ————— footer clock (click flips SF ↔ UTC) —————
       document.getElementById("year").textContent = new Date().getFullYear();
       let clockZone = "America/Los_Angeles";
       const clockWrap = document.getElementById("clock-wrap");
@@ -737,10 +669,8 @@ Changelog
       setInterval(updateClock, 1000);
       updateClock();
 
-      // ————— liquid glass: liquidGL (MIT, NaughtyDuk), demo-5 wiring —————
       document.addEventListener("DOMContentLoaded", () => {
         if (typeof liquidGL !== "function") return;
-        // 1. the big pane refracts the scrolling column — demo-5, verbatim
         liquidGL({
           target: ".shape",
           snapshot: ".main-content",
@@ -752,7 +682,7 @@ Changelog
           shadow: true,
           reveal: "fade",
         });
-        // 2. Lenis + GSAP ticker sync (demo-5)
+        liquidGL.registerDynamic("#scroll-hint");
         window.addEventListener("load", () => liquidGL.syncWith());
         document.addEventListener("mousemove", () => {
           if (window.__liquidGLRenderer__) window.__liquidGLRenderer__.render();
