@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 5.0.0
+Version: 6.0.0
 Last updated: 2026-09-02
 Author: Nabeel
 -->
@@ -37,7 +37,7 @@ Author: Nabeel
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -49,6 +49,7 @@ Author: Nabeel
         --sheen-hi: rgba(255, 255, 255, 0.16);
         --sheen-mid: rgba(255, 255, 255, 0.05);
         --sheen-rim: rgba(255, 255, 255, 0.28);
+        --pill-bg: rgba(255, 255, 255, 0.08);
       }
       [data-theme="light"] {
         --bg-color: #ececee;
@@ -57,6 +58,7 @@ Author: Nabeel
         --sheen-hi: rgba(255, 255, 255, 0.5);
         --sheen-mid: rgba(255, 255, 255, 0.14);
         --sheen-rim: rgba(255, 255, 255, 0.9);
+        --pill-bg: rgba(255, 255, 255, 0.62);
       }
 
       * {
@@ -71,50 +73,92 @@ Author: Nabeel
         -webkit-font-smoothing: antialiased;
       }
 
-      /* the document is 100lvh tall — one browser-bar-height taller than
-         the visible area on iOS — so a swipe lets Safari collapse its bars
-         and the page bleeds edge to edge */
       html {
-        height: 100%;
         background-color: var(--bg-color);
       }
       body {
-        height: 100vh;
-        height: 100lvh;
-        width: 100%;
-        overflow: hidden;
-        overscroll-behavior: none;
         background-color: var(--bg-color);
         color: var(--text-color);
+        overscroll-behavior-y: none;
       }
 
       /* theme switch = one crossfade of the whole rendered page (glass
-         canvas included) via the View Transitions API. Nothing else
-         animates, so the glass can never lag the background. */
+         canvas included) via the View Transitions API */
       ::view-transition-old(root),
       ::view-transition-new(root) {
         animation-duration: 0.45s;
         animation-timing-function: ease-in-out;
       }
 
-      /* flat field the glass refracts. Absolute, not fixed: liquidGL's
-         rasteriser skips fixed elements. */
-      .ambient {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        height: 100lvh;
-        z-index: 0;
-        pointer-events: none;
+      /* ————— the scrolling column the pane refracts (liquidGL demo-5) ————— */
+      .main-content {
+        position: relative;
         background: var(--bg-color);
       }
+      .banner-text-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 60%;
+        margin: 0 auto;
+        padding-top: 150svh;
+        padding-bottom: 120svh;
+      }
+      .banner-text {
+        width: 100%;
+        text-align: center;
+        margin: 40vh auto;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter",
+          "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 7vw;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        line-height: 0.9;
+        color: var(--text-color);
+        pointer-events: none;
+      }
+      .banner-text.small {
+        font-size: 3.4vw;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        line-height: 1;
+        color: var(--muted-color);
+      }
+      /* retro six-colour Apple stripes — secret (type "apple") */
+      .banner-text.retro {
+        background: linear-gradient(
+          180deg,
+          #61bb46 0% 16.6%,
+          #fdb827 16.6% 33.3%,
+          #f5821f 33.3% 50%,
+          #e03a3e 50% 66.6%,
+          #963d97 66.6% 83.3%,
+          #009ddc 83.3% 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+      }
 
-      /* ————— glass finish shared by every lens —————
-         liquidGL paints the refractive face on its canvas; this layer adds
-         the soft diagonal sheen + bright top rim that reads as glass over a
-         plain background (the liquidGL homepage pill look). */
+      /* ————— the single fixed lens (demo-5 .shape, verbatim) ————— */
+      .shape {
+        position: fixed;
+        top: 10vw;
+        left: 10vw;
+        width: calc(100vw - 20vw);
+        height: calc(100vh - 20vw);
+        border-radius: 2vw;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px) saturate(180%);
+        will-change: transform;
+        pointer-events: auto;
+        z-index: 9999;
+      }
+
+      /* ————— small glass controls: sheen + rim like the liquidGL homepage pill ————— */
       .lens {
         position: relative;
         overflow: clip;
@@ -140,16 +184,15 @@ Author: Nabeel
         z-index: 3;
       }
 
-      /* ————— theme toggle ————— */
+      /* theme toggle */
       .top-nav {
         position: fixed;
         top: 0;
         right: 0;
         padding: 32px 40px;
-        z-index: 9999;
+        z-index: 10000;
       }
       #theme-toggle {
-        /* liquidGL disables pointer events on its lenses; keep it clickable */
         pointer-events: auto !important;
         width: 53px;
         height: 53px;
@@ -163,7 +206,6 @@ Author: Nabeel
         justify-content: center;
         outline: none;
         -webkit-tap-highlight-color: transparent;
-        /* same spring as the email pill */
         transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
       #theme-toggle:hover {
@@ -203,104 +245,76 @@ Author: Nabeel
         transform: rotate(0deg);
       }
 
-      /* ————— card + email pill, fixed overlays centred on the viewport ————— */
-      .card-anchor,
-      .pill-anchor {
+      /* scroll hint below the pane; fades out once you scroll */
+      .scroll-hint {
         position: fixed;
-        inset: 0;
-        z-index: 9999;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding-bottom: 140px;
-        pointer-events: none;
-      }
-      .pill-anchor a {
-        pointer-events: auto;
-        transform: translateY(160px);
-      }
-
-      .card {
-        width: min(340px, calc(100vw - 48px));
-        height: 200px;
-        border-radius: 1rem;
-        padding: 1.25rem 1.5rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 5;
-      }
-      .card-face {
+        left: 50%;
+        bottom: calc(10vw * 0.5 + 8px);
+        transform: translateX(-50%);
+        z-index: 10000;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 18px;
-        text-align: center;
-      }
-
-      .name {
-        font-family:
-          -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter",
-          "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-size: 2.4rem;
-        font-weight: 700;
-        letter-spacing: -0.022em;
-        color: var(--text-color);
-      }
-      .name span {
-        font-family: inherit;
-      }
-      .tagline {
-        font-size: 1.02rem;
-        font-weight: 400;
+        gap: 6px;
         color: var(--muted-color);
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        pointer-events: none;
+        transition: opacity 0.6s ease;
       }
-
-      .name .caret {
-        display: inline-block;
-        width: 2px;
-        height: 0.8em;
-        border-radius: 1px;
-        background: currentColor;
-        margin-left: 4px;
-        vertical-align: -0.05em;
-        animation: caret-pulse 1s ease-in-out infinite;
+      .scroll-hint svg {
+        width: 14px;
+        height: 14px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        animation: nudge 1.8s ease-in-out infinite;
       }
-      @keyframes caret-pulse {
+      @keyframes nudge {
         0%,
         100% {
-          opacity: 1;
+          transform: translateY(0);
+          opacity: 0.9;
         }
         50% {
-          opacity: 0.15;
+          transform: translateY(5px);
+          opacity: 0.4;
         }
       }
-      .name .caret.done {
-        animation: none;
-        opacity: 1;
-        transition: opacity 0.35s ease 0.45s;
-      }
-      .name .caret.done.gone {
+      .scroll-hint.gone {
         opacity: 0;
       }
 
-      /* retro six-colour Apple stripes — secret (type "apple") */
-      .name.retro #name-text {
-        background: linear-gradient(
-          180deg,
-          #61bb46 0% 16.6%,
-          #fdb827 16.6% 33.3%,
-          #f5821f 33.3% 50%,
-          #e03a3e 50% 66.6%,
-          #963d97 66.6% 83.3%,
-          #009ddc 83.3% 100%
-        );
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        color: transparent;
+      /* email pill: appears centred on the pane once you reach the end */
+      /* the pill is CSS glass (not a WebGL lens): the library has no per-lens
+         show/hide, and its canvas would draw the lens even while the pill is
+         hidden. On a flat field the look is identical: same sheen, same rim,
+         the library's own shadow values. */
+      .pill-anchor {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+        opacity: 0;
+        transform: translateY(14px) scale(0.96);
+        transition:
+          opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+          transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
       }
-
+      .pill-anchor.show {
+        opacity: 1;
+        transform: none;
+      }
+      .pill-anchor.show a {
+        pointer-events: auto;
+      }
       .email-wrap {
         display: inline-block;
         text-decoration: none;
@@ -308,7 +322,12 @@ Author: Nabeel
       .email-pill {
         border-radius: 999px;
         padding: 1.05rem 2.6rem;
-        z-index: 5;
+        background: var(--pill-bg);
+        -webkit-backdrop-filter: blur(14px) saturate(160%);
+        backdrop-filter: blur(14px) saturate(160%);
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.1),
+          0 0 0 0.5px rgba(0, 0, 0, 0.05);
         transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
       .email-wrap:hover .email-pill {
@@ -324,13 +343,13 @@ Author: Nabeel
         letter-spacing: -0.01em;
       }
 
-      /* ————— footer: long glass pill pinned to the visual viewport ————— */
+      /* footer: long glass pill pinned to the viewport */
       footer.lens {
         position: fixed;
         left: 24px;
         right: 24px;
         bottom: calc(24px + env(safe-area-inset-bottom));
-        z-index: 9999;
+        z-index: 10000;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -341,14 +360,32 @@ Author: Nabeel
         font-weight: 500;
         letter-spacing: 0.01em;
       }
-      /* the lens disables pointer events on the footer; the clock stays
-         clickable to flip SF ↔ UTC */
       #clock-wrap {
         pointer-events: auto;
         cursor: pointer;
       }
 
       @media (max-width: 768px) {
+        /* demo-5 mobile pane, verbatim */
+        .shape {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: calc(80vw);
+          height: calc(50vh);
+          border-radius: 4vw;
+        }
+        .banner-text-container {
+          max-width: 78%;
+        }
+        .banner-text {
+          font-size: 14vw;
+          margin: 34vh auto;
+        }
+        .banner-text.small {
+          font-size: 6.4vw;
+        }
         .top-nav {
           padding: calc(14px + env(safe-area-inset-top)) 18px 18px;
         }
@@ -356,18 +393,9 @@ Author: Nabeel
           width: 48px;
           height: 48px;
         }
-        .card-anchor,
-        .pill-anchor {
-          padding-bottom: 120px;
-        }
-        .name {
-          font-size: 2.2rem;
-        }
-        .tagline {
-          font-size: 0.95rem;
-        }
-        .pill-anchor a {
-          transform: translateY(150px);
+        .scroll-hint {
+          /* between the pane's bottom edge (25vh) and the footer */
+          bottom: calc(25vh - 62px);
         }
         .email-pill {
           padding: 0.95rem 2.2rem;
@@ -386,10 +414,23 @@ Author: Nabeel
       }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
     <script src="scripts/liquidGL.js" defer></script>
   </head>
   <body>
-    <div class="ambient"></div>
+    <!-- everything that scrolls under the pane lives in here -->
+    <div class="main-content">
+      <div class="banner-text-container">
+        <div class="banner-text" id="name">Nabeel</div>
+        <div class="banner-text small">building things on the internet</div>
+        <div id="end-sentinel" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <!-- the single lens (demo-5) -->
+    <div class="shape"></div>
 
     <div class="top-nav">
       <button id="theme-toggle" class="lens lg-flat" aria-label="Toggle Theme">
@@ -410,20 +451,14 @@ Author: Nabeel
       </button>
     </div>
 
-    <div class="card-anchor">
-      <div class="card lens lg-card" id="card">
-        <div class="card-face">
-          <h1 class="name" id="name"
-            ><span id="name-text"></span><span class="caret" id="caret"></span
-          ></h1>
-          <p class="tagline">building things on the internet</p>
-        </div>
-      </div>
+    <div class="scroll-hint" id="scroll-hint">
+      <span>scroll</span>
+      <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>
     </div>
 
-    <div class="pill-anchor">
+    <div class="pill-anchor" id="pill-anchor">
       <a href="mailto:x@nabeel.ca" class="email-wrap">
-        <div class="email-pill lens lg-flat">
+        <div class="email-pill lens">
           <span>x@nabeel.ca</span>
         </div>
       </a>
@@ -457,9 +492,9 @@ Author: Nabeel
           localStorage.setItem("theme", theme);
           syncChrome();
         };
-        // re-photograph the flat field so the glass takes the new colour;
-        // the library hides its canvas while capturing, so this must happen
-        // behind a frozen frame, never on screen
+        // re-photograph the column so the glass takes the new colour; the
+        // library hides its canvas while capturing, so do it behind a
+        // frozen frame, never on screen
         const recapture = async () => {
           const r = window.__liquidGLRenderer__;
           if (r && r.captureSnapshot) await r.captureSnapshot();
@@ -476,35 +511,27 @@ Author: Nabeel
           recapture();
         }
       }
-      // light is the default (set in markup); dark only when chosen
       if (localStorage.getItem("theme") === "dark") root.removeAttribute("data-theme");
       syncChrome();
       themeToggle.addEventListener("click", () =>
         setTheme(root.getAttribute("data-theme") === "light" ? "dark" : "light"),
       );
 
-      // ————— typewriter: human rhythm, caret leaves right after —————
-      const nameEl = document.getElementById("name");
-      const nameText = document.getElementById("name-text");
-      const caret = document.getElementById("caret");
-      const NAME = "Nabeel";
-      const RHYTHM = [0, 95, 150, 80, 120, 70];
-      let typeIndex = 0;
-      function typeNext() {
-        nameText.textContent = NAME.slice(0, ++typeIndex);
-        if (typeIndex < NAME.length) {
-          setTimeout(typeNext, RHYTHM[typeIndex] + Math.random() * 35);
-        } else {
-          caret.classList.add("done");
-          requestAnimationFrame(() =>
-            requestAnimationFrame(() => caret.classList.add("gone")),
-          );
-        }
+      // ————— scroll hint + end-of-page email reveal —————
+      const scrollHint = document.getElementById("scroll-hint");
+      const pillAnchor = document.getElementById("pill-anchor");
+      function onScroll() {
+        if (window.scrollY > 40) scrollHint.classList.add("gone");
+        // reveal the email only once the page is scrolled all the way down
+        const atBottom =
+          window.innerHeight + window.scrollY >=
+          document.documentElement.scrollHeight - 4;
+        pillAnchor.classList.toggle("show", atBottom);
       }
-      setTimeout(typeNext, 450);
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll, { passive: true });
 
       // ————— fireworks (type "nabeel"), rendered in front of the glass —————
-      // main-thread canvas: the worker/OffscreenCanvas path can fail silently
       const fireworks = confetti.create(null, { resize: true, useWorker: false });
       function fireworksShow() {
         const end = Date.now() + 2500;
@@ -526,12 +553,17 @@ Author: Nabeel
       }
 
       // ————— typed secrets —————
+      const nameEl = document.getElementById("name");
       let inputBuffer = "";
       const secrets = {
         dark: () => setTheme("dark"),
         light: () => setTheme("light"),
         nabeel: fireworksShow,
-        apple: () => nameEl.classList.toggle("retro"),
+        apple: () => {
+          nameEl.classList.toggle("retro");
+          const r = window.__liquidGLRenderer__;
+          if (r && r.captureSnapshot) r.captureSnapshot();
+        },
       };
       window.addEventListener("keydown", (e) => {
         if (e.key.length !== 1) return;
@@ -566,41 +598,41 @@ Author: Nabeel
       setInterval(updateClock, 1000);
       updateClock();
 
-      // ————— liquid glass: liquidGL WebGL refraction (MIT, NaughtyDuk) —————
-      // Cursor tilt on the card only. No device sensors, no permission prompts.
-      // Two calls share one renderer but keep separate options — the library
-      // hands every lens of a call the same options object.
+      // ————— liquid glass: liquidGL (MIT, NaughtyDuk), demo-5 wiring —————
       document.addEventListener("DOMContentLoaded", () => {
         if (typeof liquidGL !== "function") return;
-        const base = {
-          snapshot: ".ambient",
-          // a flat field needs no 2x snapshot; 1x keeps theme recaptures fast
-          resolution: 1,
-          shadow: true,
+        // 1. the big pane refracts the scrolling column — demo-5, verbatim
+        liquidGL({
+          target: ".shape",
+          snapshot: ".main-content",
+          refraction: 0.026,
+          bevelDepth: 0.119,
+          bevelWidth: 0.057,
+          frost: 0,
           specular: true,
+          shadow: true,
           reveal: "fade",
-        };
-        // card: liquidGL demo-2 bank card, verbatim
-        liquidGL({
-          ...base,
-          target: ".lg-card",
-          refraction: 0,
-          bevelDepth: 0.1,
-          bevelWidth: 0.17,
-          frost: 2,
-          tilt: true,
-          tiltFactor: 25,
-          tiltEase: 550,
         });
-        // pill / toggle / footer: the liquidGL homepage pill, verbatim
+        // 2. small controls: the liquidGL homepage pill recipe
         liquidGL({
-          ...base,
           target: ".lg-flat",
+          snapshot: ".main-content",
           refraction: 0.01,
           bevelDepth: 0.119,
           bevelWidth: 0.057,
           frost: 0,
+          specular: true,
+          shadow: true,
+          reveal: "fade",
           tilt: false,
+        });
+        // 3. Lenis + GSAP ticker sync (demo-5)
+        window.addEventListener("load", () => liquidGL.syncWith());
+        document.addEventListener("mousemove", () => {
+          if (window.__liquidGLRenderer__) window.__liquidGLRenderer__.render();
+        });
+        document.addEventListener("scroll", () => {
+          if (window.__liquidGLRenderer__) window.__liquidGLRenderer__.render();
         });
       });
 
