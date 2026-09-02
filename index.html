@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 6.4.1
+Version: 6.5.0
 Last updated: 2026-09-02
 Author: Nabeel
 -->
@@ -223,6 +223,9 @@ Author: Nabeel
       }
       .banner-text .runner.running {
         display: block;
+      }
+      .banner-text .runner .stripes {
+        inset: 0;
       }
 
       .shape {
@@ -535,7 +538,7 @@ Author: Nabeel
             <span class="band"><span><span class="i">i</span>Nabeel</span></span>
             <span class="band"><span><span class="i">i</span>Nabeel</span></span>
           </span>
-          <span class="runner" id="runner" aria-hidden="true">i</span>
+          <span class="runner" id="runner" aria-hidden="true"><span class="word">i</span><span class="stripes"><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span></span></span>
         </div>
         <div class="banner-text small">building things on the internet</div>
         <div id="end-sentinel" aria-hidden="true"></div>
@@ -708,7 +711,7 @@ Author: Nabeel
         }
         await bringNameIntoPane();
         await transitionWith(() => nameEl.classList.add("retro"));
-        await sleep(500);
+        await sleep(80);
 
         nameEl.setAttribute("data-liquidgl-hide", "");
         if (r) await r.captureSnapshot();
@@ -799,12 +802,16 @@ Author: Nabeel
         );
         const drop = leafEl.animate(
           [
-            { top: "-0.31em", left: "calc(50% - 0.09em)" },
-            { top: "0.1em", left: "calc(50% + 0.02em)", offset: 0.35 },
-            { top: "0.8em", left: "calc(50% - 0.06em)", offset: 0.7 },
-            { top: "1.3em", left: "calc(50% + 0.05em)" },
+            { top: "-0.31em", left: "calc(50% - 0.09em)", easing: "ease-out" },
+            { top: "-0.48em", left: "calc(50% - 0.55em)", offset: 0.12, easing: "ease-in-out" },
+            { top: "-0.2em", left: "calc(50% - 1.15em)", offset: 0.28, easing: "ease-in-out" },
+            { top: "0.1em", left: "calc(50% - 0.35em)", offset: 0.44, easing: "ease-in-out" },
+            { top: "0.36em", left: "calc(50% + 0.65em)", offset: 0.6, easing: "ease-in-out" },
+            { top: "0.62em", left: "calc(50% + 1.02em)", offset: 0.78, easing: "ease-in-out" },
+            { top: "0.9em", left: "calc(50% + 1.12em)", offset: 0.93, easing: "ease-out" },
+            { top: "0.96em", left: "calc(50% + 1.18em)" },
           ],
-          { duration: 900, delay: 220, easing: "cubic-bezier(0.5, 0, 0.9, 0.4)", fill: "forwards" },
+          { duration: 2800, delay: 150, fill: "forwards" },
         ).finished;
         await leave;
         runner.classList.remove("running");
@@ -821,9 +828,38 @@ Author: Nabeel
         });
       }
 
+      const paneEl = document.querySelector(".shape");
+      const hintEl = document.getElementById("scroll-hint");
+      function inside(e, r, pad) {
+        return (
+          e.clientX >= r.left - pad &&
+          e.clientX <= r.right + pad &&
+          e.clientY >= r.top - pad &&
+          e.clientY <= r.bottom + pad
+        );
+      }
+      function overHint(e) {
+        const r = hintEl.getBoundingClientRect();
+        return r.bottom > 0 && inside(e, r, 16);
+      }
+      document.addEventListener("mousemove", (e) => {
+        document.body.style.cursor = overHint(e) ? "pointer" : "";
+      });
+      document.addEventListener("click", (e) => {
+        if (e.target.closest("a, button")) return;
+        if (!overHint(e)) return;
+        const rect = nameEl.getBoundingClientRect();
+        window.scrollTo({
+          top: scrollY + rect.top + rect.height / 2 - innerHeight / 2,
+          behavior: "smooth",
+        });
+      });
+
       let tapCount = 0;
       let tapTimer = null;
-      document.querySelector(".shape").addEventListener("pointerup", () => {
+      document.addEventListener("pointerup", (e) => {
+        if (e.target.closest("a, button")) return;
+        if (!inside(e, paneEl.getBoundingClientRect(), 0)) return;
         tapCount += 1;
         clearTimeout(tapTimer);
         tapTimer = setTimeout(() => (tapCount = 0), 500);
