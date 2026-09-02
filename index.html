@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 6.7.2
+Version: 6.7.3
 Last updated: 2026-09-02
 Author: Nabeel
 -->
@@ -98,7 +98,7 @@ Author: Nabeel
         max-width: 60%;
         margin: 0 auto;
         padding-top: 90svh;
-        padding-bottom: calc(50svh - 1.7rem);
+        padding-bottom: calc(50svh - 1.6rem);
       }
       .toolbar-cover {
         position: sticky;
@@ -406,23 +406,20 @@ Author: Nabeel
       .email-wrap {
         display: block;
         position: relative;
-        width: 15.5rem;
-        height: 3.4rem;
-        margin: 16vh auto 0;
+        width: 12rem;
+        height: 3.2rem;
+        margin: 24vh auto 0;
         color: var(--text-color);
         text-decoration: none;
         pointer-events: auto;
         cursor: pointer;
       }
       .email-wrap:hover {
-        --pill-bg: rgba(255, 255, 255, 0.18);
-        --sheen-mid: rgba(255, 255, 255, 0.12);
-        --sheen-rim: rgba(255, 255, 255, 0.55);
+        --pill-bg: rgba(255, 255, 255, 0.12);
+        --sheen-rim: rgba(255, 255, 255, 0.38);
       }
       [data-theme="light"] .email-wrap:hover {
-        --pill-bg: rgba(255, 255, 255, 0.95);
-        --sheen-mid: rgba(255, 255, 255, 0.3);
-        --sheen-rim: rgba(255, 255, 255, 1);
+        --pill-bg: rgba(255, 255, 255, 0.8);
       }
       .email-wrap svg {
         display: block;
@@ -518,9 +515,9 @@ Author: Nabeel
           height: 48px;
         }
         .email-wrap {
-          width: 13rem;
+          width: 10.5rem;
           height: 3rem;
-          margin-top: 12vh;
+          margin-top: 18vh;
         }
         .email-wrap span {
           font-size: 0.92rem;
@@ -564,10 +561,10 @@ Author: Nabeel
         </div>
         <div class="banner-text small">building things on the internet</div>
         <a href="mailto:x@nabeel.ca" class="email-wrap" id="email" data-liquidgl-hide aria-label="Email x@nabeel.ca">
-          <svg viewBox="0 0 248 54" aria-hidden="true">
-            <rect class="pill-bg" x="0.5" y="0.5" width="247" height="53" rx="26.5" />
-            <path class="pill-sheen" d="M27 1h194a26 26 0 0 1 22 12H5A26 26 0 0 1 27 1z" />
-            <rect class="pill-rim" x="0.5" y="0.5" width="247" height="53" rx="26.5" />
+          <svg viewBox="0 0 202 54" aria-hidden="true">
+            <rect class="pill-bg" x="0.5" y="0.5" width="201" height="53" rx="26.5" />
+            <path class="pill-sheen" d="M27 1h148a26 26 0 0 1 22 12H5A26 26 0 0 1 27 1z" />
+            <rect class="pill-rim" x="0.5" y="0.5" width="201" height="53" rx="26.5" />
           </svg>
           <span>x@nabeel.ca</span>
         </a>
@@ -1034,8 +1031,16 @@ Author: Nabeel
         document.addEventListener("mousemove", () => {
           if (window.__liquidGLRenderer__) window.__liquidGLRenderer__.render();
         });
+        let settleTimer = null;
         document.addEventListener("scroll", () => {
-          if (window.__liquidGLRenderer__) window.__liquidGLRenderer__.render();
+          const r = window.__liquidGLRenderer__;
+          if (!r) return;
+          r.render();
+          clearTimeout(settleTimer);
+          settleTimer = setTimeout(() => {
+            r.render();
+            setTimeout(() => r.render(), 300);
+          }, 320);
         });
       });
 
