@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 6.4.0
+Version: 6.4.1
 Last updated: 2026-09-02
 Author: Nabeel
 -->
@@ -357,15 +357,18 @@ Author: Nabeel
         text-transform: uppercase;
         pointer-events: none;
       }
-      .scroll-hint svg {
+      .scroll-hint .arrow {
+        display: block;
         width: 1em;
         height: 1em;
-        stroke: currentColor;
-        fill: none;
-        stroke-width: 1.6;
-        stroke-linecap: round;
-        stroke-linejoin: round;
         animation: nudge 1.8s ease-in-out infinite;
+      }
+      .scroll-hint .arrow-light,
+      [data-theme="light"] .scroll-hint .arrow-dark {
+        display: none;
+      }
+      [data-theme="light"] .scroll-hint .arrow-light {
+        display: block;
       }
       @keyframes nudge {
         0%,
@@ -518,7 +521,8 @@ Author: Nabeel
       <div class="toolbar-cover" data-liquid-ignore aria-hidden="true"></div>
       <div class="scroll-hint" id="scroll-hint" data-liquidgl-hide>
         <span>scroll</span>
-        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>
+        <img class="arrow arrow-dark" alt="" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a1a1a8' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E" />
+        <img class="arrow arrow-light" alt="" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236e6e75' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E" />
       </div>
       <div class="banner-text-container">
         <div class="banner-text" id="name">
@@ -882,6 +886,13 @@ Author: Nabeel
           reveal: "fade",
         });
         liquidGL.registerDynamic("#scroll-hint");
+        let resizeTimer = null;
+        window.addEventListener("resize", () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            forceLive([document.getElementById("scroll-hint")]);
+          }, 600);
+        });
         window.addEventListener("load", () => liquidGL.syncWith());
         document.addEventListener("mousemove", () => {
           if (window.__liquidGLRenderer__) window.__liquidGLRenderer__.render();
