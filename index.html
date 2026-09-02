@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 6.10.1
+Version: 6.11.0
 Last updated: 2026-09-02
 Author: Nabeel
 -->
@@ -390,6 +390,11 @@ Author: Nabeel
         height: 1em;
         animation: nudge 1.8s ease-in-out infinite;
       }
+      @media (hover: none) {
+        .scroll-hint .arrow {
+          animation: none;
+        }
+      }
       .scroll-hint .arrow-light,
       [data-theme="light"] .scroll-hint .arrow-dark {
         display: none;
@@ -491,25 +496,26 @@ Author: Nabeel
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: calc(80vw);
-          height: calc(50vh);
-          border-radius: 4vw;
+          width: calc(90vw);
+          height: calc(54vh);
+          border-radius: 5vw;
         }
         .banner-text-container {
-          max-width: 78%;
-          padding-bottom: 76svh;
+          max-width: 86%;
+          padding-top: 82svh;
+          padding-bottom: 74svh;
         }
         .banner-text {
-          font-size: 14vw;
-          margin: 0 auto 52vh;
+          font-size: 16vw;
+          margin: 0 auto 57vh;
         }
         #name {
-          margin: 0 auto calc(52vh - 0.8em);
+          margin: 0 auto calc(57vh - 0.8em);
         }
         .banner-text.small {
-          font-size: 5.2vw;
+          font-size: 5.6vw;
           line-height: 1.12;
-          max-width: 60vw;
+          max-width: 68vw;
           text-wrap: balance;
         }
         .scroll-hint {
@@ -1032,6 +1038,8 @@ Author: Nabeel
 
       document.addEventListener("DOMContentLoaded", () => {
         if (typeof liquidGL !== "function") return;
+        const canHover = matchMedia("(hover: hover)").matches;
+        if (!canHover) document.getElementById("scroll-hint").removeAttribute("data-liquidgl-hide");
         liquidGL({
           target: ".shape",
           snapshot: ".main-content",
@@ -1042,8 +1050,9 @@ Author: Nabeel
           specular: true,
           shadow: true,
           reveal: "fade",
+          resolution: Math.min(3, window.devicePixelRatio || 1),
         });
-        liquidGL.registerDynamic("#scroll-hint");
+        if (canHover) liquidGL.registerDynamic("#scroll-hint");
         let resizeTimer = null;
         window.addEventListener("resize", () => {
           clearTimeout(resizeTimer);

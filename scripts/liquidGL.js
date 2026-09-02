@@ -2171,7 +2171,7 @@
 
     /* ----------------------------- */
     _resizeCanvas() {
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const dpr = Math.min(3, window.devicePixelRatio || 1);
       this.canvas.width = innerWidth * dpr;
       this.canvas.height = innerHeight * dpr;
       this.canvas.style.width = `${innerWidth}px`;
@@ -2195,7 +2195,7 @@
           const fullW = this.snapshotTarget.scrollWidth;
           const fullH = this.snapshotTarget.scrollHeight;
           const maxTex = this.gl.getParameter(this.gl.MAX_TEXTURE_SIZE) || 8192;
-          const MAX_MOBILE_DIM = 4096;
+          const MAX_MOBILE_DIM = 6144;
           const isMobileSafari = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
           let scale = Math.min(
@@ -2426,7 +2426,7 @@
         }
       });
 
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const dpr = Math.min(3, window.devicePixelRatio || 1);
       this.lenses.forEach((ln) => {
         if (ln._mirrorActive && ln.rectPx) {
           const { left, top, width, height } = ln.rectPx;
@@ -2461,7 +2461,7 @@
       const rect = lens.rectPx;
       if (!rect) return;
 
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const dpr = Math.min(3, window.devicePixelRatio || 1);
 
       let overscrollY = 0;
       let overscrollX = 0;
@@ -3458,7 +3458,7 @@
       const maxAllowedCss = Math.min(rect.width, rect.height) * 0.5;
       this.radiusCss = Math.min(brPx, maxAllowedCss);
 
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const dpr = Math.min(3, window.devicePixelRatio || 1);
       this.radiusGl = this.radiusCss * dpr;
 
       if (this._shadowSyncFn) {
