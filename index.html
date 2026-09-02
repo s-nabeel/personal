@@ -1,8 +1,8 @@
 <!--
 index.html
 
-Version: 4.1.0
-Last updated: 2026-09-01
+Version: 5.0.0
+Last updated: 2026-09-02
 Author: Nabeel
 -->
 <!doctype html>
@@ -13,7 +13,7 @@ Author: Nabeel
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
-    <meta name="theme-color" id="theme-color" content="#f8f8fb" />
+    <meta name="theme-color" id="theme-color" content="#ececee" />
     <title>Nabeel</title>
 
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -41,56 +41,22 @@ Author: Nabeel
       rel="stylesheet"
     />
     <style>
+      /* ————— theme tokens ————— */
       :root {
-        /* exact video base colour so iOS bar areas continue the wallpaper */
-        --bg-color: #0e0f1a;
+        --bg-color: #101014;
         --text-color: #f5f5f7;
-        --muted-color: #9a9aa2;
-        --footer-color: #86868b;
-
-        /* liquid glass tokens */
-        --glass-bg: rgba(255, 255, 255, 0.06);
-        --glass-bg-strong: rgba(255, 255, 255, 0.1);
-        --glass-stroke: rgba(255, 255, 255, 0.25);
-        --glass-inner: inset 0 1px 1px rgba(255, 255, 255, 0.3),
-          inset 0 -1px 1px rgba(255, 255, 255, 0.08);
-        --card-shadow: 0 40px 90px rgba(0, 0, 0, 0.55),
-          0 8px 24px rgba(0, 0, 0, 0.35);
-        --emboss-hi: rgba(255, 255, 255, 0.35);
-        --emboss-lo: rgba(0, 0, 0, 0.5);
-
-        --blob-a: rgba(255, 20, 120, 0.5);
-        --blob-b: rgba(255, 100, 20, 0.32);
-        --blob-c: rgba(130, 60, 255, 0.42);
-        --blob-d: rgba(0, 170, 255, 0.22);
-
-        --glint-core: rgba(255, 255, 255, 0.95);
-        --glint-mid: rgba(255, 255, 255, 0.3);
+        --muted-color: #a1a1a8;
+        --sheen-hi: rgba(255, 255, 255, 0.16);
+        --sheen-mid: rgba(255, 255, 255, 0.05);
+        --sheen-rim: rgba(255, 255, 255, 0.28);
       }
-
       [data-theme="light"] {
-        --bg-color: #f8f8fb;
-        --text-color: #101014;
-        --muted-color: #55555c;
-        --footer-color: #6b6b72;
-
-        --glass-bg: rgba(255, 255, 255, 0.34);
-        --glass-bg-strong: rgba(255, 255, 255, 0.5);
-        --glass-stroke: rgba(255, 255, 255, 0.75);
-        --glass-inner: inset 0 1px 1px rgba(255, 255, 255, 0.95),
-          inset 0 -1px 1px rgba(255, 255, 255, 0.4);
-        --card-shadow: 0 40px 90px rgba(60, 50, 100, 0.28),
-          0 8px 24px rgba(60, 50, 100, 0.12);
-        --emboss-hi: rgba(255, 255, 255, 0.9);
-        --emboss-lo: rgba(0, 0, 0, 0.18);
-
-        --blob-a: rgba(255, 90, 160, 0.45);
-        --blob-b: rgba(255, 160, 80, 0.35);
-        --blob-c: rgba(150, 110, 255, 0.4);
-        --blob-d: rgba(60, 190, 255, 0.3);
-
-        --glint-core: rgba(60, 80, 215, 1);
-        --glint-mid: rgba(60, 80, 215, 0.4);
+        --bg-color: #ececee;
+        --text-color: #111114;
+        --muted-color: #6e6e75;
+        --sheen-hi: rgba(255, 255, 255, 0.5);
+        --sheen-mid: rgba(255, 255, 255, 0.14);
+        --sheen-rim: rgba(255, 255, 255, 0.9);
       }
 
       * {
@@ -102,18 +68,16 @@ Author: Nabeel
         font-family:
           -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter",
           "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-style: normal !important;
         -webkit-font-smoothing: antialiased;
       }
 
       /* the document is 100lvh tall — one browser-bar-height taller than
-         the visible area on iOS — so Safari lets a swipe collapse its
-         bars and the page bleeds edge to edge like apple.com */
+         the visible area on iOS — so a swipe lets Safari collapse its bars
+         and the page bleeds edge to edge */
       html {
         height: 100%;
-        /* Safari paints beyond-page areas (behind its bars) with this */
         background-color: var(--bg-color);
-        transition: background-color 0.4s ease;
+        transition: background-color 0.5s ease;
       }
       body {
         height: 100vh;
@@ -121,27 +85,16 @@ Author: Nabeel
         width: 100%;
         overflow: hidden;
         overscroll-behavior: none;
-      }
-
-      body {
         background-color: var(--bg-color);
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        align-items: center;
         color: var(--text-color);
         transition:
-          background-color 0.4s ease,
-          color 0.4s ease;
+          background-color 0.5s ease,
+          color 0.5s ease;
       }
 
-      /* demo wallpaper the glass refracts — a real <img> so liquidGL's
-         rasteriser captures it; static, the lenses provide the motion */
+      /* flat field the glass refracts. Absolute, not fixed: liquidGL's
+         rasteriser skips fixed elements. */
       .ambient {
-        /* absolute, NOT fixed: liquidGL's rasteriser skips fixed elements,
-           which left the lenses refracting an empty snapshot.
-           100lvh spans the LARGE viewport so the wallpaper spills under
-           iOS's status/address bars like apple.com */
         position: absolute;
         top: 0;
         left: 0;
@@ -150,36 +103,20 @@ Author: Nabeel
         height: 100lvh;
         z-index: 0;
         pointer-events: none;
-        overflow: hidden;
-        /* poster painted underneath so a stalled video never shows black */
-        background: #0e0f1a url("assets/wallpaper_dark_v4.jpg") center / cover
-          no-repeat;
-      }
-      [data-theme="light"] .ambient {
-        background: #f8f8fb url("assets/wallpaper_light_v4.jpg") center / cover
-          no-repeat;
-      }
-      .ambient video {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        /* theme change is a pure crossfade between the two videos */
-        opacity: 0;
-        transition: opacity 0.8s ease;
-      }
-      .ambient video.live {
-        opacity: 1;
+        background: var(--bg-color);
+        transition: background-color 0.5s ease;
       }
 
-      /* specular finish painted on every glass face — the diagonal sheen
-         that makes glass read even over plain backgrounds */
-      .card::before,
-      .email-pill::before,
-      #theme-toggle::before,
-      footer::before {
+      /* ————— glass finish shared by every lens —————
+         liquidGL paints the refractive face on its canvas; this layer adds
+         the soft diagonal sheen + bright top rim that reads as glass over a
+         plain background (the liquidGL homepage pill look). */
+      .lens {
+        position: relative;
+        overflow: clip;
+        will-change: transform;
+      }
+      .lens::before {
         content: "";
         position: absolute;
         inset: 0;
@@ -188,93 +125,52 @@ Author: Nabeel
         pointer-events: none;
         background: linear-gradient(
           125deg,
-          rgba(255, 255, 255, 0.32) 0%,
-          rgba(255, 255, 255, 0.08) 30%,
-          rgba(255, 255, 255, 0) 55%,
-          rgba(110, 110, 135, 0.05) 100%
+          var(--sheen-hi) 0%,
+          var(--sheen-mid) 34%,
+          rgba(255, 255, 255, 0) 62%
         );
-        box-shadow:
-          inset 0 1px 1px rgba(255, 255, 255, 0.7),
-          inset 0 -1px 1px rgba(0, 0, 0, 0.04);
+        box-shadow: inset 0 1px 1px var(--sheen-rim);
+        transition: background 0.5s ease;
       }
-
-      /* shared liquid glass recipe */
-      .glass {
+      .lens > * {
         position: relative;
-        background: var(--glass-bg);
-        -webkit-backdrop-filter: blur(26px) saturate(190%);
-        backdrop-filter: blur(26px) saturate(190%);
-        border: 1px solid var(--glass-stroke);
-        box-shadow: var(--glass-inner);
-        transition:
-          background 0.4s ease,
-          border-color 0.4s ease;
+        z-index: 3;
       }
 
-      /* rim glint that follows the cursor */
-      .glass::after {
-        content: "";
-        position: absolute;
-        inset: -1px;
-        border-radius: inherit;
-        pointer-events: none;
-        padding: 1.5px;
-        background: radial-gradient(
-          180px circle at var(--mx, 50%) var(--my, 50%),
-          var(--glint-core) 0%,
-          var(--glint-mid) 40%,
-          transparent 70%
-        );
-        -webkit-mask:
-          linear-gradient(#000 0 0) content-box,
-          linear-gradient(#000 0 0);
-        -webkit-mask-composite: xor;
-        mask:
-          linear-gradient(#000 0 0) content-box,
-          linear-gradient(#000 0 0);
-        mask-composite: exclude;
-        opacity: 0;
-        transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-      }
-      .glass:hover::after {
-        opacity: 1;
-      }
-
+      /* ————— theme toggle ————— */
       .top-nav {
         position: fixed;
         top: 0;
         right: 0;
         padding: 32px 40px;
         z-index: 9999;
-        /* NOTE: no mix-blend here — the sun/moon icon animates, and
-           Chrome stalls repaints of dynamic content inside blended
-           fixed containers */
       }
-
-      /* same glass treatment as the email pill, just round */
       #theme-toggle {
-        z-index: 5;
-        /* stay clickable even though the lens disables pointer events */
+        /* liquidGL disables pointer events on its lenses; keep it clickable */
         pointer-events: auto !important;
-        overflow: clip;
-        will-change: transform;
-        border: none;
-        background: none;
-        border-radius: 999px;
-        color: #ffffff;
-        cursor: pointer;
         width: 53px;
         height: 53px;
+        border: none;
+        background: transparent;
+        border-radius: 999px;
+        color: var(--text-color);
+        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
         outline: none;
         -webkit-tap-highlight-color: transparent;
+        /* same spring as the email pill */
+        transition:
+          color 0.5s ease,
+          transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      #theme-toggle:hover {
+        transform: scale(1.04);
       }
       #theme-toggle:active {
-        opacity: 0.8;
+        transform: scale(0.97);
       }
-
       #theme-toggle svg {
         position: absolute;
         z-index: 3;
@@ -282,7 +178,6 @@ Author: Nabeel
         height: 17px;
         fill: none;
         stroke: currentColor;
-        filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.55));
         stroke-width: 1.8;
         stroke-linecap: round;
         stroke-linejoin: round;
@@ -290,7 +185,6 @@ Author: Nabeel
           transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
           opacity 0.4s ease;
       }
-
       #sun-icon {
         opacity: 1;
         transform: rotate(0deg);
@@ -299,7 +193,6 @@ Author: Nabeel
         opacity: 0;
         transform: rotate(-90deg);
       }
-
       [data-theme="light"] #sun-icon {
         opacity: 0;
         transform: rotate(90deg);
@@ -309,29 +202,8 @@ Author: Nabeel
         transform: rotate(0deg);
       }
 
-      /* fixed overlay directly on body, exactly like the demo's
-         card-anchor: no intermediate stacking context, so the
-         difference blend composites against the lens canvas */
-      .card-anchor {
-        position: fixed;
-        inset: 0;
-        z-index: 9999;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 36px;
-        /* keep the glass over the saturated part of the wallpaper,
-           not the washed-out bright blob lower down */
-        padding-bottom: 140px;
-        pointer-events: none;
-        mix-blend-mode: difference;
-      }
-      .card-anchor a {
-        pointer-events: auto;
-      }
-
-      /* pill lives outside the blended anchor so its text stays uniform */
+      /* ————— card + email pill, fixed overlays centred on the viewport ————— */
+      .card-anchor,
       .pill-anchor {
         position: fixed;
         inset: 0;
@@ -341,38 +213,21 @@ Author: Nabeel
         align-items: center;
         padding-bottom: 140px;
         pointer-events: none;
-        /* text adapts to whatever the glass sits over, like the card */
-        mix-blend-mode: difference;
       }
       .pill-anchor a {
         pointer-events: auto;
         transform: translateY(160px);
       }
 
-      /* ————— the bank card (liquidGL demo-2, 1:1) ————— */
       .card {
         width: min(340px, calc(100vw - 48px));
         height: 200px;
         border-radius: 1rem;
         padding: 1.25rem 1.5rem;
         display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        gap: 0.5rem;
-        position: relative;
-        overflow: clip;
-        will-change: transform;
-        z-index: 5;
-      }
-      .card > * {
-        position: relative;
-        z-index: 3;
-      }
-
-      /* clean personal card face */
-      .card {
         justify-content: center;
         align-items: center;
+        z-index: 5;
       }
       .card-face {
         display: flex;
@@ -382,7 +237,6 @@ Author: Nabeel
         text-align: center;
       }
 
-      /* everything in the Apple stack: real SF Pro on Apple devices */
       .name {
         font-family:
           -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter",
@@ -390,68 +244,17 @@ Author: Nabeel
         font-size: 2.4rem;
         font-weight: 700;
         letter-spacing: -0.022em;
-        color: #ffffff;
-        margin: 0;
+        color: var(--text-color);
+        transition: color 0.5s ease;
       }
       .name span {
         font-family: inherit;
       }
-
       .tagline {
         font-size: 1.02rem;
         font-weight: 400;
-        letter-spacing: 0.002em;
-        color: #ffffff;
-        opacity: 0.55;
-        margin: 0;
-      }
-
-      .stack {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 36px;
-      }
-
-      /* liquid glass email pill (demo-3 style) */
-      .email-wrap {
-        display: inline-block;
-        text-decoration: none;
-        pointer-events: auto;
-        will-change: transform;
-      }
-      .email-pill {
-        position: relative;
-        z-index: 5;
-        border-radius: 999px;
-        padding: 1.05rem 2.6rem;
-        overflow: clip;
-        will-change: transform;
-        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
-      .email-wrap:hover .email-pill {
-        transform: scale(1.05);
-      }
-      .email-wrap:active .email-pill {
-        transform: scale(0.97);
-      }
-      .email-pill span {
-        position: relative;
-        z-index: 3;
-        color: #ffffff;
-        font-size: 0.98rem;
-        font-weight: 500;
-        letter-spacing: -0.01em;
-      }
-
-      .name {
-        transition: opacity 0.3s ease;
-      }
-      .name.fading {
-        opacity: 0;
-      }
-      .name span {
-        font-family: inherit;
+        color: var(--muted-color);
+        transition: color 0.5s ease;
       }
 
       .name .caret {
@@ -459,10 +262,9 @@ Author: Nabeel
         width: 2px;
         height: 0.8em;
         border-radius: 1px;
-        background: #ffffff;
+        background: currentColor;
         margin-left: 4px;
         vertical-align: -0.05em;
-        /* soft pulse, not a hard blink */
         animation: caret-pulse 1s ease-in-out infinite;
       }
       @keyframes caret-pulse {
@@ -483,14 +285,7 @@ Author: Nabeel
         opacity: 0;
       }
 
-      /* the custom reveal fade is disabled: inside the blended fixed
-         anchor Chrome fails to repaint after the transition, and
-         liquidGL already fades its lenses in */
-      .reveal {
-        opacity: 1;
-      }
-
-      /* retro six-color Apple stripes — secret */
+      /* retro six-colour Apple stripes — secret (type "apple") */
       .name.retro #name-text {
         background: linear-gradient(
           180deg,
@@ -505,13 +300,34 @@ Author: Nabeel
         background-clip: text;
         -webkit-text-fill-color: transparent;
         color: transparent;
-        text-shadow: none;
       }
 
-      /* long glass button spanning the bottom, matching the email pill */
-      footer {
-        /* pinned to the visual viewport so it stays put while iOS
-           collapses its bars */
+      .email-wrap {
+        display: inline-block;
+        text-decoration: none;
+      }
+      .email-pill {
+        border-radius: 999px;
+        padding: 1.05rem 2.6rem;
+        z-index: 5;
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .email-wrap:hover .email-pill {
+        transform: scale(1.04);
+      }
+      .email-wrap:active .email-pill {
+        transform: scale(0.97);
+      }
+      .email-pill span {
+        color: var(--text-color);
+        font-size: 0.98rem;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        transition: color 0.5s ease;
+      }
+
+      /* ————— footer: long glass pill pinned to the visual viewport ————— */
+      footer.lens {
         position: fixed;
         left: 24px;
         right: 24px;
@@ -522,17 +338,11 @@ Author: Nabeel
         align-items: center;
         padding: 1.05rem 2rem;
         border-radius: 999px;
-        overflow: clip;
-        will-change: transform;
-        mix-blend-mode: difference;
-        color: #ffffff;
+        color: var(--muted-color);
         font-size: 0.78rem;
-        font-weight: 600;
-        letter-spacing: 0.02em;
-      }
-      footer > * {
-        position: relative;
-        z-index: 3;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        transition: color 0.5s ease;
       }
       /* the lens disables pointer events on the footer; the clock stays
          clickable to flip SF ↔ UTC */
@@ -543,14 +353,38 @@ Author: Nabeel
 
       @media (max-width: 768px) {
         .top-nav {
-          padding: calc(14px + env(safe-area-inset-top)) 20px 18px;
+          padding: calc(14px + env(safe-area-inset-top)) 18px 18px;
         }
-        footer {
-          left: 12px;
-          right: 12px;
-          bottom: calc(12px + env(safe-area-inset-bottom));
-          padding: 11px 18px;
-          font-size: 0.6rem;
+        #theme-toggle {
+          width: 48px;
+          height: 48px;
+        }
+        .card-anchor,
+        .pill-anchor {
+          padding-bottom: 120px;
+        }
+        .name {
+          font-size: 2.2rem;
+        }
+        .tagline {
+          font-size: 0.95rem;
+        }
+        .pill-anchor a {
+          transform: translateY(150px);
+        }
+        .email-pill {
+          padding: 0.95rem 2.2rem;
+        }
+        .email-pill span {
+          font-size: 0.92rem;
+        }
+        footer.lens {
+          left: 14px;
+          right: 14px;
+          bottom: calc(14px + env(safe-area-inset-bottom));
+          padding: 0.85rem 1.2rem;
+          font-size: 0.68rem;
+          gap: 12px;
         }
       }
     </style>
@@ -558,29 +392,10 @@ Author: Nabeel
     <script src="scripts/liquidGL.js" defer></script>
   </head>
   <body>
-    <div class="ambient">
-      <video
-        id="wp-light"
-        src="assets/wallpaper_light_v4.mp4"
-        poster="assets/wallpaper_light_v4.jpg"
-        autoplay
-        muted
-        loop
-        playsinline
-      ></video>
-      <video
-        id="wp-dark"
-        src="assets/wallpaper_dark_v4.mp4"
-        poster="assets/wallpaper_dark_v4.jpg"
-        autoplay
-        muted
-        loop
-        playsinline
-      ></video>
-    </div>
+    <div class="ambient"></div>
 
     <div class="top-nav">
-      <button id="theme-toggle" class="liquidGL-flat" aria-label="Toggle Theme">
+      <button id="theme-toggle" class="lens lg-flat" aria-label="Toggle Theme">
         <svg id="sun-icon" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="5"></circle>
           <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -599,26 +414,25 @@ Author: Nabeel
     </div>
 
     <div class="card-anchor">
-      <div class="card liquidGL" id="card">
+      <div class="card lens lg-card" id="card">
         <div class="card-face">
           <h1 class="name" id="name"
             ><span id="name-text"></span><span class="caret" id="caret"></span
           ></h1>
-          <p class="tagline reveal">building things on the internet</p>
+          <p class="tagline">building things on the internet</p>
         </div>
       </div>
-
     </div>
 
     <div class="pill-anchor">
-      <a href="mailto:x@nabeel.ca" class="email-wrap reveal">
-        <div class="email-pill liquidGL-flat">
+      <a href="mailto:x@nabeel.ca" class="email-wrap">
+        <div class="email-pill lens lg-flat">
           <span>x@nabeel.ca</span>
         </div>
       </a>
     </div>
 
-    <footer class="liquidGL-footer">
+    <footer class="lens lg-flat">
       <div class="footer-left">
         © <span id="year"></span> Nabeel. All rights reserved
       </div>
@@ -628,69 +442,40 @@ Author: Nabeel
     </footer>
 
     <script>
-      const themeToggle = document.getElementById("theme-toggle");
-      const body = document.body;
+      // ————— theme —————
       const root = document.documentElement;
-      // both wallpapers stay loaded and playing; theme change is a pure
-      // opacity crossfade — no reload, no jank. The inactive video gets
-      // data-liquid-ignore so the glass refracts only the visible one.
-      const wpLight = document.getElementById("wp-light");
-      const wpDark = document.getElementById("wp-dark");
-      const reducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-      [wpLight, wpDark].forEach((v) => {
-        if (reducedMotion) {
-          v.autoplay = false;
-          v.addEventListener("canplay", () => v.pause());
-        }
-      });
-      function applyWallpaper() {
+      const themeToggle = document.getElementById("theme-toggle");
+      function syncChrome() {
         const light = root.getAttribute("data-theme") === "light";
-        const active = light ? wpLight : wpDark;
-        const inactive = light ? wpDark : wpLight;
-        active.classList.add("live");
-        inactive.classList.remove("live");
-        // only mark ignores once the renderer has registered both videos —
-        // an ignore present at init would exclude that video permanently
-        if (window.__liquidGLRenderer__) {
-          active.removeAttribute("data-liquid-ignore");
-          inactive.setAttribute("data-liquid-ignore", "");
-        }
-        const p = active.play();
-        if (p && p.catch) p.catch(() => {});
-        // tint the browser chrome to match the wallpaper
         document
           .getElementById("theme-color")
-          .setAttribute("content", light ? "#f8f8fb" : "#0e0f1a");
+          .setAttribute("content", light ? "#ececee" : "#101014");
+      }
+      function setTheme(theme) {
+        if (theme === "dark") root.removeAttribute("data-theme");
+        else root.setAttribute("data-theme", "light");
+        localStorage.setItem("theme", theme);
+        syncChrome();
+        // re-photograph the flat field once the colour transition has
+        // finished (plus a safety pass), so the glass takes the new colour
+        const r = window.__liquidGLRenderer__;
+        if (r && r.captureSnapshot) {
+          setTimeout(() => r.captureSnapshot(), 560);
+          setTimeout(() => r.captureSnapshot(), 1100);
+        }
       }
       // light is the default (set in markup); dark only when chosen
-      if (localStorage.getItem("theme") === "dark")
-        root.removeAttribute("data-theme");
-      applyWallpaper();
+      if (localStorage.getItem("theme") === "dark") root.removeAttribute("data-theme");
+      syncChrome();
+      themeToggle.addEventListener("click", () =>
+        setTheme(root.getAttribute("data-theme") === "light" ? "dark" : "light"),
+      );
 
-      themeToggle.addEventListener("click", () => {
-        if (root.getAttribute("data-theme") === "light") {
-          root.removeAttribute("data-theme");
-          localStorage.setItem("theme", "dark");
-        } else {
-          root.setAttribute("data-theme", "light");
-          localStorage.setItem("theme", "light");
-        }
-        applyWallpaper();
-      });
-
+      // ————— typewriter: human rhythm, caret leaves right after —————
       const nameEl = document.getElementById("name");
       const nameText = document.getElementById("name-text");
       const caret = document.getElementById("caret");
-      const NAME_HTML = "Nabeel";
-
-      // natural typewriter: human rhythm, caret leaves right after
-      document
-        .querySelectorAll(".reveal")
-        .forEach((el) => el.classList.add("shown"));
       const NAME = "Nabeel";
-      // hand-tuned per-keystroke delays (ms) — quick, slightly uneven
       const RHYTHM = [0, 95, 150, 80, 120, 70];
       let typeIndex = 0;
       function typeNext() {
@@ -706,22 +491,10 @@ Author: Nabeel
       }
       setTimeout(typeNext, 450);
 
-      const greetings = [
-        "Nabeel",
-        "hello",
-        "salaam",
-        "bonjour",
-        "hola",
-        "ciao",
-        "こんにちは",
-      ];
-      let greetIndex = 0;
-      let nameClicks = 0;
-
-      // fireworks show, rendered in front of the glass
-      // (main-thread canvas: the worker/OffscreenCanvas path can fail silently)
+      // ————— fireworks (type "nabeel"), rendered in front of the glass —————
+      // main-thread canvas: the worker/OffscreenCanvas path can fail silently
       const fireworks = confetti.create(null, { resize: true, useWorker: false });
-      const triggerHello = () => {
+      function fireworksShow() {
         const end = Date.now() + 2500;
         const colors = ["#ff2d78", "#ff7a1a", "#b06bff", "#4db8ff", "#ffffff"];
         (function fire() {
@@ -731,72 +504,38 @@ Author: Nabeel
             spread: 360,
             ticks: 70,
             gravity: 0.9,
-            origin: {
-              x: 0.15 + Math.random() * 0.7,
-              y: 0.15 + Math.random() * 0.4,
-            },
+            origin: { x: 0.15 + Math.random() * 0.7, y: 0.15 + Math.random() * 0.4 },
             colors,
             zIndex: 20000,
             disableForReducedMotion: true,
           });
           if (Date.now() < end) setTimeout(fire, 180 + Math.random() * 140);
         })();
-      };
+      }
 
-      // name-click greeting easter egg — disabled for now
-      // nameEl.addEventListener("click", () => {
-      //   nameClicks++;
-      //   nameEl.classList.add("fading");
-      //   setTimeout(() => {
-      //     greetIndex = (greetIndex + 1) % greetings.length;
-      //     if (greetings[greetIndex] === "Nabeel") {
-      //       nameText.innerHTML = NAME_HTML;
-      //     } else {
-      //       nameText.textContent = greetings[greetIndex];
-      //     }
-      //     nameEl.classList.remove("fading");
-      //   }, 300);
-      //   if (nameClicks === 5) {
-      //     triggerHello();
-      //     nameClicks = 0;
-      //   }
-      // });
-
+      // ————— typed secrets —————
       let inputBuffer = "";
       const secrets = {
-        dark: () => {
-          root.removeAttribute("data-theme");
-          localStorage.setItem("theme", "dark");
-        },
-        light: () => {
-          root.setAttribute("data-theme", "light");
-          localStorage.setItem("theme", "light");
-        },
-        nabeel: () => {
-          triggerHello();
-        },
-        apple: () => {
-          nameEl.classList.toggle("retro");
-        },
+        dark: () => setTheme("dark"),
+        light: () => setTheme("light"),
+        nabeel: fireworksShow,
+        apple: () => nameEl.classList.toggle("retro"),
       };
-
       window.addEventListener("keydown", (e) => {
-        if (e.key.length === 1) {
-          inputBuffer += e.key.toLowerCase();
-          if (inputBuffer.length > 10) inputBuffer = inputBuffer.substring(1);
-          for (const word in secrets) {
-            if (inputBuffer.includes(word)) {
-              secrets[word]();
-              inputBuffer = "";
-            }
+        if (e.key.length !== 1) return;
+        inputBuffer = (inputBuffer + e.key.toLowerCase()).slice(-10);
+        for (const word in secrets) {
+          if (inputBuffer.includes(word)) {
+            secrets[word]();
+            inputBuffer = "";
           }
         }
       });
 
+      // ————— footer clock (click flips SF ↔ UTC) —————
       document.getElementById("year").textContent = new Date().getFullYear();
       let clockZone = "America/Los_Angeles";
       const clockWrap = document.getElementById("clock-wrap");
-      clockWrap.style.cursor = "pointer";
       clockWrap.addEventListener("click", () => {
         clockZone = clockZone === "UTC" ? "America/Los_Angeles" : "UTC";
         clockWrap.firstChild.textContent =
@@ -804,81 +543,52 @@ Author: Nabeel
         updateClock();
       });
       function updateClock() {
-        const formatter = new Intl.DateTimeFormat([], {
+        document.getElementById("clock").textContent = new Intl.DateTimeFormat([], {
           timeZone: clockZone,
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
           hour12: false,
-        });
-        document.getElementById("clock").textContent = formatter.format(
-          new Date(),
-        );
+        }).format(new Date());
       }
       setInterval(updateClock, 1000);
       updateClock();
 
-      // ————— true liquid glass: liquidGL WebGL refraction (MIT, NaughtyDuk) —————
-      // Cursor tilt only — no device sensors, no permission prompts, ever.
+      // ————— liquid glass: liquidGL WebGL refraction (MIT, NaughtyDuk) —————
+      // Cursor tilt on the card only. No device sensors, no permission prompts.
+      // Two calls share one renderer but keep separate options — the library
+      // hands every lens of a call the same options object.
       document.addEventListener("DOMContentLoaded", () => {
-        if (typeof liquidGL === "function") {
-          // two calls share one renderer but keep separate options
-          // (the library hands every lens of a call the SAME options
-          // object, so per-lens mutation corrupts the others)
-          // card: demo-2 params, cursor tilt + moving specular
-          liquidGL({
-            snapshot: ".ambient",
-            target: ".liquidGL",
-            resolution: 1.5,
-            refraction: 0,
-            bevelDepth: 0.1,
-            bevelWidth: 0.17,
-            frost: 2,
-            shadow: true,
-            specular: true,
-            reveal: "fade",
-            tilt: true,
-            tiltFactor: 25,
-            tiltEase: 550,
-          });
-          // toggle, pill, footer: the card's exact glass, minus the tilt
-          liquidGL({
-            snapshot: ".ambient",
-            target: ".liquidGL-flat",
-            refraction: 0,
-            bevelDepth: 0.1,
-            bevelWidth: 0.17,
-            frost: 2,
-            shadow: true,
-            specular: true,
-            reveal: "fade",
-            tilt: false,
-          });
-          // footer: slightly thicker glass so it reads over plain regions
-          liquidGL({
-            snapshot: ".ambient",
-            target: ".liquidGL-footer",
-            refraction: 0,
-            bevelDepth: 0.16,
-            bevelWidth: 0.24,
-            frost: 4,
-            shadow: true,
-            specular: true,
-            reveal: "fade",
-            tilt: false,
-          });
-          // now that both wallpapers are registered, mark the inactive one
-          applyWallpaper();
-        }
-
-      });
-
-      // rim glint tracking on small glass elements
-      document.querySelectorAll(".glass").forEach((el) => {
-        el.addEventListener("pointermove", (e) => {
-          const r = el.getBoundingClientRect();
-          el.style.setProperty("--mx", e.clientX - r.left + "px");
-          el.style.setProperty("--my", e.clientY - r.top + "px");
+        if (typeof liquidGL !== "function") return;
+        const base = {
+          snapshot: ".ambient",
+          // a flat field needs no 2x snapshot; 1x keeps theme recaptures fast
+          resolution: 1,
+          shadow: true,
+          specular: true,
+          reveal: "fade",
+        };
+        // card: liquidGL demo-2 bank card, verbatim
+        liquidGL({
+          ...base,
+          target: ".lg-card",
+          refraction: 0,
+          bevelDepth: 0.1,
+          bevelWidth: 0.17,
+          frost: 2,
+          tilt: true,
+          tiltFactor: 25,
+          tiltEase: 550,
+        });
+        // pill / toggle / footer: the liquidGL homepage pill, verbatim
+        liquidGL({
+          ...base,
+          target: ".lg-flat",
+          refraction: 0.01,
+          bevelDepth: 0.119,
+          bevelWidth: 0.057,
+          frost: 0,
+          tilt: false,
         });
       });
 
