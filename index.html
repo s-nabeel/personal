@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 6.9.0
+Version: 6.10.0
 Last updated: 2026-09-02
 Author: Nabeel
 -->
@@ -98,7 +98,7 @@ Author: Nabeel
         max-width: 60%;
         margin: 0 auto;
         padding-top: 90svh;
-        padding-bottom: calc(50svh - 1.6rem);
+        padding-bottom: calc(100svh - 10vw + 6vh);
       }
       .toolbar-cover {
         position: sticky;
@@ -408,71 +408,49 @@ Author: Nabeel
           opacity: 0.4;
         }
       }
-      .email-slot {
-        position: relative;
-        width: 12rem;
-        height: 3.2rem;
-        margin: 0 auto;
+      .pill-anchor {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+        opacity: 0;
+        transform: translateY(14px) scale(0.96);
+        transition:
+          opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+          transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .pill-anchor.show {
+        opacity: 1;
+        transform: none;
+      }
+      .pill-anchor.show a {
+        pointer-events: auto;
       }
       .email-wrap {
-        display: block;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 12rem;
-        height: 3.2rem;
-        margin: -1.6rem 0 0 -6rem;
-        color: var(--text-color);
+        display: inline-block;
         text-decoration: none;
-        transition:
-          width 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
-          height 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
-          margin 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-        pointer-events: auto;
-        cursor: pointer;
       }
-      .email-wrap:hover {
-        --pill-bg: rgba(255, 255, 255, 0.12);
-        --sheen-rim: rgba(255, 255, 255, 0.38);
-        width: 12.48rem;
-        height: 3.328rem;
-        margin: -1.664rem 0 0 -6.24rem;
+      .email-pill {
+        border-radius: 999px;
+        padding: 1.05rem 2.6rem;
+        background: var(--pill-bg);
+        -webkit-backdrop-filter: blur(14px) saturate(160%);
+        backdrop-filter: blur(14px) saturate(160%);
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.1),
+          0 0 0 0.5px rgba(0, 0, 0, 0.05);
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
-      .email-wrap:active {
-        width: 11.64rem;
-        height: 3.104rem;
-        margin: -1.552rem 0 0 -5.82rem;
+      .email-wrap:hover .email-pill {
+        transform: scale(1.04);
       }
-      [data-theme="light"] .email-wrap:hover {
-        --pill-bg: rgba(255, 255, 255, 0.8);
+      .email-wrap:active .email-pill {
+        transform: scale(0.97);
       }
-      .email-wrap svg {
-        display: block;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 12rem;
-        height: 3.2rem;
-        margin: -1.6rem 0 0 -6rem;
-        overflow: visible;
-      }
-      .email-wrap .pill-bg {
-        fill: var(--pill-bg);
-      }
-      .email-wrap .pill-rim {
-        fill: none;
-        stroke: var(--sheen-rim);
-        stroke-width: 1;
-      }
-      .email-wrap .pill-sheen {
-        fill: var(--sheen-mid);
-      }
-      .email-wrap span {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      .email-pill span {
         color: var(--text-color);
         font-size: 0.98rem;
         font-weight: 500;
@@ -519,6 +497,7 @@ Author: Nabeel
         }
         .banner-text-container {
           max-width: 78%;
+          padding-bottom: 82svh;
         }
         .banner-text {
           font-size: 14vw;
@@ -543,19 +522,10 @@ Author: Nabeel
           width: 48px;
           height: 48px;
         }
-        .email-slot {
-          width: 10.5rem;
-          height: 3rem;
+        .email-pill {
+          padding: 0.95rem 2.2rem;
         }
-        .email-wrap,
-        .email-wrap:hover,
-        .email-wrap:active,
-        .email-wrap svg {
-          width: 10.5rem;
-          height: 3rem;
-          margin: -1.5rem 0 0 -5.25rem;
-        }
-        .email-wrap span {
+        .email-pill span {
           font-size: 0.92rem;
         }
         footer.lens {
@@ -596,16 +566,6 @@ Author: Nabeel
           <span class="runner" id="runner" aria-hidden="true"><span class="word">i</span><span class="stripes"><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span></span></span>
         </div>
         <div class="banner-text small">building things on the internet</div>
-        <div class="email-slot">
-        <a href="mailto:x@nabeel.ca" class="email-wrap" id="email" data-liquidgl-hide aria-label="Email x@nabeel.ca">
-          <svg viewBox="0 0 202 54" aria-hidden="true">
-            <rect class="pill-bg" x="0.5" y="0.5" width="201" height="53" rx="26.5" />
-            <path class="pill-sheen" d="M27 1h148a26 26 0 0 1 22 12H5A26 26 0 0 1 27 1z" />
-            <rect class="pill-rim" x="0.5" y="0.5" width="201" height="53" rx="26.5" />
-          </svg>
-          <span>x@nabeel.ca</span>
-        </a>
-        </div>
         <div id="end-sentinel" aria-hidden="true"></div>
       </div>
     </div>
@@ -633,6 +593,14 @@ Author: Nabeel
       </button>
     </div>
 
+
+    <div class="pill-anchor" id="pill-anchor">
+      <a href="mailto:x@nabeel.ca" class="email-wrap">
+        <div class="email-pill lens">
+          <span>x@nabeel.ca</span>
+        </div>
+      </a>
+    </div>
 
     <footer class="lens">
       <div class="footer-left">
@@ -687,6 +655,20 @@ Author: Nabeel
       themeToggle.addEventListener("click", () =>
         setTheme(root.getAttribute("data-theme") === "light" ? "dark" : "light"),
       );
+
+      const pillAnchor = document.getElementById("pill-anchor");
+      let lastY = -1;
+      let lastH = -1;
+      (function watchScroll() {
+        const y = window.scrollY;
+        const h = document.documentElement.scrollHeight;
+        if (y !== lastY || h !== lastH) {
+          lastY = y;
+          lastH = h;
+          pillAnchor.classList.toggle("show", window.innerHeight + y >= h - 4);
+        }
+        requestAnimationFrame(watchScroll);
+      })();
 
       const fireworks = confetti.create(null, { resize: true, useWorker: false });
       function fireworksShow() {
@@ -1060,10 +1042,8 @@ Author: Nabeel
           specular: true,
           shadow: true,
           reveal: "fade",
-          resolution: Math.min(3, window.devicePixelRatio || 1),
         });
         liquidGL.registerDynamic("#scroll-hint");
-        liquidGL.registerDynamic("#email");
         let resizeTimer = null;
         window.addEventListener("resize", () => {
           clearTimeout(resizeTimer);
