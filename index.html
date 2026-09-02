@@ -158,6 +158,23 @@ Author: Nabeel
         z-index: 9999;
       }
 
+      /* ————— window mask —————
+         Demo-5 hides its text outside the pane (the wallpaper sections paint
+         over it; only the glass snapshot still shows it). Same result here:
+         a pane-shaped hole with the background colour painted everywhere
+         else, sitting between the scrolling column and the glass canvas. */
+      .mask {
+        position: fixed;
+        top: 10vw;
+        left: 10vw;
+        width: calc(100vw - 20vw);
+        height: calc(100vh - 20vw);
+        border-radius: 2vw;
+        box-shadow: 0 0 0 200vmax var(--bg-color);
+        pointer-events: none;
+        z-index: 9990;
+      }
+
       /* ————— small glass controls: sheen + rim like the liquidGL homepage pill ————— */
       .lens {
         position: relative;
@@ -367,7 +384,8 @@ Author: Nabeel
 
       @media (max-width: 768px) {
         /* demo-5 mobile pane, verbatim */
-        .shape {
+        .shape,
+        .mask {
           position: fixed;
           top: 50%;
           left: 50%;
@@ -428,6 +446,9 @@ Author: Nabeel
         <div id="end-sentinel" aria-hidden="true"></div>
       </div>
     </div>
+
+    <!-- window mask: hides the column everywhere except through the pane -->
+    <div class="mask" aria-hidden="true"></div>
 
     <!-- the single lens (demo-5) -->
     <div class="shape"></div>
@@ -520,16 +541,23 @@ Author: Nabeel
       // ————— scroll hint + end-of-page email reveal —————
       const scrollHint = document.getElementById("scroll-hint");
       const pillAnchor = document.getElementById("pill-anchor");
-      function onScroll() {
-        if (window.scrollY > 40) scrollHint.classList.add("gone");
-        // reveal the email only once the page is scrolled all the way down
-        const atBottom =
-          window.innerHeight + window.scrollY >=
-          document.documentElement.scrollHeight - 4;
-        pillAnchor.classList.toggle("show", atBottom);
-      }
-      window.addEventListener("scroll", onScroll, { passive: true });
-      window.addEventListener("resize", onScroll, { passive: true });
+      // Lenis (smooth scroll) delivers scroll events a step behind the real
+      // position, so poll the position each frame instead of listening
+      let lastY = -1;
+      let lastH = -1;
+      (function watchScroll() {
+        const y = window.scrollY;
+        const h = document.documentElement.scrollHeight;
+        if (y !== lastY || h !== lastH) {
+          lastY = y;
+          lastH = h;
+          // hint hides once you scroll and comes back at the top
+          scrollHint.classList.toggle("gone", y > 40);
+          // reveal the email only once the page is scrolled all the way down
+          pillAnchor.classList.toggle("show", window.innerHeight + y >= h - 4);
+        }
+        requestAnimationFrame(watchScroll);
+      })();
 
       // ————— fireworks (type "nabeel"), rendered in front of the glass —————
       const fireworks = confetti.create(null, { resize: true, useWorker: false });
