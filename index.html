@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 6.7.1
+Version: 6.7.2
 Last updated: 2026-09-02
 Author: Nabeel
 -->
@@ -414,6 +414,16 @@ Author: Nabeel
         pointer-events: auto;
         cursor: pointer;
       }
+      .email-wrap:hover {
+        --pill-bg: rgba(255, 255, 255, 0.18);
+        --sheen-mid: rgba(255, 255, 255, 0.12);
+        --sheen-rim: rgba(255, 255, 255, 0.55);
+      }
+      [data-theme="light"] .email-wrap:hover {
+        --pill-bg: rgba(255, 255, 255, 0.95);
+        --sheen-mid: rgba(255, 255, 255, 0.3);
+        --sheen-rim: rgba(255, 255, 255, 1);
+      }
       .email-wrap svg {
         display: block;
         width: 100%;
@@ -553,7 +563,7 @@ Author: Nabeel
           <span class="runner" id="runner" aria-hidden="true"><span class="word">i</span><span class="stripes"><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span></span></span>
         </div>
         <div class="banner-text small">building things on the internet</div>
-        <a href="mailto:x@nabeel.ca" class="email-wrap" id="email" aria-label="Email x@nabeel.ca">
+        <a href="mailto:x@nabeel.ca" class="email-wrap" id="email" data-liquidgl-hide aria-label="Email x@nabeel.ca">
           <svg viewBox="0 0 248 54" aria-hidden="true">
             <rect class="pill-bg" x="0.5" y="0.5" width="247" height="53" rx="26.5" />
             <path class="pill-sheen" d="M27 1h194a26 26 0 0 1 22 12H5A26 26 0 0 1 27 1z" />
@@ -1012,6 +1022,7 @@ Author: Nabeel
           reveal: "fade",
         });
         liquidGL.registerDynamic("#scroll-hint");
+        liquidGL.registerDynamic("#email");
         let resizeTimer = null;
         window.addEventListener("resize", () => {
           clearTimeout(resizeTimer);
