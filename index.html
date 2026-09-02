@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 6.12.1
+Version: 6.12.2
 Last updated: 2026-09-02
 Author: Nabeel
 -->
@@ -13,6 +13,7 @@ Author: Nabeel
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
+    <meta name="color-scheme" content="dark light" />
     <meta name="theme-color" id="theme-color" content="#101014" />
     <title>Nabeel</title>
 
@@ -42,6 +43,7 @@ Author: Nabeel
     />
     <style>
       :root {
+        color-scheme: dark;
         --bg-color: #101014;
         --text-color: #f5f5f7;
         --muted-color: #a1a1a8;
@@ -51,6 +53,7 @@ Author: Nabeel
         --pill-bg: rgba(255, 255, 255, 0.08);
       }
       [data-theme="light"] {
+        color-scheme: light;
         --bg-color: #ececee;
         --text-color: #111114;
         --muted-color: #6e6e75;
@@ -391,11 +394,6 @@ Author: Nabeel
         width: 1em;
         height: 1em;
         animation: nudge 1.8s ease-in-out infinite;
-      }
-      @media (hover: none) {
-        .scroll-hint .arrow {
-          animation: none;
-        }
       }
       .scroll-hint .arrow-light,
       [data-theme="light"] .scroll-hint .arrow-dark {
@@ -1061,8 +1059,6 @@ Author: Nabeel
 
       document.addEventListener("DOMContentLoaded", () => {
         if (typeof liquidGL !== "function") return;
-        const canHover = matchMedia("(hover: hover)").matches;
-        if (!canHover) document.getElementById("scroll-hint").removeAttribute("data-liquidgl-hide");
         liquidGL({
           target: ".shape",
           snapshot: ".main-content",
@@ -1075,7 +1071,7 @@ Author: Nabeel
           reveal: "fade",
           resolution: Math.min(3, window.devicePixelRatio || 1),
         });
-        if (canHover) liquidGL.registerDynamic("#scroll-hint");
+        liquidGL.registerDynamic("#scroll-hint");
         let resizeTimer = null;
         window.addEventListener("resize", () => {
           clearTimeout(resizeTimer);
