@@ -2078,11 +2078,6 @@
               refrCol = sum / float(SAMPLES);
           } else {
               refrCol = texture2D(u_tex, sampleUV);
-              refrCol += texture2D(u_tex, sampleUV + vec2( texel.x, 0.0));
-              refrCol += texture2D(u_tex, sampleUV + vec2(-texel.x, 0.0));
-              refrCol += texture2D(u_tex, sampleUV + vec2(0.0,  texel.y));
-              refrCol += texture2D(u_tex, sampleUV + vec2(0.0, -texel.y));
-              refrCol /= 5.0;
           }
 
           if (u_aberration > 0.0) {
