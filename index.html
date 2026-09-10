@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 8.2.1
+Version: 8.2.2
 Last updated: 2026-09-10
 Author: Nabeel
 -->
@@ -102,6 +102,10 @@ Author: Nabeel
       ::view-transition-new(root) {
         animation-duration: 0.45s;
         animation-timing-function: ease-in-out;
+      }
+      .vt-fast::view-transition-old(root),
+      .vt-fast::view-transition-new(root) {
+        animation-duration: 0.2s;
       }
 
       .main-content {
@@ -697,12 +701,16 @@ Author: Nabeel
         if (a.src !== want) a.src = want;
       }
       let transitionBusy = false;
-      function transitionWith(apply) {
-        if (transitionBusy) return;
+      function transitionWith(apply, fast) {
         const recapture = async () => {
           const r = window.__liquidGLRenderer__;
           if (r && r.captureSnapshot) await r.captureSnapshot();
         };
+        if (transitionBusy) {
+          apply();
+          return recapture();
+        }
+        root.classList.toggle("vt-fast", !!fast);
         if (document.startViewTransition) {
           transitionBusy = true;
           const vt = document.startViewTransition(async () => {
@@ -856,8 +864,7 @@ Author: Nabeel
         try {
           await document.fonts.load('400 1em "EB Garamond"');
         } catch (e) {}
-        nameEl.setAttribute("data-liquidgl-hide", "");
-        if (r) await r.captureSnapshot();
+        await transitionWith(() => nameEl.setAttribute("data-liquidgl-hide", ""), true);
         liveNode(nameEl, true);
         liveNode(runner, true);
         ghostEl.classList.add("on");
@@ -914,10 +921,11 @@ Author: Nabeel
         ).finished;
 
         animating = false;
-        liveNode(nameEl, false);
-        liveNode(runner, false);
-        nameEl.removeAttribute("data-liquidgl-hide");
-        if (r) await r.captureSnapshot();
+        await transitionWith(() => {
+          liveNode(nameEl, false);
+          liveNode(runner, false);
+          nameEl.removeAttribute("data-liquidgl-hide");
+        }, true);
         crashBusy = false;
       }
 
@@ -928,8 +936,7 @@ Author: Nabeel
           return;
         }
         await bringNameIntoPane();
-        nameEl.setAttribute("data-liquidgl-hide", "");
-        if (r) await r.captureSnapshot();
+        await transitionWith(() => nameEl.setAttribute("data-liquidgl-hide", ""), true);
         liveNode(nameEl, true);
         liveNode(runner, true);
         let animating = true;
@@ -962,14 +969,15 @@ Author: Nabeel
         const fadeIn = ghostEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 520, easing: "ease-in-out", fill: "forwards" });
         await wordEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 520, easing: "ease-in-out", fill: "forwards" }).finished;
         animating = false;
-        liveNode(nameEl, false);
-        liveNode(runner, false);
-        nameEl.removeAttribute("data-liquidgl-hide");
-        nameEl.classList.remove("retro");
-        wordEl.getAnimations().forEach((a) => a.cancel());
-        fadeIn.cancel();
-        ghostEl.classList.remove("on");
-        if (r) await r.captureSnapshot();
+        await transitionWith(() => {
+          liveNode(nameEl, false);
+          liveNode(runner, false);
+          nameEl.removeAttribute("data-liquidgl-hide");
+          nameEl.classList.remove("retro");
+          wordEl.getAnimations().forEach((a) => a.cancel());
+          fadeIn.cancel();
+          ghostEl.classList.remove("on");
+        }, true);
       }
 
       const paneEl = document.querySelector(".shape");
