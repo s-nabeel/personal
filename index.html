@@ -1,8 +1,8 @@
 <!--
 index.html
 
-Version: 6.12.2
-Last updated: 2026-09-02
+Version: 7.0.0
+Last updated: 2026-09-10
 Author: Nabeel
 -->
 <!doctype html>
@@ -14,7 +14,7 @@ Author: Nabeel
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
     <meta name="color-scheme" content="dark light" />
-    <meta name="theme-color" id="theme-color" content="#101014" />
+    <meta name="theme-color" id="theme-color" content="#000000" />
     <title>Nabeel</title>
 
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -27,40 +27,46 @@ Author: Nabeel
     <meta property="og:url" content="https://nabeel.ca/" />
     <meta property="og:title" content="Nabeel" />
     <meta property="og:description" content="Personal site of Nabeel." />
-    <meta property="og:image" content="https://nabeel.ca/og-image.png" />
+    <meta property="og:image" content="https://nabeel.ca/og-image.png?v=7" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://nabeel.ca/" />
     <meta name="twitter:title" content="Nabeel" />
     <meta name="twitter:description" content="Personal site of Nabeel." />
-    <meta name="twitter:image" content="https://nabeel.ca/og-image.png" />
+    <meta name="twitter:image" content="https://nabeel.ca/og-image.png?v=7" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <style>
       :root {
         color-scheme: dark;
-        --bg-color: #101014;
+        --bg-color: #000000;
         --text-color: #f5f5f7;
-        --muted-color: #a1a1a8;
+        --muted-color: #86868b;
+        --accent: #2997ff;
         --sheen-hi: rgba(255, 255, 255, 0.16);
         --sheen-mid: rgba(255, 255, 255, 0.05);
         --sheen-rim: rgba(255, 255, 255, 0.28);
         --pill-bg: rgba(255, 255, 255, 0.08);
+        --glow: 0.55;
+        --pad: clamp(56px, 10vw, 140px);
+        --radius: clamp(16px, 2vw, 28px);
+        --pane-h: calc(100vh - 2 * var(--pad));
+        --display-font: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        --text-font: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
       }
       [data-theme="light"] {
         color-scheme: light;
-        --bg-color: #ececee;
-        --text-color: #111114;
-        --muted-color: #6e6e75;
-        --sheen-hi: rgba(255, 255, 255, 0.5);
-        --sheen-mid: rgba(255, 255, 255, 0.14);
-        --sheen-rim: rgba(255, 255, 255, 0.9);
-        --pill-bg: rgba(255, 255, 255, 0.62);
+        --bg-color: #f5f5f7;
+        --text-color: #1d1d1f;
+        --muted-color: #6e6e73;
+        --accent: #0071e3;
+        --sheen-hi: rgba(255, 255, 255, 0.42);
+        --sheen-mid: rgba(255, 255, 255, 0.12);
+        --sheen-rim: rgba(255, 255, 255, 0.75);
+        --pill-bg: rgba(255, 255, 255, 0.55);
+        --glow: 0.32;
       }
 
       * {
@@ -69,9 +75,7 @@ Author: Nabeel
         box-sizing: border-box;
         user-select: none;
         -webkit-user-select: none;
-        font-family:
-          -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter",
-          "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-family: var(--text-font);
         -webkit-font-smoothing: antialiased;
       }
 
@@ -84,6 +88,11 @@ Author: Nabeel
         background-color: var(--bg-color);
         color: var(--text-color);
         overscroll-behavior-y: none;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+      }
+      body.ready {
+        opacity: 1;
       }
 
       ::view-transition-old(root),
@@ -95,6 +104,7 @@ Author: Nabeel
       .main-content {
         position: relative;
         background: var(--bg-color);
+        overflow-x: clip;
       }
       .banner-text-container {
         display: flex;
@@ -103,7 +113,14 @@ Author: Nabeel
         max-width: 60%;
         margin: 0 auto;
         padding-top: 86svh;
-        padding-bottom: calc(100svh - 10vw + 1vh);
+        padding-bottom: calc(100svh - var(--pad) + 1vh);
+      }
+      .glow {
+        position: absolute;
+        width: 56vmin;
+        height: 56vmin;
+        opacity: var(--glow);
+        pointer-events: none;
       }
       .toolbar-cover {
         position: sticky;
@@ -118,30 +135,27 @@ Author: Nabeel
         position: absolute;
         left: 0;
         right: 0;
-        bottom: 0;
-        height: calc(100lvh - 100svh);
+        bottom: -160px;
+        height: calc(100lvh - 100svh + env(safe-area-inset-bottom, 0px) + 200px);
         background: var(--bg-color);
       }
       .banner-text {
         width: 100%;
         text-align: center;
-        margin: 0 auto calc(100vh - 20vw + 2vh);
-        font-family:
-          -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter",
-          "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-size: 7vw;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: -0.02em;
-        line-height: 0.9;
+        margin: 0 auto calc(var(--pane-h) + 2vh);
+        font-family: var(--display-font);
+        font-size: clamp(56px, 7vw, 132px);
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        line-height: 1;
         color: var(--text-color);
         pointer-events: none;
       }
       .banner-text.small {
-        font-size: 3.4vw;
-        font-weight: 600;
-        letter-spacing: -0.01em;
-        line-height: 1;
+        font-size: clamp(20px, 2.2vw, 40px);
+        font-weight: 400;
+        letter-spacing: 0.011em;
+        line-height: 1.2;
         color: var(--muted-color);
       }
       .banner-text {
@@ -189,7 +203,7 @@ Author: Nabeel
       .band:nth-child(6) > span { top: -500%; }
       #name {
         padding: 0.4em 0 0.8em;
-        margin: 0 auto calc(100vh - 20vw + 2vh - 0.8em);
+        margin: 0 auto calc(var(--pane-h) + 2vh - 0.8em);
       }
       .banner-text .word {
         position: relative;
@@ -215,18 +229,17 @@ Author: Nabeel
         width: 100%;
         height: 100%;
       }
-      .banner-text .leaf-fly {
+      .leaf-fly {
         display: none;
         position: absolute;
-        left: calc(50% - 0.09em);
-        top: -0.31em;
-        width: 0.26em;
-        height: 0.3em;
+        left: 0;
+        top: 0;
+        pointer-events: none;
       }
-      .banner-text .leaf-fly.on {
+      .leaf-fly.on {
         display: block;
       }
-      .banner-text .leaf-fly img {
+      .leaf-fly img {
         display: none;
         position: absolute;
         left: -50%;
@@ -236,7 +249,6 @@ Author: Nabeel
       }
       .banner-text .i {
         display: none;
-        text-transform: none;
       }
       .banner-text.crashed .i {
         display: inline;
@@ -246,7 +258,6 @@ Author: Nabeel
         position: absolute;
         top: 0.4em;
         left: -60vw;
-        text-transform: none;
         color: var(--text-color);
         white-space: nowrap;
       }
@@ -259,11 +270,11 @@ Author: Nabeel
 
       .shape {
         position: fixed;
-        top: 10vw;
-        left: 10vw;
-        width: calc(100vw - 20vw);
-        height: calc(100vh - 20vw);
-        border-radius: 2vw;
+        top: var(--pad);
+        left: calc(var(--pad) + env(safe-area-inset-left));
+        width: calc(100vw - 2 * var(--pad) - env(safe-area-inset-left) - env(safe-area-inset-right));
+        height: var(--pane-h);
+        border-radius: var(--radius);
         background: rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(20px) saturate(180%);
         will-change: transform;
@@ -273,11 +284,11 @@ Author: Nabeel
 
       .mask {
         position: fixed;
-        top: 10vw;
-        left: 10vw;
-        width: calc(100vw - 20vw);
-        height: calc(100vh - 20vw);
-        border-radius: 2vw;
+        top: var(--pad);
+        left: calc(var(--pad) + env(safe-area-inset-left));
+        width: calc(100vw - 2 * var(--pad) - env(safe-area-inset-left) - env(safe-area-inset-right));
+        height: var(--pane-h);
+        border-radius: var(--radius);
         box-shadow: 0 0 0 200vmax var(--bg-color);
         pointer-events: none;
         z-index: 9990;
@@ -312,7 +323,7 @@ Author: Nabeel
         position: fixed;
         top: 0;
         right: 0;
-        padding: 32px 40px;
+        padding: calc(32px + env(safe-area-inset-top)) calc(40px + env(safe-area-inset-right)) 32px 40px;
         z-index: 10000;
       }
       #theme-toggle {
@@ -456,10 +467,10 @@ Author: Nabeel
         transform: scale(0.97);
       }
       .email-pill span {
-        color: var(--text-color);
-        font-size: 0.98rem;
-        font-weight: 500;
-        letter-spacing: -0.01em;
+        color: var(--accent);
+        font-size: 1rem;
+        font-weight: 400;
+        letter-spacing: -0.02em;
       }
 
       footer.lens {
@@ -481,23 +492,59 @@ Author: Nabeel
           0 0 0 0.5px rgba(0, 0, 0, 0.05);
         color: var(--muted-color);
         font-size: 0.78rem;
-        font-weight: 500;
-        letter-spacing: 0.01em;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        font-variant-numeric: tabular-nums;
       }
       #clock-wrap {
         pointer-events: auto;
         cursor: pointer;
       }
+      .footer-mid {
+        opacity: 0.55;
+      }
+      @media (hover: none) {
+        .footer-mid {
+          display: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .scroll-hint .arrow {
+          animation: none;
+        }
+        #theme-toggle,
+        .email-pill,
+        .pill-anchor,
+        body {
+          transition: none;
+        }
+      }
+      @media (hover: none) and (pointer: coarse) {
+        html {
+          scroll-snap-type: y proximity;
+        }
+        #scroll-hint,
+        #name,
+        .banner-text.small {
+          scroll-snap-align: center;
+        }
+        .banner-text-container {
+          scroll-snap-align: end;
+        }
+      }
 
-      @media (max-width: 768px) {
+      @media (max-width: 768px) and (orientation: portrait) {
+        :root {
+          --pane-h: 54vh;
+        }
         .shape,
         .mask {
           position: fixed;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: calc(90vw);
-          height: calc(54vh);
+          width: calc(90vw - env(safe-area-inset-left) - env(safe-area-inset-right));
+          height: var(--pane-h);
           border-radius: 5vw;
         }
         .banner-text-container {
@@ -506,20 +553,24 @@ Author: Nabeel
           padding-bottom: 74svh;
         }
         .banner-text {
-          font-size: 16vw;
-          margin: 0 auto 57vh;
+          font-size: clamp(44px, 15vw, 88px);
+          margin: 0 auto 68vh;
         }
         #name {
-          margin: 0 auto calc(57vh - 0.8em);
+          margin: 0 auto calc(68vh - 0.8em);
         }
         .banner-text.small {
-          font-size: 5.6vw;
-          line-height: 1.12;
-          max-width: 68vw;
+          font-size: clamp(18px, 5.4vw, 28px);
+          line-height: 1.2;
+          max-width: 70vw;
           text-wrap: balance;
         }
         .scroll-hint {
           font-size: 4.2vw;
+        }
+        .glow {
+          width: 80vmin;
+          height: 80vmin;
         }
         .top-nav {
           padding: calc(14px + env(safe-area-inset-top)) 18px 18px;
@@ -543,35 +594,74 @@ Author: Nabeel
           gap: 12px;
         }
       }
+      @media (max-height: 520px) and (orientation: landscape) {
+        :root {
+          --pad: 8vh;
+          --radius: 4vh;
+          --pane-h: calc(100vh - 2 * var(--pad));
+        }
+        .shape,
+        .mask {
+          left: calc(14vw + env(safe-area-inset-left));
+          width: calc(72vw - env(safe-area-inset-left) - env(safe-area-inset-right));
+        }
+        .banner-text {
+          font-size: clamp(40px, 12vh, 72px);
+        }
+        .banner-text.small {
+          font-size: clamp(16px, 4vh, 24px);
+        }
+        .scroll-hint {
+          font-size: clamp(13px, 3.2vh, 18px);
+        }
+        .top-nav {
+          padding: 14px calc(18px + env(safe-area-inset-right)) 14px 18px;
+        }
+        #theme-toggle {
+          width: 44px;
+          height: 44px;
+        }
+        footer.lens {
+          left: calc(14px + env(safe-area-inset-left));
+          right: calc(14px + env(safe-area-inset-right));
+          bottom: 10px;
+          padding: 0.6rem 1.2rem;
+          font-size: 0.66rem;
+        }
+      }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-    <script src="scripts/liquidGL.js?v=6.12.0" defer></script>
+    <script src="scripts/liquidGL.js?v=7.0.0" defer></script>
   </head>
   <body>
     <div class="main-content">
       <div class="toolbar-cover" data-liquid-ignore aria-hidden="true"></div>
+      <img class="glow" alt="" style="left: -14vmin; top: 22svh" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20200%20200%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27g%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%271%27%2F%3E%3Cstop%20offset%3D%270.55%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%270.35%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Ccircle%20cx%3D%27100%27%20cy%3D%27100%27%20r%3D%27100%27%20fill%3D%27url%28%23g%29%27%2F%3E%3C%2Fsvg%3E" />
+      <img class="glow" alt="" style="right: -18vmin; top: 60svh" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20200%20200%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27g%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%271%27%2F%3E%3Cstop%20offset%3D%270.55%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%270.35%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Ccircle%20cx%3D%27100%27%20cy%3D%27100%27%20r%3D%27100%27%20fill%3D%27url%28%23g%29%27%2F%3E%3C%2Fsvg%3E" />
+      <img class="glow" alt="" style="left: -10vmin; top: calc(86svh + var(--pane-h) + 30vh)" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20200%20200%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27g%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%238e5cff%27%20stop-opacity%3D%271%27%2F%3E%3Cstop%20offset%3D%270.55%27%20stop-color%3D%27%238e5cff%27%20stop-opacity%3D%270.35%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%238e5cff%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Ccircle%20cx%3D%27100%27%20cy%3D%27100%27%20r%3D%27100%27%20fill%3D%27url%28%23g%29%27%2F%3E%3C%2Fsvg%3E" />
+      <img class="glow" alt="" style="right: -12vmin; top: calc(86svh + 2 * var(--pane-h) + 40vh)" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20200%20200%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27g%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%232fd3a5%27%20stop-opacity%3D%271%27%2F%3E%3Cstop%20offset%3D%270.55%27%20stop-color%3D%27%232fd3a5%27%20stop-opacity%3D%270.35%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%232fd3a5%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Ccircle%20cx%3D%27100%27%20cy%3D%27100%27%20r%3D%27100%27%20fill%3D%27url%28%23g%29%27%2F%3E%3C%2Fsvg%3E" />
       <div class="scroll-hint" id="scroll-hint" data-liquidgl-hide>
         <span>scroll</span>
-        <img class="arrow arrow-dark" alt="" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a1a1a8' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E" />
-        <img class="arrow arrow-light" alt="" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236e6e75' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E" />
+        <img class="arrow arrow-dark" alt="" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2386868b' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E" />
+        <img class="arrow arrow-light" alt="" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236e6e73' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E" />
       </div>
       <div class="banner-text-container">
         <div class="banner-text" id="name">
-          <span class="word"><span class="i">i</span>N<span class="a">a<span class="leaf-box" aria-hidden="true"><svg class="leaf" viewBox="0 0 85 98"><path fill="#61bb46" d="M62.2 66.8c14.6-17.7 24.5-42.3 21.8-66.8-21.1.9-46.6 14.1-61.7 31.8-13.5 15.7-25.3 40.7-22.1 64.7 23.5 1.8 47.4-12 62-29.7z"/></svg></span></span>beel</span>
+          <span class="word"><span class="i">i</span>N<span class="a">a<span class="leaf-box" aria-hidden="true"><svg class="leaf" viewBox="0 0 85 98"><path fill="#61bb46" d="M62.2 66.8c14.6-17.7 24.5-42.3 21.8-66.8-21.1.9-46.6 14.1-61.7 31.8-13.5 15.7-25.3 40.7-22.1 64.7 23.5 1.8 47.4-12 62-29.7z"/></svg></span></span>beel.</span>
           <span class="stripes" aria-hidden="true">
-            <span class="band"><span><span class="i">i</span>Nabeel</span></span>
-            <span class="band"><span><span class="i">i</span>Nabeel</span></span>
-            <span class="band"><span><span class="i">i</span>Nabeel</span></span>
-            <span class="band"><span><span class="i">i</span>Nabeel</span></span>
-            <span class="band"><span><span class="i">i</span>Nabeel</span></span>
-            <span class="band"><span><span class="i">i</span>Nabeel</span></span>
+            <span class="band"><span><span class="i">i</span>Nabeel.</span></span>
+            <span class="band"><span><span class="i">i</span>Nabeel.</span></span>
+            <span class="band"><span><span class="i">i</span>Nabeel.</span></span>
+            <span class="band"><span><span class="i">i</span>Nabeel.</span></span>
+            <span class="band"><span><span class="i">i</span>Nabeel.</span></span>
+            <span class="band"><span><span class="i">i</span>Nabeel.</span></span>
           </span>
           <span class="runner" id="runner" aria-hidden="true"><span class="word">i</span><span class="stripes"><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span></span></span>
         </div>
-        <div class="banner-text small">building things on the internet</div>
+        <div class="banner-text small">Building things on the internet</div>
         <div id="end-sentinel" aria-hidden="true"></div>
       </div>
     </div>
@@ -612,6 +702,7 @@ Author: Nabeel
       <div class="footer-left">
         © <span id="year"></span> Nabeel. All rights reserved
       </div>
+      <div class="footer-mid">Try typing apple</div>
       <div class="footer-right" id="clock-wrap">
         San Francisco, CA. <span id="clock">00:00:00</span>
       </div>
@@ -624,7 +715,7 @@ Author: Nabeel
         const light = root.getAttribute("data-theme") === "light";
         document
           .getElementById("theme-color")
-          .setAttribute("content", light ? "#ececee" : "#101014");
+          .setAttribute("content", light ? "#f5f5f7" : "#000000");
       }
       let transitionBusy = false;
       function transitionWith(apply) {
@@ -696,6 +787,7 @@ Author: Nabeel
         })();
       }
 
+      const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
       const nameEl = document.getElementById("name");
       const runner = document.getElementById("runner");
       const wordEl = nameEl.querySelector(".word");
@@ -723,6 +815,28 @@ Author: Nabeel
         });
         r.render();
       }
+      let nameDirtyUntil = 0;
+      function dirtyName(ms) {
+        nameDirtyUntil = Math.max(nameDirtyUntil, performance.now() + ms);
+      }
+      function liveLoop(extra, isOn) {
+        (function tick() {
+          if (!isOn()) return;
+          const r = window.__liquidGLRenderer__;
+          if (r) {
+            if (performance.now() < nameDirtyUntil) {
+              const m = r._dynMeta?.get(nameEl);
+              if (m) m.needsRecapture = true;
+            }
+            (extra || []).forEach((el) => {
+              const m = r._dynMeta?.get(el);
+              if (m) m.needsRecapture = true;
+            });
+            r.render();
+          }
+          requestAnimationFrame(tick);
+        })();
+      }
 
       async function bringNameIntoPane() {
         const rect = nameEl.getBoundingClientRect();
@@ -742,6 +856,11 @@ Author: Nabeel
           crashBusy = false;
           return;
         }
+        if (reduceMotion) {
+          await transitionWith(() => nameEl.classList.add("retro", "crashed"));
+          crashBusy = false;
+          return;
+        }
         await bringNameIntoPane();
         nameEl.setAttribute("data-liquidgl-hide", "");
         if (r) await r.captureSnapshot();
@@ -754,11 +873,8 @@ Author: Nabeel
         leafBox.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 420, delay: 160, easing: "ease-out", fill: "backwards" });
 
         let animating = true;
-        (function tick() {
-          if (!animating) return;
-          forceLive([nameEl, runner]);
-          requestAnimationFrame(tick);
-        })();
+        dirtyName(640);
+        liveLoop([], () => animating);
 
         runner.classList.add("running");
         const wordRect = wordEl.getBoundingClientRect();
@@ -772,6 +888,7 @@ Author: Nabeel
 
         runner.classList.remove("running");
         nameEl.classList.add("crashed");
+        dirtyName(700);
         const hit = wordEl.getBoundingClientRect();
         fireworks({
           particleCount: 28,
@@ -830,7 +947,7 @@ Author: Nabeel
           leafFrames.push(img);
         }
       }
-      nameEl.querySelector(".a").appendChild(leafFly);
+      document.querySelector(".main-content").appendChild(leafFly);
       let leafShown = null;
       function showLeafFrame(angle, flip) {
         let a = Math.round(((angle + 180) / 360) * LEAF_ANGLES) % LEAF_ANGLES;
@@ -857,11 +974,16 @@ Author: Nabeel
         return new Promise((resolve) => {
           const em = parseFloat(getComputedStyle(nameEl).fontSize);
           const aBox = nameEl.querySelector(".a").getBoundingClientRect();
+          const mainBox = document.querySelector(".main-content").getBoundingClientRect();
+          const baseX = aBox.left - mainBox.left;
+          const baseY = aBox.top - mainBox.top;
+          leafFly.style.width = `${0.26 * em}px`;
+          leafFly.style.height = `${0.3 * em}px`;
           const startX = aBox.width / 2 - 0.09 * em;
           const startY = -0.31 * em;
           const groundY = 0.96 * em;
-          const total = 2100;
-          const omega = (Math.PI * 2) / 860;
+          const total = 1600;
+          const omega = (Math.PI * 2) / 720;
           let t0 = null;
           let landed = null;
           let restX = 0;
@@ -896,15 +1018,15 @@ Author: Nabeel
               y = groundY;
               x = restX + 0.08 * em * ease * Math.sign(vx || 1);
               angle = angle + (restAngle - angle) * ease;
-              leafFly.style.left = `${x}px`;
-              leafFly.style.top = `${y}px`;
+              leafFly.style.left = `${baseX + x}px`;
+              leafFly.style.top = `${baseY + y}px`;
               showLeafFrame(angle, 1);
               if (k >= 1 && t - landed > 120) return resolve();
               requestAnimationFrame(step);
               return;
             }
-            leafFly.style.left = `${x}px`;
-            leafFly.style.top = `${y}px`;
+            leafFly.style.left = `${baseX + x}px`;
+            leafFly.style.top = `${baseY + y}px`;
             showLeafFrame(angle, flip);
             requestAnimationFrame(step);
           };
@@ -914,17 +1036,20 @@ Author: Nabeel
 
       async function appleUndo() {
         const r = window.__liquidGLRenderer__;
+        if (reduceMotion) {
+          await transitionWith(() => nameEl.classList.remove("retro", "crashed"));
+          return;
+        }
         await bringNameIntoPane();
         nameEl.setAttribute("data-liquidgl-hide", "");
+        leafFly.setAttribute("data-liquidgl-hide", "");
         if (r) await r.captureSnapshot();
         liveNode(nameEl, true);
         liveNode(runner, true);
+        liveNode(leafFly, true);
         let animating = true;
-        (function tick() {
-          if (!animating) return;
-          forceLive([nameEl, runner]);
-          requestAnimationFrame(tick);
-        })();
+        dirtyName(300);
+        liveLoop([leafFly], () => animating);
 
         const iRect = wordEl.querySelector(".i").getBoundingClientRect();
         const nameRect = nameEl.getBoundingClientRect();
@@ -948,6 +1073,7 @@ Author: Nabeel
         animating = false;
         liveNode(nameEl, false);
         liveNode(runner, false);
+        liveNode(leafFly, false);
         nameEl.removeAttribute("data-liquidgl-hide");
         await transitionWith(() => {
           nameEl.classList.remove("retro");
@@ -968,7 +1094,7 @@ Author: Nabeel
       }
       function overHint(e) {
         const r = hintEl.getBoundingClientRect();
-        return r.bottom > 0 && inside(e, r, 16);
+        return r.bottom > 0 && inside(e, r, 28);
       }
       document.addEventListener("mousemove", (e) => {
         document.body.style.cursor = overHint(e) ? "pointer" : "";
@@ -1079,7 +1205,11 @@ Author: Nabeel
             forceLive([document.getElementById("scroll-hint")]);
           }, 600);
         });
-        window.addEventListener("load", () => liquidGL.syncWith());
+        window.addEventListener("load", () => {
+          liquidGL.syncWith();
+          setTimeout(() => document.body.classList.add("ready"), 250);
+        });
+        setTimeout(() => document.body.classList.add("ready"), 1800);
         document.addEventListener("mousemove", () => {
           if (window.__liquidGLRenderer__) window.__liquidGLRenderer__.render();
         });
