@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 7.1.2
+Version: 7.2.0
 Last updated: 2026-09-10
 Author: Nabeel
 -->
@@ -169,11 +169,8 @@ Author: Nabeel
         position: absolute;
         inset: 0.53em 0 0.92em;
       }
-      .banner-text.retro .word {
-        color: transparent;
-      }
       .banner-text.retro .stripes {
-        display: block;
+        display: none;
       }
       .band {
         position: absolute;
@@ -876,10 +873,7 @@ Author: Nabeel
         if (r) await r.captureSnapshot();
         liveNode(nameEl, true);
         liveNode(runner, true);
-        const textColor = getComputedStyle(nameEl).color;
         nameEl.classList.add("retro");
-        wordEl.animate([{ color: textColor }, { color: "transparent" }], { duration: 520, easing: "ease-in-out" });
-        nameEl.querySelector(".stripes").animate([{ opacity: 0 }, { opacity: 1 }], { duration: 520, easing: "ease-in-out" });
         leafBox.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 420, delay: 160, easing: "ease-out", fill: "backwards" });
 
         let animating = true;
