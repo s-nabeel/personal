@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 8.6.0
+Version: 8.6.1
 Last updated: 2026-09-10
 Author: Nabeel
 -->
@@ -52,6 +52,9 @@ Author: Nabeel
         --sheen-mid: rgba(255, 255, 255, 0.05);
         --sheen-rim: rgba(255, 255, 255, 0.28);
         --pill-bg: rgba(255, 255, 255, 0.08);
+        --glass-ring: rgba(255, 255, 255, 0.14);
+        --glass-depth: rgba(0, 0, 0, 0.35);
+        --glass-shadow: rgba(0, 0, 0, 0.35);
         --glow: 0.55;
         --pad: clamp(56px, 10vw, 140px);
         --radius: clamp(16px, 2vw, 28px);
@@ -69,6 +72,9 @@ Author: Nabeel
         --sheen-mid: rgba(255, 255, 255, 0.12);
         --sheen-rim: rgba(255, 255, 255, 0.75);
         --pill-bg: rgba(255, 255, 255, 0.55);
+        --glass-ring: rgba(0, 0, 0, 0.06);
+        --glass-depth: rgba(0, 0, 0, 0.06);
+        --glass-shadow: rgba(0, 0, 0, 0.12);
         --glow: 0.32;
       }
 
@@ -297,11 +303,12 @@ Author: Nabeel
         height: 53px;
         border: none;
         background: var(--pill-bg);
-        -webkit-backdrop-filter: blur(14px) saturate(160%);
-        backdrop-filter: blur(14px) saturate(160%);
+        -webkit-backdrop-filter: blur(18px) saturate(180%);
+        backdrop-filter: blur(18px) saturate(180%);
         box-shadow:
-          0 10px 30px rgba(0, 0, 0, 0.1),
-          0 0 0 0.5px rgba(0, 0, 0, 0.05);
+          0 12px 32px var(--glass-shadow),
+          0 0 0 0.5px var(--glass-ring),
+          inset 0 -1px 1px var(--glass-depth);
         border-radius: 999px;
         color: var(--text-color);
         cursor: pointer;
@@ -419,11 +426,12 @@ Author: Nabeel
         border-radius: 999px;
         padding: 1.05rem 2.6rem;
         background: var(--pill-bg);
-        -webkit-backdrop-filter: blur(14px) saturate(160%);
-        backdrop-filter: blur(14px) saturate(160%);
+        -webkit-backdrop-filter: blur(18px) saturate(180%);
+        backdrop-filter: blur(18px) saturate(180%);
         box-shadow:
-          0 10px 30px rgba(0, 0, 0, 0.1),
-          0 0 0 0.5px rgba(0, 0, 0, 0.05);
+          0 12px 32px var(--glass-shadow),
+          0 0 0 0.5px var(--glass-ring),
+          inset 0 -1px 1px var(--glass-depth);
         transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
       .email-wrap:hover .email-pill {
@@ -451,11 +459,12 @@ Author: Nabeel
         padding: 1.05rem 2rem;
         border-radius: 999px;
         background: var(--pill-bg);
-        -webkit-backdrop-filter: blur(14px) saturate(160%);
-        backdrop-filter: blur(14px) saturate(160%);
+        -webkit-backdrop-filter: blur(18px) saturate(180%);
+        backdrop-filter: blur(18px) saturate(180%);
         box-shadow:
-          0 10px 30px rgba(0, 0, 0, 0.1),
-          0 0 0 0.5px rgba(0, 0, 0, 0.05);
+          0 12px 32px var(--glass-shadow),
+          0 0 0 0.5px var(--glass-ring),
+          inset 0 -1px 1px var(--glass-depth);
         color: var(--muted-color);
         font-size: 0.78rem;
         font-weight: 400;
