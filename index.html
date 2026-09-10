@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 8.5.0
+Version: 8.5.1
 Last updated: 2026-09-10
 Author: Nabeel
 -->
@@ -213,6 +213,9 @@ Author: Nabeel
       }
       .banner-text.crashed .i {
         display: inline;
+      }
+      .banner-text.leaving .i {
+        visibility: hidden;
       }
       .runner {
         display: none;
@@ -931,7 +934,7 @@ Author: Nabeel
         const iRect = wordEl.querySelector(".i").getBoundingClientRect();
         runner.style.left = `${iRect.left - geo.mainRect.left}px`;
         runner.classList.add("running");
-        nameEl.classList.remove("crashed");
+        nameEl.classList.add("leaving");
         thinkEl.getAnimations().forEach((a) => a.cancel());
         nameEl.animate(
           [{ left: "0px" }, { left: "-0.12em", offset: 0.25 }, { left: "0px" }],
@@ -946,7 +949,7 @@ Author: Nabeel
 
         dirtyName(900);
         await wordEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 380, easing: "ease-in", fill: "forwards" }).finished;
-        nameEl.classList.remove("retro");
+        nameEl.classList.remove("retro", "crashed", "leaving");
         wordEl.getAnimations().forEach((a) => a.cancel());
         await wordEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 420, easing: "ease-out" }).finished;
         animating = false;
