@@ -2934,7 +2934,9 @@
               }
               meta._capturing = false;
             };
-            if (typeof requestIdleCallback === "function") {
+            if (this._fastDynamic) {
+              capture();
+            } else if (typeof requestIdleCallback === "function") {
               requestIdleCallback(capture, { timeout: 100 });
             } else {
               setTimeout(capture, 0);
