@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 8.0.0
+Version: 8.1.0
 Last updated: 2026-09-10
 Author: Nabeel
 -->
@@ -182,11 +182,40 @@ Author: Nabeel
         z-index: 1;
       }
       .banner-text.retro .word,
-      .banner-text.retro .runner {
+      .runner {
         font-family: "EB Garamond", Georgia, "Times New Roman", serif;
         font-weight: 400;
         letter-spacing: -0.03em;
         color: var(--muted-color);
+      }
+      .banner-text .ghost {
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0.4em;
+        text-align: center;
+        color: var(--text-color);
+        pointer-events: none;
+      }
+      .banner-text .ghost.on {
+        display: block;
+      }
+      .banner-text .think {
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0.12em;
+        text-align: center;
+        font-family: "EB Garamond", Georgia, "Times New Roman", serif;
+        font-weight: 400;
+        font-size: 0.24em;
+        letter-spacing: 0;
+        color: var(--muted-color);
+      }
+      .banner-text.crashed .think {
+        display: block;
       }
       .banner-text .i,
       .banner-text .mac {
@@ -196,31 +225,28 @@ Author: Nabeel
         display: inline;
       }
       .banner-text.crashed .mac {
-        display: inline-block;
+        display: inline;
       }
       .banner-text .mac,
-      .banner-text .runner-mac svg {
-        width: 0.66em;
-        height: 0.74em;
-        vertical-align: -0.04em;
+      .runner-mac {
+        font-family: var(--display-font);
+        font-weight: 400;
+        font-size: 0.82em;
+        letter-spacing: 0;
+      }
+      .banner-text .mac {
         margin-left: 0.14em;
       }
-      .banner-text .mac svg,
-      .banner-text .runner-mac svg {
-        display: block;
-        width: 100%;
-        height: 100%;
-        color: inherit;
-      }
-      .banner-text .runner {
+      .runner {
         display: none;
         position: absolute;
-        top: 0.4em;
+        top: 0;
         left: -60vw;
-        color: var(--text-color);
+        line-height: 1;
         white-space: nowrap;
+        pointer-events: none;
       }
-      .banner-text .runner.running {
+      .runner.running {
         display: block;
       }
       .shape {
@@ -614,11 +640,13 @@ Author: Nabeel
         <img class="arrow arrow-dark" alt="" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2386868b' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E" />
         <img class="arrow arrow-light" alt="" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236e6e73' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E" />
       </div>
+      <span class="runner" id="runner" aria-hidden="true">i</span>
+      <span class="runner runner-mac" id="runner2" aria-hidden="true">⌘</span>
       <div class="banner-text-container">
         <div class="banner-text" id="name">
-          <span class="word"><span class="i">i</span>Nabeel<span class="mac" aria-hidden="true"><svg viewBox="0 0 100 112" aria-hidden="true"><rect x="8" y="6" width="84" height="100" rx="11" fill="none" stroke="currentColor" stroke-width="7"/><rect x="22" y="18" width="56" height="44" rx="5" fill="none" stroke="currentColor" stroke-width="6"/><line x1="34" y1="78" x2="66" y2="78" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><line x1="26" y1="92" x2="40" y2="92" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg></span></span>
-          <span class="runner" id="runner" aria-hidden="true">i</span>
-          <span class="runner runner-mac" id="runner2" aria-hidden="true"><svg viewBox="0 0 100 112" aria-hidden="true"><rect x="8" y="6" width="84" height="100" rx="11" fill="none" stroke="currentColor" stroke-width="7"/><rect x="22" y="18" width="56" height="44" rx="5" fill="none" stroke="currentColor" stroke-width="6"/><line x1="34" y1="78" x2="66" y2="78" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><line x1="26" y1="92" x2="40" y2="92" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg></span>
+          <span class="ghost" aria-hidden="true">Nabeel</span>
+          <span class="word"><span class="i">i</span>Nabeel<span class="mac" aria-hidden="true">⌘</span></span>
+          <span class="think" aria-hidden="true">Think different.</span>
         </div>
         <div class="banner-text small">Building things on the internet</div>
         <div id="end-sentinel" aria-hidden="true"></div>
@@ -759,6 +787,20 @@ Author: Nabeel
       const runner = document.getElementById("runner");
       const runner2 = document.getElementById("runner2");
       const wordEl = nameEl.querySelector(".word");
+      const ghostEl = nameEl.querySelector(".ghost");
+      const mainEl = document.querySelector(".main-content");
+      function placeRunners() {
+        const cs = getComputedStyle(nameEl);
+        const em = parseFloat(cs.fontSize);
+        const nameRect = nameEl.getBoundingClientRect();
+        const mainRect = mainEl.getBoundingClientRect();
+        const top = nameRect.top - mainRect.top + 0.4 * em;
+        [runner, runner2].forEach((el) => {
+          el.style.fontSize = cs.fontSize;
+          el.style.top = `${top}px`;
+        });
+        return { em, nameRect, mainRect, offX: nameRect.left - mainRect.left };
+      }
       const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
       function liveNode(el, on) {
@@ -814,7 +856,7 @@ Author: Nabeel
 
       let crashBusy = false;
       function macStart() {
-        return nameEl.getBoundingClientRect().width + innerWidth * 0.6;
+        return innerWidth * 1.6;
       }
       async function appleShow() {
         if (crashBusy) return;
@@ -839,21 +881,23 @@ Author: Nabeel
         liveNode(nameEl, true);
         liveNode(runner, true);
         liveNode(runner2, true);
-        const fromColor = getComputedStyle(wordEl).color;
+        ghostEl.classList.add("on");
         nameEl.classList.add("retro");
-        wordEl.animate([{ color: fromColor }, { color: getComputedStyle(wordEl).color }], { duration: 520, easing: "ease-in-out" });
+        const fadeOut = ghostEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 520, easing: "ease-in-out", fill: "forwards" });
+        wordEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 520, easing: "ease-in-out" });
+        fadeOut.finished.then(() => { ghostEl.classList.remove("on"); fadeOut.cancel(); }).catch(() => {});
 
         let animating = true;
         dirtyName(640);
         liveLoop([], () => animating);
 
+        const geo = placeRunners();
         runner.classList.add("running");
         runner2.classList.add("running");
         const wordRect = wordEl.getBoundingClientRect();
-        const nameRect = nameEl.getBoundingClientRect();
         const runnerW = runner.getBoundingClientRect().width;
-        const stopLeft = wordRect.left - nameRect.left - runnerW;
-        const stopRight = wordRect.right - nameRect.left;
+        const stopLeft = wordRect.left - geo.mainRect.left - runnerW;
+        const stopRight = wordRect.right - geo.mainRect.left;
         const arriveL = runner.animate(
           [{ left: "-60vw" }, { left: `${stopLeft}px` }],
           { duration: 620, easing: "cubic-bezier(0.7, 0, 1, 1)", fill: "forwards" },
@@ -918,11 +962,11 @@ Author: Nabeel
         dirtyName(820);
         liveLoop([], () => animating);
 
+        const geo = placeRunners();
         const iRect = wordEl.querySelector(".i").getBoundingClientRect();
         const macRect = wordEl.querySelector(".mac").getBoundingClientRect();
-        const nameRect = nameEl.getBoundingClientRect();
-        runner.style.left = `${iRect.left - nameRect.left}px`;
-        runner2.style.left = `${macRect.left - nameRect.left}px`;
+        runner.style.left = `${iRect.left - geo.mainRect.left}px`;
+        runner2.style.left = `${macRect.left - geo.mainRect.left}px`;
         runner.classList.add("running");
         runner2.classList.add("running");
         nameEl.classList.remove("crashed");
@@ -940,12 +984,20 @@ Author: Nabeel
         runner.style.left = "";
         runner2.style.left = "";
 
+        ghostEl.classList.add("on");
+        dirtyName(600);
+        const fadeIn = ghostEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 520, easing: "ease-in-out", fill: "forwards" });
+        await wordEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 520, easing: "ease-in-out", fill: "forwards" }).finished;
         animating = false;
         liveNode(nameEl, false);
         liveNode(runner, false);
         liveNode(runner2, false);
         nameEl.removeAttribute("data-liquidgl-hide");
-        await transitionWith(() => nameEl.classList.remove("retro"));
+        nameEl.classList.remove("retro");
+        wordEl.getAnimations().forEach((a) => a.cancel());
+        fadeIn.cancel();
+        ghostEl.classList.remove("on");
+        if (r) await r.captureSnapshot();
       }
 
       const paneEl = document.querySelector(".shape");
