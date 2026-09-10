@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 8.2.0
+Version: 8.2.1
 Last updated: 2026-09-10
 Author: Nabeel
 -->
@@ -772,6 +772,7 @@ Author: Nabeel
       const runner = document.getElementById("runner");
       const wordEl = nameEl.querySelector(".word");
       const ghostEl = nameEl.querySelector(".ghost");
+      const thinkEl = nameEl.querySelector(".think");
       const mainEl = document.querySelector(".main-content");
       function placeRunners() {
         const cs = getComputedStyle(nameEl);
@@ -881,7 +882,11 @@ Author: Nabeel
 
         runner.classList.remove("running");
         nameEl.classList.add("crashed");
-        dirtyName(760);
+        dirtyName(1100);
+        thinkEl.animate(
+          [{ opacity: 0, bottom: "-0.25em" }, { opacity: 1, bottom: "0.12em" }],
+          { duration: 560, delay: 220, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" },
+        );
         const hit = wordEl.getBoundingClientRect();
         [hit.left].forEach((x) =>
           fireworks({
@@ -928,14 +933,19 @@ Author: Nabeel
         liveNode(nameEl, true);
         liveNode(runner, true);
         let animating = true;
-        dirtyName(820);
+        dirtyName(1300);
         liveLoop([], () => animating);
 
+        await thinkEl.animate(
+          [{ opacity: 1, bottom: "0.12em" }, { opacity: 0, bottom: "-0.3em" }],
+          { duration: 420, easing: "cubic-bezier(0.4, 0, 1, 1)", fill: "forwards" },
+        ).finished;
         const geo = placeRunners();
         const iRect = wordEl.querySelector(".i").getBoundingClientRect();
         runner.style.left = `${iRect.left - geo.mainRect.left}px`;
         runner.classList.add("running");
         nameEl.classList.remove("crashed");
+        thinkEl.getAnimations().forEach((a) => a.cancel());
         nameEl.animate(
           [{ left: "0px" }, { left: "-0.12em", offset: 0.25 }, { left: "0px" }],
           { duration: 520, easing: "ease-out" },
