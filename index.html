@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 8.4.0
+Version: 8.5.0
 Last updated: 2026-09-10
 Author: Nabeel
 -->
@@ -719,6 +719,7 @@ Author: Nabeel
           localStorage.setItem("theme", theme);
           syncChrome();
           syncArrow();
+          forceLive([nameEl]);
         });
       }
       if (localStorage.getItem("theme") === "light") root.setAttribute("data-theme", "light");
@@ -845,16 +846,12 @@ Author: Nabeel
           return;
         }
         if (reduceMotion) {
-          await transitionWith(() => nameEl.classList.add("retro", "crashed"));
+          nameEl.classList.add("retro", "crashed");
+          forceLive([nameEl]);
           crashBusy = false;
           return;
         }
         await bringNameIntoPane();
-        try {
-          await document.fonts.load('400 1em "EB Garamond"');
-        } catch (e) {}
-        await transitionWith(() => nameEl.setAttribute("data-liquidgl-hide", ""), true);
-        liveNode(nameEl, true);
         liveNode(runner, true);
         let animating = true;
         dirtyName(900);
@@ -908,23 +905,19 @@ Author: Nabeel
         ).finished;
 
         animating = false;
-        await transitionWith(() => {
-          liveNode(nameEl, false);
-          liveNode(runner, false);
-          nameEl.removeAttribute("data-liquidgl-hide");
-        }, true);
+        liveNode(runner, false);
+        forceLive([nameEl]);
         crashBusy = false;
       }
 
       async function appleUndo() {
         const r = window.__liquidGLRenderer__;
         if (reduceMotion) {
-          await transitionWith(() => nameEl.classList.remove("retro", "crashed"));
+          nameEl.classList.remove("retro", "crashed");
+          forceLive([nameEl]);
           return;
         }
         await bringNameIntoPane();
-        await transitionWith(() => nameEl.setAttribute("data-liquidgl-hide", ""), true);
-        liveNode(nameEl, true);
         liveNode(runner, true);
         let animating = true;
         dirtyName(1300);
@@ -957,11 +950,8 @@ Author: Nabeel
         wordEl.getAnimations().forEach((a) => a.cancel());
         await wordEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 420, easing: "ease-out" }).finished;
         animating = false;
-        await transitionWith(() => {
-          liveNode(nameEl, false);
-          liveNode(runner, false);
-          nameEl.removeAttribute("data-liquidgl-hide");
-        }, true);
+        liveNode(runner, false);
+        forceLive([nameEl]);
       }
 
       const paneEl = document.querySelector(".shape");
@@ -1067,6 +1057,8 @@ Author: Nabeel
 
       document.addEventListener("DOMContentLoaded", () => {
         if (typeof liquidGL !== "function") return;
+        nameEl.setAttribute("data-liquidgl-hide", "");
+        if (document.fonts && document.fonts.load) document.fonts.load('400 1em "EB Garamond"').catch(() => {});
         liquidGL({
           target: ".shape",
           snapshot: ".main-content",
@@ -1079,6 +1071,7 @@ Author: Nabeel
           reveal: "fade",
           resolution: Math.min(3, window.devicePixelRatio || 1),
         });
+        liquidGL.registerDynamic("#name");
         const touchOnly = matchMedia("(hover: none) and (pointer: coarse)").matches;
         if (touchOnly) {
           const hint = document.getElementById("scroll-hint");
@@ -1104,7 +1097,7 @@ Author: Nabeel
         window.addEventListener("resize", () => {
           clearTimeout(resizeTimer);
           resizeTimer = setTimeout(() => {
-            forceLive([document.getElementById("scroll-hint")]);
+            forceLive([document.getElementById("scroll-hint"), nameEl]);
           }, 600);
         });
         window.addEventListener("load", () => {
