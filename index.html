@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 7.2.1
+Version: 8.0.0
 Last updated: 2026-09-10
 Author: Nabeel
 -->
@@ -38,6 +38,9 @@ Author: Nabeel
     <meta name="twitter:image" content="https://nabeel.ca/og-image.png?v=9" />
 
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet" />
     <style>
       :root {
         color-scheme: dark;
@@ -115,6 +118,12 @@ Author: Nabeel
         padding-top: 86svh;
         padding-bottom: calc(100svh - var(--pad) + 1vh);
       }
+      .glows {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
       .glow {
         position: absolute;
         width: 56vmin;
@@ -164,41 +173,6 @@ Author: Nabeel
       .banner-text span {
         font-family: inherit;
       }
-      .banner-text .stripes {
-        display: none;
-        position: absolute;
-        inset: 0.53em 0 0.92em;
-      }
-      .banner-text.retro .stripes {
-        display: none;
-      }
-      .band {
-        position: absolute;
-        left: 0;
-        right: 0;
-        height: calc(100% / 6);
-        overflow: hidden;
-        text-align: center;
-      }
-      .band > span {
-        position: absolute;
-        left: 0;
-        right: 0;
-        height: auto;
-        line-height: 1;
-      }
-      .band:nth-child(1) { top: 0;                 color: #61bb46; }
-      .band:nth-child(2) { top: calc(100% / 6);     color: #fdb827; }
-      .band:nth-child(3) { top: calc(200% / 6);     color: #f5821f; }
-      .band:nth-child(4) { top: calc(300% / 6);     color: #e03a3e; }
-      .band:nth-child(5) { top: calc(400% / 6);     color: #963d97; }
-      .band:nth-child(6) { top: calc(500% / 6);     color: #009ddc; }
-      .band:nth-child(1) > span { top: -0.13em; }
-      .band:nth-child(2) > span { top: calc(-100% - 0.13em); }
-      .band:nth-child(3) > span { top: calc(-200% - 0.13em); }
-      .band:nth-child(4) > span { top: calc(-300% - 0.13em); }
-      .band:nth-child(5) > span { top: calc(-400% - 0.13em); }
-      .band:nth-child(6) > span { top: calc(-500% - 0.13em); }
       #name {
         padding: 0.4em 0 0.8em;
         margin: 0 auto calc(var(--pane-h) + 2vh - 0.8em);
@@ -207,49 +181,36 @@ Author: Nabeel
         position: relative;
         z-index: 1;
       }
-      .banner-text .a {
-        position: relative;
-        display: inline-block;
+      .banner-text.retro .word,
+      .banner-text.retro .runner {
+        font-family: "EB Garamond", Georgia, "Times New Roman", serif;
+        font-weight: 400;
+        letter-spacing: -0.03em;
+        color: var(--muted-color);
       }
-      .banner-text .leaf-box {
-        display: none;
-        position: absolute;
-        left: calc(50% - 0.06em);
-        top: -0.02em;
-        width: 0.26em;
-        height: 0.3em;
-      }
-      .banner-text.retro .leaf-box {
-        display: block;
-      }
-      .banner-text .leaf {
-        display: block;
-        width: 100%;
-        height: 100%;
-      }
-      .leaf-fly {
-        display: none;
-        position: absolute;
-        left: 0;
-        top: 0;
-        pointer-events: none;
-      }
-      .leaf-fly.on {
-        display: block;
-      }
-      .leaf-fly img {
-        display: none;
-        position: absolute;
-        left: -50%;
-        top: -50%;
-        width: 200%;
-        height: 200%;
-      }
-      .banner-text .i {
+      .banner-text .i,
+      .banner-text .mac {
         display: none;
       }
       .banner-text.crashed .i {
         display: inline;
+      }
+      .banner-text.crashed .mac {
+        display: inline-block;
+      }
+      .banner-text .mac,
+      .banner-text .runner-mac svg {
+        width: 0.66em;
+        height: 0.74em;
+        vertical-align: -0.04em;
+        margin-left: 0.14em;
+      }
+      .banner-text .mac svg,
+      .banner-text .runner-mac svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        color: inherit;
       }
       .banner-text .runner {
         display: none;
@@ -262,10 +223,6 @@ Author: Nabeel
       .banner-text .runner.running {
         display: block;
       }
-      .banner-text .runner .stripes {
-        inset: 0.13em 0 0.12em;
-      }
-
       .shape {
         position: fixed;
         top: var(--pad);
@@ -646,10 +603,12 @@ Author: Nabeel
   <body>
     <div class="main-content">
       <div class="toolbar-cover" data-liquid-ignore aria-hidden="true"></div>
+      <div class="glows" aria-hidden="true">
       <img class="glow" alt="" style="left: -14vmin; top: 22svh" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20200%20200%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27g%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%271%27%2F%3E%3Cstop%20offset%3D%270.55%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%270.35%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Ccircle%20cx%3D%27100%27%20cy%3D%27100%27%20r%3D%27100%27%20fill%3D%27url%28%23g%29%27%2F%3E%3C%2Fsvg%3E" />
       <img class="glow" alt="" style="right: -18vmin; top: 60svh" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20200%20200%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27g%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%271%27%2F%3E%3Cstop%20offset%3D%270.55%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%270.35%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Ccircle%20cx%3D%27100%27%20cy%3D%27100%27%20r%3D%27100%27%20fill%3D%27url%28%23g%29%27%2F%3E%3C%2Fsvg%3E" />
       <img class="glow" alt="" style="left: -10vmin; top: calc(86svh + var(--pane-h) + 30vh)" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20200%20200%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27g%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%238e5cff%27%20stop-opacity%3D%271%27%2F%3E%3Cstop%20offset%3D%270.55%27%20stop-color%3D%27%238e5cff%27%20stop-opacity%3D%270.35%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%238e5cff%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Ccircle%20cx%3D%27100%27%20cy%3D%27100%27%20r%3D%27100%27%20fill%3D%27url%28%23g%29%27%2F%3E%3C%2Fsvg%3E" />
       <img class="glow" alt="" style="right: -12vmin; top: calc(86svh + 2 * var(--pane-h) + 40vh)" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20200%20200%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27g%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%232fd3a5%27%20stop-opacity%3D%271%27%2F%3E%3Cstop%20offset%3D%270.55%27%20stop-color%3D%27%232fd3a5%27%20stop-opacity%3D%270.35%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%232fd3a5%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Ccircle%20cx%3D%27100%27%20cy%3D%27100%27%20r%3D%27100%27%20fill%3D%27url%28%23g%29%27%2F%3E%3C%2Fsvg%3E" />
+      </div>
       <div class="scroll-hint" id="scroll-hint" data-liquidgl-hide>
         <span>scroll</span>
         <img class="arrow arrow-dark" alt="" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2386868b' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E" />
@@ -657,16 +616,9 @@ Author: Nabeel
       </div>
       <div class="banner-text-container">
         <div class="banner-text" id="name">
-          <span class="word"><span class="i">i</span>N<span class="a">a<span class="leaf-box" aria-hidden="true"><svg class="leaf" viewBox="0 0 85 98"><path fill="#61bb46" d="M62.2 66.8c14.6-17.7 24.5-42.3 21.8-66.8-21.1.9-46.6 14.1-61.7 31.8-13.5 15.7-25.3 40.7-22.1 64.7 23.5 1.8 47.4-12 62-29.7z"/></svg></span></span>beel</span>
-          <span class="stripes" aria-hidden="true">
-            <span class="band"><span><span class="i">i</span>Nabeel</span></span>
-            <span class="band"><span><span class="i">i</span>Nabeel</span></span>
-            <span class="band"><span><span class="i">i</span>Nabeel</span></span>
-            <span class="band"><span><span class="i">i</span>Nabeel</span></span>
-            <span class="band"><span><span class="i">i</span>Nabeel</span></span>
-            <span class="band"><span><span class="i">i</span>Nabeel</span></span>
-          </span>
-          <span class="runner" id="runner" aria-hidden="true"><span class="word">i</span><span class="stripes"><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span><span class="band"><span>i</span></span></span></span>
+          <span class="word"><span class="i">i</span>Nabeel<span class="mac" aria-hidden="true"><svg viewBox="0 0 100 112" aria-hidden="true"><rect x="8" y="6" width="84" height="100" rx="11" fill="none" stroke="currentColor" stroke-width="7"/><rect x="22" y="18" width="56" height="44" rx="5" fill="none" stroke="currentColor" stroke-width="6"/><line x1="34" y1="78" x2="66" y2="78" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><line x1="26" y1="92" x2="40" y2="92" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg></span></span>
+          <span class="runner" id="runner" aria-hidden="true">i</span>
+          <span class="runner runner-mac" id="runner2" aria-hidden="true"><svg viewBox="0 0 100 112" aria-hidden="true"><rect x="8" y="6" width="84" height="100" rx="11" fill="none" stroke="currentColor" stroke-width="7"/><rect x="22" y="18" width="56" height="44" rx="5" fill="none" stroke="currentColor" stroke-width="6"/><line x1="34" y1="78" x2="66" y2="78" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><line x1="26" y1="92" x2="40" y2="92" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg></span>
         </div>
         <div class="banner-text small">Building things on the internet</div>
         <div id="end-sentinel" aria-hidden="true"></div>
@@ -724,6 +676,13 @@ Author: Nabeel
           .getElementById("theme-color")
           .setAttribute("content", light ? "#f5f5f7" : "#000000");
       }
+      function syncArrow() {
+        const a = document.getElementById("arrow-touch");
+        if (!a || !window.__arrowSrc) return;
+        const light = root.getAttribute("data-theme") === "light";
+        const want = light ? window.__arrowSrc.light : window.__arrowSrc.dark;
+        if (a.src !== want) a.src = want;
+      }
       let transitionBusy = false;
       function transitionWith(apply) {
         if (transitionBusy) return;
@@ -752,6 +711,7 @@ Author: Nabeel
           else root.setAttribute("data-theme", "light");
           localStorage.setItem("theme", theme);
           syncChrome();
+          syncArrow();
         });
       }
       if (localStorage.getItem("theme") === "light") root.setAttribute("data-theme", "light");
@@ -797,9 +757,8 @@ Author: Nabeel
       const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
       const nameEl = document.getElementById("name");
       const runner = document.getElementById("runner");
+      const runner2 = document.getElementById("runner2");
       const wordEl = nameEl.querySelector(".word");
-      const leafEl = nameEl.querySelector(".leaf");
-      const leafBox = nameEl.querySelector(".leaf-box");
       const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
       function liveNode(el, on) {
@@ -854,6 +813,9 @@ Author: Nabeel
       }
 
       let crashBusy = false;
+      function macStart() {
+        return nameEl.getBoundingClientRect().width + innerWidth * 0.6;
+      }
       async function appleShow() {
         if (crashBusy) return;
         crashBusy = true;
@@ -869,173 +831,75 @@ Author: Nabeel
           return;
         }
         await bringNameIntoPane();
+        try {
+          await document.fonts.load('400 1em "EB Garamond"');
+        } catch (e) {}
         nameEl.setAttribute("data-liquidgl-hide", "");
         if (r) await r.captureSnapshot();
         liveNode(nameEl, true);
         liveNode(runner, true);
+        liveNode(runner2, true);
+        const fromColor = getComputedStyle(wordEl).color;
         nameEl.classList.add("retro");
-        leafBox.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 420, delay: 160, easing: "ease-out", fill: "backwards" });
+        wordEl.animate([{ color: fromColor }, { color: getComputedStyle(wordEl).color }], { duration: 520, easing: "ease-in-out" });
 
         let animating = true;
         dirtyName(640);
         liveLoop([], () => animating);
 
         runner.classList.add("running");
+        runner2.classList.add("running");
         const wordRect = wordEl.getBoundingClientRect();
         const nameRect = nameEl.getBoundingClientRect();
         const runnerW = runner.getBoundingClientRect().width;
         const stopLeft = wordRect.left - nameRect.left - runnerW;
-        await runner.animate(
+        const stopRight = wordRect.right - nameRect.left;
+        const arriveL = runner.animate(
           [{ left: "-60vw" }, { left: `${stopLeft}px` }],
           { duration: 620, easing: "cubic-bezier(0.7, 0, 1, 1)", fill: "forwards" },
         ).finished;
+        const arriveR = runner2.animate(
+          [{ left: `${macStart()}px` }, { left: `${stopRight}px` }],
+          { duration: 620, easing: "cubic-bezier(0.7, 0, 1, 1)", fill: "forwards" },
+        ).finished;
+        await Promise.all([arriveL, arriveR]);
 
         runner.classList.remove("running");
+        runner2.classList.remove("running");
         nameEl.classList.add("crashed");
-        dirtyName(700);
+        dirtyName(760);
         const hit = wordEl.getBoundingClientRect();
-        fireworks({
-          particleCount: 28,
-          spread: 75,
-          startVelocity: 26,
-          ticks: 55,
-          gravity: 1,
-          scalar: 0.8,
-          origin: { x: hit.left / innerWidth, y: (hit.top + hit.height * 0.55) / innerHeight },
-          colors: ["#61bb46", "#fdb827", "#f5821f", "#e03a3e", "#963d97", "#009ddc"],
-          zIndex: 20000,
-          disableForReducedMotion: true,
-        });
-        leafBox.animate(
-          [{ top: "-0.02em" }, { top: "-0.3em", offset: 0.4 }, { top: "-0.02em" }],
-          { duration: 560, easing: "cubic-bezier(0.34, 1.56, 0.64, 1)" },
+        [hit.left, hit.right].forEach((x) =>
+          fireworks({
+            particleCount: 22,
+            spread: 70,
+            startVelocity: 24,
+            ticks: 50,
+            gravity: 1,
+            scalar: 0.7,
+            origin: { x: x / innerWidth, y: (hit.top + hit.height * 0.55) / innerHeight },
+            colors: ["#f5f5f7", "#86868b", "#c9c9ce"],
+            zIndex: 20000,
+            disableForReducedMotion: true,
+          }),
         );
-        await nameEl.animate(
+        await wordEl.animate(
           [
-            { left: "0px" },
-            { left: "0.28em", offset: 0.18 },
-            { left: "-0.12em", offset: 0.45 },
-            { left: "0.05em", offset: 0.72 },
-            { left: "0px" },
+            { letterSpacing: "-0.01em" },
+            { letterSpacing: "-0.07em", offset: 0.22 },
+            { letterSpacing: "0.01em", offset: 0.6 },
+            { letterSpacing: "-0.01em" },
           ],
-          { duration: 760, easing: "ease-out" },
+          { duration: 720, easing: "ease-out" },
         ).finished;
 
         animating = false;
         liveNode(nameEl, false);
         liveNode(runner, false);
+        liveNode(runner2, false);
         nameEl.removeAttribute("data-liquidgl-hide");
         if (r) await r.captureSnapshot();
         crashBusy = false;
-      }
-
-      const LEAF_PATH =
-        "M62.2 66.8c14.6-17.7 24.5-42.3 21.8-66.8-21.1.9-46.6 14.1-61.7 31.8-13.5 15.7-25.3 40.7-22.1 64.7 23.5 1.8 47.4-12 62-29.7z";
-      const LEAF_ANGLES = 36;
-      const LEAF_FLIPS = [1, 0.72, 0.42];
-      const leafFly = document.createElement("span");
-      leafFly.className = "leaf-fly";
-      leafFly.setAttribute("aria-hidden", "true");
-      const leafFrames = [];
-      for (let a = 0; a < LEAF_ANGLES; a++) {
-        for (let f = 0; f < LEAF_FLIPS.length; f++) {
-          const deg = (a * 360) / LEAF_ANGLES - 180;
-          const svg =
-            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='-30 -30 145 158'>` +
-            `<g transform='translate(42.5 49) rotate(${deg}) scale(${LEAF_FLIPS[f]} 1) translate(-42.5 -49)'>` +
-            `<path fill='#61bb46' d='${LEAF_PATH}'/></g></svg>`;
-          const img = document.createElement("img");
-          img.alt = "";
-          img.src = "data:image/svg+xml;utf8," + encodeURIComponent(svg);
-          leafFly.appendChild(img);
-          leafFrames.push(img);
-        }
-      }
-      document.querySelector(".main-content").appendChild(leafFly);
-      let leafShown = null;
-      function showLeafFrame(angle, flip) {
-        let a = Math.round(((angle + 180) / 360) * LEAF_ANGLES) % LEAF_ANGLES;
-        if (a < 0) a += LEAF_ANGLES;
-        let f = 0;
-        for (let i = 1; i < LEAF_FLIPS.length; i++) {
-          if (Math.abs(flip - LEAF_FLIPS[i]) < Math.abs(flip - LEAF_FLIPS[f])) f = i;
-        }
-        const img = leafFrames[a * LEAF_FLIPS.length + f];
-        if (img === leafShown) return;
-        if (leafShown) leafShown.style.display = "";
-        img.style.display = "block";
-        leafShown = img;
-      }
-      function resetLeaf() {
-        leafBox.style.display = "";
-        leafFly.classList.remove("on");
-        leafFly.style.left = "";
-        leafFly.style.top = "";
-        if (leafShown) leafShown.style.display = "";
-        leafShown = null;
-      }
-      function fallLeaf() {
-        return new Promise((resolve) => {
-          const em = parseFloat(getComputedStyle(nameEl).fontSize);
-          const aBox = nameEl.querySelector(".a").getBoundingClientRect();
-          const mainBox = document.querySelector(".main-content").getBoundingClientRect();
-          const baseX = aBox.left - mainBox.left;
-          const baseY = aBox.top - mainBox.top;
-          leafFly.style.width = `${0.26 * em}px`;
-          leafFly.style.height = `${0.3 * em}px`;
-          const startX = aBox.width / 2 - 0.09 * em;
-          const startY = -0.31 * em;
-          const groundY = 0.96 * em;
-          const total = 1600;
-          const omega = (Math.PI * 2) / 720;
-          let t0 = null;
-          let landed = null;
-          let restX = 0;
-          let restAngle = 0;
-          leafBox.style.display = "none";
-          leafFly.classList.add("on");
-          const step = (ts) => {
-            if (t0 === null) t0 = ts;
-            const t = ts - t0;
-            const u = Math.min(t / total, 1);
-            const lift = Math.min(t / 300, 1);
-            const amp = (0.5 + 0.8 * u) * em;
-            const drift = (-0.15 + 1.35 * u * u) * em;
-            const sway = Math.sin(omega * t);
-            const swayV = Math.cos(omega * t);
-            let x = startX + drift + amp * sway * lift;
-            const rise = -0.2 * em * Math.sin(Math.PI * Math.min(t / 520, 1));
-            const speed = 0.12 + 0.34 * Math.abs(swayV);
-            const fallY = (groundY - startY) * Math.pow(u, 1.2) * (0.72 + 0.28 * speed / 0.46);
-            let y = startY + rise + fallY;
-            const vx = amp * omega * swayV;
-            let angle = -swayV * 46 + 9 * Math.sin(omega * 2.3 * t);
-            const flip = 0.35 + 0.65 * Math.abs(Math.cos(omega * 0.5 * t + 0.6));
-            if (y >= groundY || u >= 1) {
-              if (landed === null) {
-                landed = t;
-                restX = x;
-                restAngle = angle > 0 ? 62 : -62;
-              }
-              const k = Math.min((t - landed) / 240, 1);
-              const ease = 1 - Math.pow(1 - k, 3);
-              y = groundY;
-              x = restX + 0.08 * em * ease * Math.sign(vx || 1);
-              angle = angle + (restAngle - angle) * ease;
-              leafFly.style.left = `${baseX + x}px`;
-              leafFly.style.top = `${baseY + y}px`;
-              showLeafFrame(angle, 1);
-              if (k >= 1 && t - landed > 120) return resolve();
-              requestAnimationFrame(step);
-              return;
-            }
-            leafFly.style.left = `${baseX + x}px`;
-            leafFly.style.top = `${baseY + y}px`;
-            showLeafFrame(angle, flip);
-            requestAnimationFrame(step);
-          };
-          requestAnimationFrame(step);
-        });
       }
 
       async function appleUndo() {
@@ -1046,44 +910,42 @@ Author: Nabeel
         }
         await bringNameIntoPane();
         nameEl.setAttribute("data-liquidgl-hide", "");
-        leafFly.setAttribute("data-liquidgl-hide", "");
         if (r) await r.captureSnapshot();
         liveNode(nameEl, true);
         liveNode(runner, true);
-        liveNode(leafFly, true);
+        liveNode(runner2, true);
         let animating = true;
         dirtyName(820);
-        liveLoop([leafFly], () => animating);
+        liveLoop([], () => animating);
 
         const iRect = wordEl.querySelector(".i").getBoundingClientRect();
+        const macRect = wordEl.querySelector(".mac").getBoundingClientRect();
         const nameRect = nameEl.getBoundingClientRect();
         runner.style.left = `${iRect.left - nameRect.left}px`;
+        runner2.style.left = `${macRect.left - nameRect.left}px`;
         runner.classList.add("running");
+        runner2.classList.add("running");
         nameEl.classList.remove("crashed");
-        const leave = runner.animate(
+        const leaveL = runner.animate(
           [{ left: runner.style.left }, { left: "-60vw" }],
           { duration: 640, easing: "cubic-bezier(0.6, 0, 1, 1)", fill: "forwards" },
         ).finished;
-        nameEl.animate(
-          [{ left: "0px" }, { left: "-0.14em", offset: 0.25 }, { left: "0px" }],
-          { duration: 520, easing: "ease-out" },
-        );
-        const drop = fallLeaf();
-        await leave;
+        const leaveR = runner2.animate(
+          [{ left: runner2.style.left }, { left: `${macStart()}px` }],
+          { duration: 640, easing: "cubic-bezier(0.6, 0, 1, 1)", fill: "forwards" },
+        ).finished;
+        await Promise.all([leaveL, leaveR]);
         runner.classList.remove("running");
+        runner2.classList.remove("running");
         runner.style.left = "";
-        await drop;
+        runner2.style.left = "";
 
         animating = false;
         liveNode(nameEl, false);
         liveNode(runner, false);
-        liveNode(leafFly, false);
+        liveNode(runner2, false);
         nameEl.removeAttribute("data-liquidgl-hide");
-        await transitionWith(() => {
-          nameEl.classList.remove("retro");
-          leafBox.getAnimations().forEach((a) => a.cancel());
-          resetLeaf();
-        });
+        await transitionWith(() => nameEl.classList.remove("retro"));
       }
 
       const paneEl = document.querySelector(".shape");
@@ -1205,8 +1067,15 @@ Author: Nabeel
         if (touchOnly) {
           const hint = document.getElementById("scroll-hint");
           hint.removeAttribute("data-liquidgl-hide");
-          hint.querySelectorAll(".arrow").forEach((a) => a.setAttribute("data-liquidgl-hide", ""));
-          liquidGL.registerDynamic(".scroll-hint .arrow");
+          const dark = hint.querySelector(".arrow-dark");
+          const light = hint.querySelector(".arrow-light");
+          window.__arrowSrc = { dark: dark.src, light: light.src };
+          light.remove();
+          dark.classList.remove("arrow-dark");
+          dark.id = "arrow-touch";
+          dark.setAttribute("data-liquidgl-hide", "");
+          syncArrow();
+          liquidGL.registerDynamic("#arrow-touch");
           (function idle() {
             const r = window.__liquidGLRenderer__;
             if (r && !document.hidden && scrollY < innerHeight) r.render();
