@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 8.6.1
+Version: 8.7.0
 Last updated: 2026-09-10
 Author: Nabeel
 -->
@@ -615,10 +615,8 @@ Author: Nabeel
       }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-    <script src="scripts/liquidGL.js?v=8.3.0" defer></script>
+    <script src="scripts/liquidGL.js?v=8.7.0" defer></script>
   </head>
   <body>
     <div class="main-content">
@@ -822,10 +820,12 @@ Author: Nabeel
         nameDirtyUntil = Math.max(nameDirtyUntil, performance.now() + ms);
       }
       function liveLoop(extra, isOn) {
+        window.__glassBusy = true;
         (function tick() {
           const r = window.__liquidGLRenderer__;
           if (!isOn()) {
             if (r) r._fastDynamic = false;
+            window.__glassBusy = false;
             return;
           }
           if (r) {
@@ -1110,11 +1110,6 @@ Author: Nabeel
           dark.setAttribute("data-liquidgl-hide", "");
           syncArrow();
           liquidGL.registerDynamic("#arrow-touch");
-          (function idle() {
-            const r = window.__liquidGLRenderer__;
-            if (r && !document.hidden && scrollY < innerHeight) r.render();
-            setTimeout(() => requestAnimationFrame(idle), 66);
-          })();
         } else {
           liquidGL.registerDynamic("#scroll-hint");
         }
@@ -1126,24 +1121,36 @@ Author: Nabeel
           }, 600);
         });
         window.addEventListener("load", () => {
-          liquidGL.syncWith();
           setTimeout(() => document.body.classList.add("ready"), 250);
         });
         setTimeout(() => document.body.classList.add("ready"), 1800);
-        document.addEventListener("mousemove", () => {
-          if (window.__liquidGLRenderer__) window.__liquidGLRenderer__.render();
-        });
-        let settleTimer = null;
-        document.addEventListener("scroll", () => {
+        const renderer = window.__liquidGLRenderer__;
+        if (renderer) {
+          if (renderer._rafId) cancelAnimationFrame(renderer._rafId);
+          renderer._rafId = null;
+          renderer.useExternalTicker = true;
+        }
+        const lenis = window.Lenis && matchMedia("(hover: hover)").matches ? new window.Lenis() : null;
+        let lastInput = performance.now();
+        let lastRender = 0;
+        const wake = () => (lastInput = performance.now());
+        ["scroll", "wheel", "mousemove", "pointerdown", "pointermove", "touchstart", "touchmove", "keydown", "resize"].forEach((t) =>
+          window.addEventListener(t, wake, { passive: true }),
+        );
+        window.__wakeGlass = wake;
+        (function loop(time) {
+          if (lenis) lenis.raf(time);
           const r = window.__liquidGLRenderer__;
-          if (!r) return;
-          r.render();
-          clearTimeout(settleTimer);
-          settleTimer = setTimeout(() => {
-            r.render();
-            setTimeout(() => r.render(), 300);
-          }, 320);
-        });
+          if (r && !document.hidden) {
+            const active = time - lastInput < 2500 || window.__glassBusy;
+            const interval = active ? 0 : 100;
+            if (time - lastRender >= interval) {
+              lastRender = time;
+              r.render();
+            }
+          }
+          requestAnimationFrame(loop);
+        })(performance.now());
       });
 
       console.log(

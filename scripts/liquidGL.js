@@ -1818,6 +1818,7 @@
         alpha: true,
         premultipliedAlpha: true,
         preserveDrawingBuffer: true,
+        powerPreference: "low-power",
       };
       this.gl =
         this.canvas.getContext("webgl2", ctxAttribs) ||
