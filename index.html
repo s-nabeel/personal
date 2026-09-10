@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 8.1.0
+Version: 8.2.0
 Last updated: 2026-09-10
 Author: Nabeel
 -->
@@ -217,25 +217,11 @@ Author: Nabeel
       .banner-text.crashed .think {
         display: block;
       }
-      .banner-text .i,
-      .banner-text .mac {
+      .banner-text .i {
         display: none;
       }
       .banner-text.crashed .i {
         display: inline;
-      }
-      .banner-text.crashed .mac {
-        display: inline;
-      }
-      .banner-text .mac,
-      .runner-mac {
-        font-family: var(--display-font);
-        font-weight: 400;
-        font-size: 0.82em;
-        letter-spacing: 0;
-      }
-      .banner-text .mac {
-        margin-left: 0.14em;
       }
       .runner {
         display: none;
@@ -641,11 +627,10 @@ Author: Nabeel
         <img class="arrow arrow-light" alt="" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236e6e73' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E" />
       </div>
       <span class="runner" id="runner" aria-hidden="true">i</span>
-      <span class="runner runner-mac" id="runner2" aria-hidden="true">⌘</span>
       <div class="banner-text-container">
         <div class="banner-text" id="name">
           <span class="ghost" aria-hidden="true">Nabeel</span>
-          <span class="word"><span class="i">i</span>Nabeel<span class="mac" aria-hidden="true">⌘</span></span>
+          <span class="word"><span class="i">i</span>Nabeel</span>
           <span class="think" aria-hidden="true">Think different.</span>
         </div>
         <div class="banner-text small">Building things on the internet</div>
@@ -785,7 +770,6 @@ Author: Nabeel
       const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
       const nameEl = document.getElementById("name");
       const runner = document.getElementById("runner");
-      const runner2 = document.getElementById("runner2");
       const wordEl = nameEl.querySelector(".word");
       const ghostEl = nameEl.querySelector(".ghost");
       const mainEl = document.querySelector(".main-content");
@@ -795,10 +779,8 @@ Author: Nabeel
         const nameRect = nameEl.getBoundingClientRect();
         const mainRect = mainEl.getBoundingClientRect();
         const top = nameRect.top - mainRect.top + 0.4 * em;
-        [runner, runner2].forEach((el) => {
-          el.style.fontSize = cs.fontSize;
-          el.style.top = `${top}px`;
-        });
+        runner.style.fontSize = cs.fontSize;
+        runner.style.top = `${top}px`;
         return { em, nameRect, mainRect, offX: nameRect.left - mainRect.left };
       }
       const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -855,9 +837,6 @@ Author: Nabeel
       }
 
       let crashBusy = false;
-      function macStart() {
-        return innerWidth * 1.6;
-      }
       async function appleShow() {
         if (crashBusy) return;
         crashBusy = true;
@@ -880,7 +859,6 @@ Author: Nabeel
         if (r) await r.captureSnapshot();
         liveNode(nameEl, true);
         liveNode(runner, true);
-        liveNode(runner2, true);
         ghostEl.classList.add("on");
         nameEl.classList.add("retro");
         const fadeOut = ghostEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 520, easing: "ease-in-out", fill: "forwards" });
@@ -893,27 +871,19 @@ Author: Nabeel
 
         const geo = placeRunners();
         runner.classList.add("running");
-        runner2.classList.add("running");
         const wordRect = wordEl.getBoundingClientRect();
         const runnerW = runner.getBoundingClientRect().width;
         const stopLeft = wordRect.left - geo.mainRect.left - runnerW;
-        const stopRight = wordRect.right - geo.mainRect.left;
-        const arriveL = runner.animate(
+        await runner.animate(
           [{ left: "-60vw" }, { left: `${stopLeft}px` }],
           { duration: 620, easing: "cubic-bezier(0.7, 0, 1, 1)", fill: "forwards" },
         ).finished;
-        const arriveR = runner2.animate(
-          [{ left: `${macStart()}px` }, { left: `${stopRight}px` }],
-          { duration: 620, easing: "cubic-bezier(0.7, 0, 1, 1)", fill: "forwards" },
-        ).finished;
-        await Promise.all([arriveL, arriveR]);
 
         runner.classList.remove("running");
-        runner2.classList.remove("running");
         nameEl.classList.add("crashed");
         dirtyName(760);
         const hit = wordEl.getBoundingClientRect();
-        [hit.left, hit.right].forEach((x) =>
+        [hit.left].forEach((x) =>
           fireworks({
             particleCount: 22,
             spread: 70,
@@ -927,12 +897,13 @@ Author: Nabeel
             disableForReducedMotion: true,
           }),
         );
-        await wordEl.animate(
+        await nameEl.animate(
           [
-            { letterSpacing: "-0.01em" },
-            { letterSpacing: "-0.07em", offset: 0.22 },
-            { letterSpacing: "0.01em", offset: 0.6 },
-            { letterSpacing: "-0.01em" },
+            { left: "0px" },
+            { left: "0.24em", offset: 0.18 },
+            { left: "-0.1em", offset: 0.45 },
+            { left: "0.04em", offset: 0.72 },
+            { left: "0px" },
           ],
           { duration: 720, easing: "ease-out" },
         ).finished;
@@ -940,7 +911,6 @@ Author: Nabeel
         animating = false;
         liveNode(nameEl, false);
         liveNode(runner, false);
-        liveNode(runner2, false);
         nameEl.removeAttribute("data-liquidgl-hide");
         if (r) await r.captureSnapshot();
         crashBusy = false;
@@ -957,32 +927,25 @@ Author: Nabeel
         if (r) await r.captureSnapshot();
         liveNode(nameEl, true);
         liveNode(runner, true);
-        liveNode(runner2, true);
         let animating = true;
         dirtyName(820);
         liveLoop([], () => animating);
 
         const geo = placeRunners();
         const iRect = wordEl.querySelector(".i").getBoundingClientRect();
-        const macRect = wordEl.querySelector(".mac").getBoundingClientRect();
         runner.style.left = `${iRect.left - geo.mainRect.left}px`;
-        runner2.style.left = `${macRect.left - geo.mainRect.left}px`;
         runner.classList.add("running");
-        runner2.classList.add("running");
         nameEl.classList.remove("crashed");
-        const leaveL = runner.animate(
+        nameEl.animate(
+          [{ left: "0px" }, { left: "-0.12em", offset: 0.25 }, { left: "0px" }],
+          { duration: 520, easing: "ease-out" },
+        );
+        await runner.animate(
           [{ left: runner.style.left }, { left: "-60vw" }],
           { duration: 640, easing: "cubic-bezier(0.6, 0, 1, 1)", fill: "forwards" },
         ).finished;
-        const leaveR = runner2.animate(
-          [{ left: runner2.style.left }, { left: `${macStart()}px` }],
-          { duration: 640, easing: "cubic-bezier(0.6, 0, 1, 1)", fill: "forwards" },
-        ).finished;
-        await Promise.all([leaveL, leaveR]);
         runner.classList.remove("running");
-        runner2.classList.remove("running");
         runner.style.left = "";
-        runner2.style.left = "";
 
         ghostEl.classList.add("on");
         dirtyName(600);
@@ -991,7 +954,6 @@ Author: Nabeel
         animating = false;
         liveNode(nameEl, false);
         liveNode(runner, false);
-        liveNode(runner2, false);
         nameEl.removeAttribute("data-liquidgl-hide");
         nameEl.classList.remove("retro");
         wordEl.getAnimations().forEach((a) => a.cancel());
