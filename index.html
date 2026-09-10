@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 7.0.3
+Version: 7.1.0
 Last updated: 2026-09-10
 Author: Nabeel
 -->
@@ -167,7 +167,7 @@ Author: Nabeel
       .banner-text .stripes {
         display: none;
         position: absolute;
-        inset: 0.4em 0 0.8em;
+        inset: 0.575em 0 0.92em;
       }
       .banner-text.retro .word {
         color: transparent;
@@ -187,7 +187,8 @@ Author: Nabeel
         position: absolute;
         left: 0;
         right: 0;
-        height: 600%;
+        height: auto;
+        line-height: 1;
       }
       .band:nth-child(1) { top: 0;                 color: #61bb46; }
       .band:nth-child(2) { top: calc(100% / 6);     color: #fdb827; }
@@ -195,12 +196,12 @@ Author: Nabeel
       .band:nth-child(4) { top: calc(300% / 6);     color: #e03a3e; }
       .band:nth-child(5) { top: calc(400% / 6);     color: #963d97; }
       .band:nth-child(6) { top: calc(500% / 6);     color: #009ddc; }
-      .band:nth-child(1) > span { top: 0; }
-      .band:nth-child(2) > span { top: -100%; }
-      .band:nth-child(3) > span { top: -200%; }
-      .band:nth-child(4) > span { top: -300%; }
-      .band:nth-child(5) > span { top: -400%; }
-      .band:nth-child(6) > span { top: -500%; }
+      .band:nth-child(1) > span { top: -0.175em; }
+      .band:nth-child(2) > span { top: calc(-100% - 0.175em); }
+      .band:nth-child(3) > span { top: calc(-200% - 0.175em); }
+      .band:nth-child(4) > span { top: calc(-300% - 0.175em); }
+      .band:nth-child(5) > span { top: calc(-400% - 0.175em); }
+      .band:nth-child(6) > span { top: calc(-500% - 0.175em); }
       #name {
         padding: 0.4em 0 0.8em;
         margin: 0 auto calc(var(--pane-h) + 2vh - 0.8em);
@@ -216,8 +217,8 @@ Author: Nabeel
       .banner-text .leaf-box {
         display: none;
         position: absolute;
-        left: calc(50% - 0.09em);
-        top: -0.31em;
+        left: calc(50% - 0.06em);
+        top: 0.03em;
         width: 0.26em;
         height: 0.3em;
       }
@@ -265,7 +266,7 @@ Author: Nabeel
         display: block;
       }
       .banner-text .runner .stripes {
-        inset: 0;
+        inset: 0.175em 0 0.12em;
       }
 
       .shape {
@@ -479,8 +480,8 @@ Author: Nabeel
         right: 24px;
         bottom: calc(24px + env(safe-area-inset-bottom));
         z-index: 10000;
-        display: flex;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
         align-items: center;
         padding: 1.05rem 2rem;
         border-radius: 999px;
@@ -502,10 +503,18 @@ Author: Nabeel
       }
       .footer-mid {
         opacity: 0.55;
+        text-align: center;
+      }
+      .footer-right {
+        text-align: right;
       }
       @media (hover: none) {
         .footer-mid {
           display: none;
+        }
+        footer.lens {
+          grid-template-columns: auto auto;
+          justify-content: space-between;
         }
       }
       @media (prefers-reduced-motion: reduce) {
@@ -520,16 +529,17 @@ Author: Nabeel
         }
       }
       @media (hover: none) and (pointer: coarse) {
-        html {
-          scroll-snap-type: y proximity;
+        .scroll-hint .arrow {
+          animation: pulse 1.8s ease-in-out infinite;
         }
-        #scroll-hint,
-        #name,
-        .banner-text.small {
-          scroll-snap-align: center;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.9;
         }
-        .banner-text-container {
-          scroll-snap-align: end;
+        50% {
+          opacity: 0.3;
         }
       }
 
@@ -1197,7 +1207,20 @@ Author: Nabeel
           reveal: "fade",
           resolution: Math.min(3, window.devicePixelRatio || 1),
         });
-        liquidGL.registerDynamic("#scroll-hint");
+        const touchOnly = matchMedia("(hover: none) and (pointer: coarse)").matches;
+        if (touchOnly) {
+          const hint = document.getElementById("scroll-hint");
+          hint.removeAttribute("data-liquidgl-hide");
+          hint.querySelectorAll(".arrow").forEach((a) => a.setAttribute("data-liquidgl-hide", ""));
+          liquidGL.registerDynamic(".scroll-hint .arrow");
+          (function idle() {
+            const r = window.__liquidGLRenderer__;
+            if (r && !document.hidden && scrollY < innerHeight) r.render();
+            setTimeout(() => requestAnimationFrame(idle), 66);
+          })();
+        } else {
+          liquidGL.registerDynamic("#scroll-hint");
+        }
         let resizeTimer = null;
         window.addEventListener("resize", () => {
           clearTimeout(resizeTimer);
