@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 8.5.1
+Version: 8.6.0
 Last updated: 2026-09-10
 Author: Nabeel
 -->
@@ -205,7 +205,8 @@ Author: Nabeel
         letter-spacing: 0;
         color: var(--muted-color);
       }
-      .banner-text.crashed .think {
+      .banner-text.crashed .think,
+      .banner-text.thinking .think {
         display: block;
       }
       .banner-text .i {
@@ -215,6 +216,10 @@ Author: Nabeel
         display: inline;
       }
       .banner-text.leaving .i {
+        visibility: hidden;
+      }
+      .banner-text.hold .i {
+        display: inline;
         visibility: hidden;
       }
       .runner {
@@ -866,6 +871,12 @@ Author: Nabeel
 
         const geo = placeRunners();
         runner.classList.add("running");
+        nameEl.classList.add("thinking");
+        dirtyName(900);
+        thinkEl.animate(
+          [{ opacity: 0, bottom: "-0.25em" }, { opacity: 1, bottom: "0.12em" }],
+          { duration: 620, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" },
+        );
         const wordRect = wordEl.getBoundingClientRect();
         const runnerW = runner.getBoundingClientRect().width;
         const stopLeft = wordRect.left - geo.mainRect.left - runnerW;
@@ -876,11 +887,8 @@ Author: Nabeel
 
         runner.classList.remove("running");
         nameEl.classList.add("crashed");
-        dirtyName(1100);
-        thinkEl.animate(
-          [{ opacity: 0, bottom: "-0.25em" }, { opacity: 1, bottom: "0.12em" }],
-          { duration: 560, delay: 220, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "backwards" },
-        );
+        nameEl.classList.remove("thinking");
+        dirtyName(800);
         const hit = wordEl.getBoundingClientRect();
         [hit.left].forEach((x) =>
           fireworks({
@@ -926,30 +934,35 @@ Author: Nabeel
         dirtyName(1300);
         liveLoop([], () => animating);
 
-        await thinkEl.animate(
+        const thinkOut = thinkEl.animate(
           [{ opacity: 1, bottom: "0.12em" }, { opacity: 0, bottom: "-0.3em" }],
-          { duration: 420, easing: "cubic-bezier(0.4, 0, 1, 1)", fill: "forwards" },
+          { duration: 520, easing: "cubic-bezier(0.4, 0, 1, 1)", fill: "forwards" },
         ).finished;
         const geo = placeRunners();
         const iRect = wordEl.querySelector(".i").getBoundingClientRect();
         runner.style.left = `${iRect.left - geo.mainRect.left}px`;
         runner.classList.add("running");
         nameEl.classList.add("leaving");
-        thinkEl.getAnimations().forEach((a) => a.cancel());
         nameEl.animate(
           [{ left: "0px" }, { left: "-0.12em", offset: 0.25 }, { left: "0px" }],
           { duration: 520, easing: "ease-out" },
         );
-        await runner.animate(
-          [{ left: runner.style.left }, { left: "-60vw" }],
-          { duration: 640, easing: "cubic-bezier(0.6, 0, 1, 1)", fill: "forwards" },
-        ).finished;
+        await Promise.all([
+          runner.animate(
+            [{ left: runner.style.left }, { left: "-60vw" }],
+            { duration: 640, easing: "cubic-bezier(0.6, 0, 1, 1)", fill: "forwards" },
+          ).finished,
+          thinkOut,
+        ]);
         runner.classList.remove("running");
         runner.style.left = "";
+        nameEl.classList.remove("crashed");
+        nameEl.classList.add("leaving", "hold");
+        thinkEl.getAnimations().forEach((a) => a.cancel());
 
         dirtyName(900);
         await wordEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 380, easing: "ease-in", fill: "forwards" }).finished;
-        nameEl.classList.remove("retro", "crashed", "leaving");
+        nameEl.classList.remove("retro", "crashed", "leaving", "hold");
         wordEl.getAnimations().forEach((a) => a.cancel());
         await wordEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 420, easing: "ease-out" }).finished;
         animating = false;
