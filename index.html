@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 8.3.0
+Version: 8.4.0
 Last updated: 2026-09-10
 Author: Nabeel
 -->
@@ -191,19 +191,6 @@ Author: Nabeel
         font-weight: 400;
         letter-spacing: -0.03em;
         color: var(--text-color);
-      }
-      .banner-text .ghost {
-        display: none;
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0.4em;
-        text-align: center;
-        color: var(--text-color);
-        pointer-events: none;
-      }
-      .banner-text .ghost.on {
-        display: block;
       }
       .banner-text .think {
         display: none;
@@ -633,7 +620,6 @@ Author: Nabeel
       <span class="runner" id="runner" aria-hidden="true">i</span>
       <div class="banner-text-container">
         <div class="banner-text" id="name">
-          <span class="ghost" aria-hidden="true">Nabeel</span>
           <span class="word"><span class="i">i</span>Nabeel</span>
           <span class="think" aria-hidden="true">Think different.</span>
         </div>
@@ -779,7 +765,6 @@ Author: Nabeel
       const nameEl = document.getElementById("name");
       const runner = document.getElementById("runner");
       const wordEl = nameEl.querySelector(".word");
-      const ghostEl = nameEl.querySelector(".ghost");
       const thinkEl = nameEl.querySelector(".think");
       const mainEl = document.querySelector(".main-content");
       function placeRunners() {
@@ -871,15 +856,13 @@ Author: Nabeel
         await transitionWith(() => nameEl.setAttribute("data-liquidgl-hide", ""), true);
         liveNode(nameEl, true);
         liveNode(runner, true);
-        ghostEl.classList.add("on");
-        nameEl.classList.add("retro");
-        const fadeOut = ghostEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 520, easing: "ease-in-out", fill: "forwards" });
-        wordEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 520, easing: "ease-in-out" });
-        fadeOut.finished.then(() => { ghostEl.classList.remove("on"); fadeOut.cancel(); }).catch(() => {});
-
         let animating = true;
-        dirtyName(640);
+        dirtyName(900);
         liveLoop([], () => animating);
+        await wordEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 380, easing: "ease-in", fill: "forwards" }).finished;
+        nameEl.classList.add("retro");
+        wordEl.getAnimations().forEach((a) => a.cancel());
+        await wordEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 420, easing: "ease-out" }).finished;
 
         const geo = placeRunners();
         runner.classList.add("running");
@@ -968,19 +951,16 @@ Author: Nabeel
         runner.classList.remove("running");
         runner.style.left = "";
 
-        ghostEl.classList.add("on");
-        dirtyName(600);
-        const fadeIn = ghostEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 520, easing: "ease-in-out", fill: "forwards" });
-        await wordEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 520, easing: "ease-in-out", fill: "forwards" }).finished;
+        dirtyName(900);
+        await wordEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 380, easing: "ease-in", fill: "forwards" }).finished;
+        nameEl.classList.remove("retro");
+        wordEl.getAnimations().forEach((a) => a.cancel());
+        await wordEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 420, easing: "ease-out" }).finished;
         animating = false;
         await transitionWith(() => {
           liveNode(nameEl, false);
           liveNode(runner, false);
           nameEl.removeAttribute("data-liquidgl-hide");
-          nameEl.classList.remove("retro");
-          wordEl.getAnimations().forEach((a) => a.cancel());
-          fadeIn.cancel();
-          ghostEl.classList.remove("on");
         }, true);
       }
 
