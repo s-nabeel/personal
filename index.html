@@ -1,8 +1,8 @@
 <!--
 index.html
 
-Version: 8.7.0
-Last updated: 2026-09-10
+Version: 8.8.0
+Last updated: 2026-09-21
 Author: Nabeel
 -->
 <!doctype html>
@@ -40,7 +40,7 @@ Author: Nabeel
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&display=swap" rel="stylesheet" />
     <style>
       :root {
         color-scheme: dark;
@@ -193,9 +193,9 @@ Author: Nabeel
       }
       .banner-text.retro .word,
       .runner {
-        font-family: "EB Garamond", Georgia, "Times New Roman", serif;
+        font-family: "Instrument Serif", Georgia, "Times New Roman", serif;
         font-weight: 400;
-        letter-spacing: -0.03em;
+        letter-spacing: -0.015em;
         color: var(--text-color);
       }
       .banner-text .think {
@@ -205,10 +205,10 @@ Author: Nabeel
         right: 0;
         bottom: 0.12em;
         text-align: center;
-        font-family: "EB Garamond", Georgia, "Times New Roman", serif;
+        font-family: "Instrument Serif", Georgia, "Times New Roman", serif;
         font-weight: 400;
-        font-size: 0.24em;
-        letter-spacing: 0;
+        font-size: 0.28em;
+        letter-spacing: 0.005em;
         color: var(--muted-color);
       }
       .banner-text.crashed .think,
@@ -1083,7 +1083,7 @@ Author: Nabeel
       document.addEventListener("DOMContentLoaded", () => {
         if (typeof liquidGL !== "function") return;
         nameEl.setAttribute("data-liquidgl-hide", "");
-        if (document.fonts && document.fonts.load) document.fonts.load('400 1em "EB Garamond"').catch(() => {});
+        if (document.fonts && document.fonts.load) document.fonts.load('400 1em "Instrument Serif"').catch(() => {});
         liquidGL({
           target: ".shape",
           snapshot: ".main-content",
