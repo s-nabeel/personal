@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 8.8.0
+Version: 8.8.1
 Last updated: 2026-09-21
 Author: Nabeel
 -->
@@ -844,14 +844,6 @@ Author: Nabeel
         })();
       }
 
-      async function bringNameIntoPane() {
-        const rect = nameEl.getBoundingClientRect();
-        const centre = rect.top + rect.height / 2;
-        if (centre > innerHeight * 0.36 && centre < innerHeight * 0.64) return;
-        window.scrollTo({ top: scrollY + centre - innerHeight / 2, behavior: "smooth" });
-        await sleep(900);
-      }
-
       let crashBusy = false;
       async function appleShow() {
         if (crashBusy) return;
@@ -868,7 +860,6 @@ Author: Nabeel
           crashBusy = false;
           return;
         }
-        await bringNameIntoPane();
         liveNode(runner, true);
         let animating = true;
         dirtyName(900);
@@ -937,7 +928,6 @@ Author: Nabeel
           forceLive([nameEl]);
           return;
         }
-        await bringNameIntoPane();
         liveNode(runner, true);
         let animating = true;
         dirtyName(1300);
