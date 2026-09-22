@@ -1,7 +1,7 @@
 <!--
 404.html
 
-Version: 8.15.0
+Version: 8.15.1
 Last updated: 2026-09-22
 Author: Nabeel
 -->
@@ -652,6 +652,36 @@ Author: Nabeel
           font-size: 0.66rem;
         }
       }
+
+      body {
+        overflow: hidden;
+      }
+      .scroll-hint,
+      #arrow-touch,
+      .top-nav,
+      #end-sentinel {
+        display: none !important;
+      }
+      .banner-text-container {
+        height: 100svh;
+        padding: 0;
+        justify-content: center;
+        transform: translateY(-7vh);
+      }
+      #name {
+        margin: 0 auto;
+      }
+      .banner-text.small {
+        margin: 1.5vh auto 0;
+      }
+      .pill-anchor {
+        padding-top: 30vh;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+      .pill-anchor a {
+        pointer-events: auto !important;
+      }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
@@ -718,7 +748,7 @@ Author: Nabeel
       <div class="footer-left">
         © <span id="year"></span> Nabeel. All rights reserved
       </div>
-      <div class="footer-mid">Try typing apple</div>
+      <div class="footer-mid"></div>
       <div class="footer-right" id="clock-wrap">
         San Francisco, CA. <span id="clock">00:00:00</span>
       </div>
@@ -732,7 +762,6 @@ Author: Nabeel
         "Nothing to see here. Literally.",
         "I checked twice. It\u2019s not back here either.",
         "Whatever was here, it wasn\u2019t built on the internet.",
-        "Even typing apple won\u2019t fix this one.",
       ];
       document.getElementById("quip").textContent = quips[Math.floor(Math.random() * quips.length)];
       const themeToggle = document.getElementById("theme-toggle");
@@ -1049,38 +1078,8 @@ Author: Nabeel
         });
       });
 
-      let tapCount = 0;
-      let tapTimer = null;
-      document.addEventListener("pointerup", (e) => {
-        if (e.target instanceof Element && e.target.closest("a, button")) return;
-        if (!inside(e, paneEl.getBoundingClientRect(), 0)) return;
-        tapCount += 1;
-        clearTimeout(tapTimer);
-        tapTimer = setTimeout(() => (tapCount = 0), 500);
-        if (tapCount === 3) {
-          tapCount = 0;
-          appleShow();
-        }
-      });
 
 
-      let inputBuffer = "";
-      const secrets = {
-        dark: () => setTheme("dark"),
-        light: () => setTheme("light"),
-        nabeel: fireworksShow,
-        apple: appleShow,
-      };
-      window.addEventListener("keydown", (e) => {
-        if (e.key.length !== 1) return;
-        inputBuffer = (inputBuffer + e.key.toLowerCase()).slice(-10);
-        for (const word in secrets) {
-          if (inputBuffer.includes(word)) {
-            secrets[word]();
-            inputBuffer = "";
-          }
-        }
-      });
 
       ["gesturestart", "gesturechange", "gestureend"].forEach((t) =>
         document.addEventListener(t, (e) => e.preventDefault(), { passive: false }),
