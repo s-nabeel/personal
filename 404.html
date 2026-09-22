@@ -26,6 +26,9 @@
         --glass-depth: rgba(0, 0, 0, 0.35);
         --glass-shadow: rgba(0, 0, 0, 0.35);
         --glow: 0.55;
+        --pad: clamp(56px, 10vw, 140px);
+        --radius: clamp(16px, 2vw, 28px);
+        --pane-h: calc(100vh - 2 * var(--pad));
         --display-font: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
       }
       :root[data-theme="light"] {
@@ -67,14 +70,16 @@
         opacity: var(--glow);
         pointer-events: none;
       }
-      .shape {
-        position: fixed;
-        inset: clamp(24px, 8vw, 120px);
-        border-radius: clamp(16px, 2vw, 28px);
-      }
+      .shape,
       .pane {
         position: fixed;
-        inset: clamp(24px, 8vw, 120px);
+        top: var(--pad);
+        left: calc(var(--pad) + env(safe-area-inset-left));
+        width: calc(100vw - 2 * var(--pad) - env(safe-area-inset-left) - env(safe-area-inset-right));
+        height: var(--pane-h);
+        border-radius: var(--radius);
+      }
+      .pane {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -149,6 +154,32 @@
       }
       a:active {
         transform: scale(0.97);
+      }
+      @media (max-width: 768px) and (orientation: portrait) {
+        :root {
+          --pane-h: 54vh;
+        }
+        .shape,
+        .pane {
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: calc(90vw - env(safe-area-inset-left) - env(safe-area-inset-right));
+          height: var(--pane-h);
+          border-radius: 5vw;
+        }
+      }
+      @media (max-height: 520px) and (orientation: landscape) {
+        :root {
+          --pad: 8vh;
+          --radius: 4vh;
+          --pane-h: calc(100vh - 2 * var(--pad));
+        }
+        .shape,
+        .pane {
+          left: calc(14vw + env(safe-area-inset-left));
+          width: calc(72vw - env(safe-area-inset-left) - env(safe-area-inset-right));
+        }
       }
     </style>
   </head>
