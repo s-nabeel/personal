@@ -54,24 +54,27 @@
         color: var(--text-color);
         overflow: hidden;
       }
-      .glow {
+      .main-content {
         position: fixed;
+        inset: 0;
+        background: var(--bg-color);
+        overflow: hidden;
+      }
+      .glow {
+        position: absolute;
         width: 56vmin;
         height: 56vmin;
         opacity: var(--glow);
         pointer-events: none;
       }
-      .pane {
+      .shape {
         position: fixed;
         inset: clamp(24px, 8vw, 120px);
         border-radius: clamp(16px, 2vw, 28px);
-        background: var(--pill-bg);
-        -webkit-backdrop-filter: blur(18px) saturate(180%);
-        backdrop-filter: blur(18px) saturate(180%);
-        box-shadow:
-          0 12px 32px var(--glass-shadow),
-          0 0 0 0.5px var(--glass-ring),
-          inset 0 -1px 1px var(--glass-depth);
+      }
+      .pane {
+        position: fixed;
+        inset: clamp(24px, 8vw, 120px);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -79,6 +82,7 @@
         gap: 18px;
         text-align: center;
         padding: 24px;
+        z-index: 10;
       }
       h1 {
         font-size: clamp(64px, 12vw, 140px);
@@ -149,14 +153,33 @@
     </style>
   </head>
   <body>
+    <div class="main-content">
     <img class="glow" alt="" style="right: -18vmin; top: -14vmin" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20200%20200%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27g%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%271%27%2F%3E%3Cstop%20offset%3D%270.55%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%270.35%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Ccircle%20cx%3D%27100%27%20cy%3D%27100%27%20r%3D%27100%27%20fill%3D%27url%28%23g%29%27%2F%3E%3C%2Fsvg%3E" />
     <img class="glow" alt="" style="left: -16vmin; bottom: -14vmin" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20200%20200%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27g%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%271%27%2F%3E%3Cstop%20offset%3D%270.55%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%270.35%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Ccircle%20cx%3D%27100%27%20cy%3D%27100%27%20r%3D%27100%27%20fill%3D%27url%28%23g%29%27%2F%3E%3C%2Fsvg%3E" />
+    </div>
+    <div class="shape"></div>
     <div class="pane">
       <h1><span>4</span><span class="orb" aria-hidden="true"></span><span>4</span></h1>
       <p id="quip">This page doesn&#8217;t exist.</p>
       <a href="/">Take me home</a>
     </div>
+    <script defer src="/scripts/liquidGL.js?v=8.7.0"></script>
     <script>
+      window.addEventListener("load", () => {
+        if (window.liquidGL)
+          liquidGL({
+            target: ".shape",
+            snapshot: ".main-content",
+            refraction: 0.026,
+            bevelDepth: 0.119,
+            bevelWidth: 0.057,
+            frost: 0,
+            specular: true,
+            shadow: true,
+            reveal: "fade",
+            resolution: Math.min(3, window.devicePixelRatio || 1),
+          });
+      });
       const quips = [
         "This page doesn\u2019t exist. Never has.",
         "You\u2019ve scrolled right off the glass.",
