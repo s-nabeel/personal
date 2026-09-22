@@ -1,7 +1,7 @@
 <!--
 404.html
 
-Version: 8.15.3
+Version: 8.16.0
 Last updated: 2026-09-22
 Author: Nabeel
 -->
@@ -758,8 +758,8 @@ Author: Nabeel
         © <span id="year"></span> Nabeel. All rights reserved
       </div>
       <div class="footer-mid"></div>
-      <div class="footer-right" id="clock-wrap">
-        San Francisco, CA. <span id="clock">00:00:00</span>
+      <div class="footer-right">
+        <span id="clock-wrap"><span id="clock-label">San Francisco, CA.</span> <span id="clock">00:00:00</span></span>
       </div>
     </footer>
 
@@ -1116,8 +1116,8 @@ Author: Nabeel
       const clockWrap = document.getElementById("clock-wrap");
       clockWrap.addEventListener("click", () => {
         clockZone = clockZone === "UTC" ? "America/Los_Angeles" : "UTC";
-        clockWrap.firstChild.textContent =
-          clockZone === "UTC" ? "\n        UTC. " : "\n        San Francisco, CA. ";
+        document.getElementById("clock-label").textContent =
+          clockZone === "UTC" ? "UTC." : "San Francisco, CA.";
         updateClock();
       });
       function updateClock() {

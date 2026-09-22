@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 8.15.3
+Version: 8.16.0
 Last updated: 2026-09-22
 Author: Nabeel
 -->
@@ -312,6 +312,46 @@ Author: Nabeel
         padding: calc(32px + env(safe-area-inset-top)) calc(40px + env(safe-area-inset-right)) 32px 40px;
         z-index: 10000;
       }
+      .scroll-dots {
+        position: fixed;
+        right: calc(clamp(12px, 2.6vw, 30px) + env(safe-area-inset-right));
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        z-index: 10000;
+        pointer-events: none;
+      }
+      .scroll-dots span {
+        width: 8px;
+        height: 8px;
+        border-radius: 4px;
+        background: var(--text-color);
+        opacity: 0.28;
+        transition:
+          height 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+          opacity 0.45s ease;
+      }
+      .scroll-dots span.on {
+        height: 24px;
+        opacity: 0.9;
+      }
+      @media (max-width: 768px) and (orientation: portrait) {
+        .scroll-dots {
+          right: calc(7px + env(safe-area-inset-right));
+          gap: 10px;
+        }
+        .scroll-dots span {
+          width: 6px;
+          height: 6px;
+          border-radius: 3px;
+        }
+        .scroll-dots span.on {
+          height: 18px;
+        }
+      }
       @media (prefers-reduced-motion: no-preference) {
         .top-nav,
         footer.lens {
@@ -322,6 +362,14 @@ Author: Nabeel
         }
         .top-nav {
           transform: translateY(-10px);
+        }
+        .scroll-dots {
+          opacity: 0;
+          transition: opacity 0.7s ease;
+        }
+        body.ready .scroll-dots {
+          opacity: 1;
+          transition-delay: 0.85s;
         }
         footer.lens {
           transform: translateY(10px);
@@ -714,13 +762,19 @@ Author: Nabeel
       </a>
     </div>
 
+    <div class="scroll-dots" aria-hidden="true">
+      <span class="on"></span>
+      <span></span>
+      <span></span>
+    </div>
+
     <footer class="lens">
       <div class="footer-left">
         © <span id="year"></span> Nabeel. All rights reserved
       </div>
       <div class="footer-mid">Try typing apple</div>
-      <div class="footer-right" id="clock-wrap">
-        San Francisco, CA. <span id="clock">00:00:00</span>
+      <div class="footer-right">
+        <span id="clock-wrap"><span id="clock-label">San Francisco, CA.</span> <span id="clock">00:00:00</span></span>
       </div>
     </footer>
 
@@ -788,8 +842,10 @@ Author: Nabeel
       );
 
       const pillAnchor = document.getElementById("pill-anchor");
+      const dotEls = document.querySelectorAll(".scroll-dots span");
       let lastY = -1;
       let lastH = -1;
+      let lastDot = 0;
       (function watchScroll() {
         const y = window.scrollY;
         const h = document.documentElement.scrollHeight;
@@ -797,6 +853,13 @@ Author: Nabeel
           lastY = y;
           lastH = h;
           pillAnchor.classList.toggle("show", window.innerHeight + y >= h - 4);
+          const maxY = h - window.innerHeight;
+          const p = maxY > 0 ? y / maxY : 0;
+          const idx = p < 0.3 ? 0 : p < 0.78 ? 1 : 2;
+          if (idx !== lastDot) {
+            lastDot = idx;
+            dotEls.forEach((d, i) => d.classList.toggle("on", i === idx));
+          }
         }
         requestAnimationFrame(watchScroll);
       })();
@@ -1099,8 +1162,8 @@ Author: Nabeel
       const clockWrap = document.getElementById("clock-wrap");
       clockWrap.addEventListener("click", () => {
         clockZone = clockZone === "UTC" ? "America/Los_Angeles" : "UTC";
-        clockWrap.firstChild.textContent =
-          clockZone === "UTC" ? "\n        UTC. " : "\n        San Francisco, CA. ";
+        document.getElementById("clock-label").textContent =
+          clockZone === "UTC" ? "UTC." : "San Francisco, CA.";
         updateClock();
       });
       function updateClock() {
