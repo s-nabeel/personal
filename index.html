@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 8.16.1
+Version: 8.16.2
 Last updated: 2026-09-22
 Author: Nabeel
 -->
@@ -329,18 +329,16 @@ Author: Nabeel
         border: 0;
         padding: 0;
         margin: 0;
-        width: 24px;
-        height: 26px;
+        width: 8px;
         background: transparent;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: block;
         cursor: pointer;
         pointer-events: auto;
         -webkit-tap-highlight-color: transparent;
         outline: none;
       }
       .scroll-dots button span {
+        display: block;
         width: 8px;
         height: 8px;
         border-radius: 4px;
@@ -359,12 +357,11 @@ Author: Nabeel
       }
       @media (max-width: 768px) and (orientation: portrait) {
         .scroll-dots {
-          right: calc(2px + env(safe-area-inset-right));
-          gap: 4px;
+          right: calc(7px + env(safe-area-inset-right));
+          gap: 10px;
         }
         .scroll-dots button {
-          width: 20px;
-          height: 22px;
+          width: 6px;
         }
         .scroll-dots button span {
           width: 6px;
