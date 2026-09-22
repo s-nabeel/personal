@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 8.10.0
+Version: 8.11.0
 Last updated: 2026-09-22
 Author: Nabeel
 -->
@@ -638,6 +638,177 @@ Author: Nabeel
           font-size: 0.66rem;
         }
       }
+      #lockscreen {
+        position: fixed;
+        inset: 0;
+        z-index: 20000;
+        background: var(--bg-color);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-3%);
+        transition:
+          opacity 0.55s ease,
+          transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      #lockscreen.locked {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+      #lockscreen.unlocking {
+        opacity: 0;
+        transform: translateY(-6%);
+      }
+      #lockscreen .ls-glow {
+        position: absolute;
+        width: 56vmin;
+        height: 56vmin;
+        opacity: var(--glow);
+        pointer-events: none;
+      }
+      .ls-date {
+        margin-top: 10vh;
+        font-family: ui-rounded, "SF Pro Rounded", var(--display-font);
+        font-size: 21px;
+        font-weight: 600;
+        color: var(--text-color);
+        opacity: 0.92;
+        position: relative;
+      }
+      .ls-time {
+        margin-top: -6px;
+        font-family: ui-rounded, "SF Pro Rounded", var(--display-font);
+        font-size: clamp(96px, 17vh, 164px);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.02;
+        font-variant-numeric: tabular-nums;
+        color: var(--text-color);
+        position: relative;
+      }
+      .ls-who {
+        margin-top: 2px;
+        font-size: 20px;
+        color: var(--muted-color);
+        position: relative;
+      }
+      .ls-notes {
+        margin-top: 7vh;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        width: min(600px, 86vw);
+        position: relative;
+      }
+      .ls-note {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 14px 18px;
+        border-radius: 22px;
+        background: var(--pill-bg);
+        -webkit-backdrop-filter: blur(18px) saturate(180%);
+        backdrop-filter: blur(18px) saturate(180%);
+        box-shadow:
+          0 12px 32px var(--glass-shadow),
+          0 0 0 0.5px var(--glass-ring),
+          inset 0 -1px 1px var(--glass-depth);
+        color: var(--text-color);
+        text-decoration: none;
+        transform: translateY(-14px);
+        opacity: 0;
+        transition:
+          transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
+          opacity 0.5s ease;
+      }
+      #lockscreen.locked .ls-note {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      #lockscreen.locked .ls-note:nth-child(1) {
+        transition-delay: 0.25s;
+      }
+      #lockscreen.locked .ls-note:nth-child(2) {
+        transition-delay: 0.38s;
+      }
+      .ls-note .ic {
+        width: 42px;
+        height: 42px;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .ls-note .ic.m {
+        background: linear-gradient(140deg, #2997ff, #0b5bd3);
+      }
+      .ls-note .ic.g {
+        background: #1d1d1f;
+        box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.2);
+        font-size: 16px;
+        font-weight: 700;
+      }
+      .ls-note .bd {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+      .ls-note .ap {
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .ls-note .mg {
+        font-size: 14px;
+        color: var(--muted-color);
+      }
+      .ls-note .wh {
+        font-size: 12px;
+        color: var(--muted-color);
+      }
+      .ls-bar {
+        position: absolute;
+        bottom: 22px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 140px;
+        height: 5px;
+        border-radius: 3px;
+        background: var(--text-color);
+        opacity: 0.85;
+      }
+      .pill-anchor.show .email-pill {
+        animation: noteDrop 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      @keyframes noteDrop {
+        0% {
+          transform: translateY(26px) scale(0.92);
+          opacity: 0;
+        }
+        60% {
+          transform: translateY(-4px) scale(1.01);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(0) scale(1);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #lockscreen,
+        .ls-note {
+          transition: opacity 0.3s ease;
+          transform: none;
+        }
+        .pill-anchor.show .email-pill {
+          animation: none;
+        }
+      }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
@@ -709,6 +880,27 @@ Author: Nabeel
         San Francisco, CA. <span id="clock">00:00:00</span>
       </div>
     </footer>
+
+    <div id="lockscreen" aria-hidden="true">
+      <img class="ls-glow" alt="" style="left: 50%; margin-left: -28vmin; top: -20vmin" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20200%20200%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27g%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%271%27%2F%3E%3Cstop%20offset%3D%270.55%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%270.35%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Ccircle%20cx%3D%27100%27%20cy%3D%27100%27%20r%3D%27100%27%20fill%3D%27url%28%23g%29%27%2F%3E%3C%2Fsvg%3E" />
+      <img class="ls-glow" alt="" style="right: -22vmin; bottom: -18vmin" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20200%20200%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27g%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%271%27%2F%3E%3Cstop%20offset%3D%270.55%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%270.35%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Ccircle%20cx%3D%27100%27%20cy%3D%27100%27%20r%3D%27100%27%20fill%3D%27url%28%23g%29%27%2F%3E%3C%2Fsvg%3E" />
+      <div class="ls-date" id="ls-date"></div>
+      <div class="ls-time" id="ls-time">00:00</div>
+      <div class="ls-who">Nabeel &#183; Building things on the internet</div>
+      <div class="ls-notes">
+        <a class="ls-note" href="mailto:x@nabeel.ca">
+          <span class="ic m">&#9993;</span>
+          <span class="bd"><span class="ap">Mail</span><span class="mg">x@nabeel.ca &#8212; say hello</span></span>
+          <span class="wh">now</span>
+        </a>
+        <a class="ls-note" href="https://github.com/s-nabeel" target="_blank" rel="noopener">
+          <span class="ic g">{ }</span>
+          <span class="bd"><span class="ap">GitHub</span><span class="mg">github.com/s-nabeel</span></span>
+          <span class="wh">2m</span>
+        </a>
+      </div>
+      <div class="ls-bar"></div>
+    </div>
 
     <script>
       const root = document.documentElement;
@@ -1040,11 +1232,69 @@ Author: Nabeel
         }
       });
 
+
+      const lockEl = document.getElementById("lockscreen");
+      let lockedNow = false;
+      let unlockArmed = 0;
+      function lsTick() {
+        const n = new Date();
+        document.getElementById("ls-time").textContent =
+          String(n.getHours()).padStart(2, "0") + ":" + String(n.getMinutes()).padStart(2, "0");
+        document.getElementById("ls-date").textContent = n.toLocaleDateString("en-US", {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+        });
+      }
+      setInterval(lsTick, 15000);
+      lsTick();
+      function lockSite() {
+        if (lockedNow) return;
+        lockedNow = true;
+        unlockArmed = Date.now();
+        lockEl.classList.remove("unlocking");
+        lockEl.classList.add("locked");
+        lockEl.setAttribute("aria-hidden", "false");
+      }
+      function unlockSite() {
+        if (!lockedNow) return;
+        lockedNow = false;
+        lockEl.classList.add("unlocking");
+        lockEl.classList.remove("locked");
+        lockEl.setAttribute("aria-hidden", "true");
+        setTimeout(() => lockEl.classList.remove("unlocking"), 600);
+      }
+      ["keydown", "pointerdown", "wheel", "touchstart"].forEach((t) =>
+        window.addEventListener(
+          t,
+          (e) => {
+            if (!lockedNow || Date.now() - unlockArmed < 450) return;
+            if (e.target && e.target.closest && e.target.closest(".ls-note")) return;
+            unlockSite();
+          },
+          { capture: true, passive: true },
+        ),
+      );
+      let idleTimer = null;
+      function resetIdle() {
+        clearTimeout(idleTimer);
+        if (!lockedNow) idleTimer = setTimeout(lockSite, 180000);
+      }
+      ["keydown", "pointerdown", "pointermove", "wheel", "touchstart", "scroll"].forEach((t) =>
+        window.addEventListener(t, resetIdle, { passive: true }),
+      );
+      resetIdle();
+      document.getElementById("clock-wrap").addEventListener("dblclick", (e) => {
+        e.preventDefault();
+        lockSite();
+      });
+
       let inputBuffer = "";
       const secrets = {
         dark: () => setTheme("dark"),
         light: () => setTheme("light"),
         nabeel: fireworksShow,
+        lock: () => lockSite(),
         apple: appleShow,
       };
       window.addEventListener("keydown", (e) => {
