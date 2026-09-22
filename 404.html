@@ -7,6 +7,13 @@
     <meta name="robots" content="noindex" />
     <title>Nabeel — Page not found</title>
     <link rel="icon" type="image/png" href="/favicon.png?v=3" />
+    <script>
+      try {
+        const t = localStorage.getItem("theme");
+        if (t === "light" || (!t && window.matchMedia("(prefers-color-scheme: light)").matches))
+          document.documentElement.setAttribute("data-theme", "light");
+      } catch (e) {}
+    </script>
     <style>
       :root {
         color-scheme: dark;
@@ -21,19 +28,17 @@
         --glow: 0.55;
         --display-font: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
       }
-      @media (prefers-color-scheme: light) {
-        :root {
-          color-scheme: light;
-          --bg-color: #f5f5f7;
-          --text-color: #1d1d1f;
-          --muted-color: #6e6e73;
-          --accent: #0071e3;
-          --pill-bg: rgba(255, 255, 255, 0.55);
-          --glass-ring: rgba(0, 0, 0, 0.06);
-          --glass-depth: rgba(0, 0, 0, 0.06);
-          --glass-shadow: rgba(0, 0, 0, 0.12);
-          --glow: 0.32;
-        }
+      :root[data-theme="light"] {
+        color-scheme: light;
+        --bg-color: #f5f5f7;
+        --text-color: #1d1d1f;
+        --muted-color: #6e6e73;
+        --accent: #0071e3;
+        --pill-bg: rgba(255, 255, 255, 0.55);
+        --glass-ring: rgba(0, 0, 0, 0.06);
+        --glass-depth: rgba(0, 0, 0, 0.06);
+        --glass-shadow: rgba(0, 0, 0, 0.12);
+        --glow: 0.32;
       }
       * {
         margin: 0;
