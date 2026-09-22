@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 8.16.0
+Version: 8.16.1
 Last updated: 2026-09-22
 Author: Nabeel
 -->
@@ -324,7 +324,23 @@ Author: Nabeel
         z-index: 10000;
         pointer-events: none;
       }
-      .scroll-dots span {
+      .scroll-dots button {
+        appearance: none;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        width: 24px;
+        height: 26px;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        pointer-events: auto;
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
+      }
+      .scroll-dots button span {
         width: 8px;
         height: 8px;
         border-radius: 4px;
@@ -334,21 +350,28 @@ Author: Nabeel
           height 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
           opacity 0.45s ease;
       }
-      .scroll-dots span.on {
+      .scroll-dots button:hover span {
+        opacity: 0.6;
+      }
+      .scroll-dots button.on span {
         height: 24px;
         opacity: 0.9;
       }
       @media (max-width: 768px) and (orientation: portrait) {
         .scroll-dots {
-          right: calc(7px + env(safe-area-inset-right));
-          gap: 10px;
+          right: calc(2px + env(safe-area-inset-right));
+          gap: 4px;
         }
-        .scroll-dots span {
+        .scroll-dots button {
+          width: 20px;
+          height: 22px;
+        }
+        .scroll-dots button span {
           width: 6px;
           height: 6px;
           border-radius: 3px;
         }
-        .scroll-dots span.on {
+        .scroll-dots button.on span {
           height: 18px;
         }
       }
@@ -762,10 +785,10 @@ Author: Nabeel
       </a>
     </div>
 
-    <div class="scroll-dots" aria-hidden="true">
-      <span class="on"></span>
-      <span></span>
-      <span></span>
+    <div class="scroll-dots">
+      <button class="on" aria-label="Name"><span></span></button>
+      <button aria-label="About"><span></span></button>
+      <button aria-label="Email"><span></span></button>
     </div>
 
     <footer class="lens">
@@ -842,7 +865,14 @@ Author: Nabeel
       );
 
       const pillAnchor = document.getElementById("pill-anchor");
-      const dotEls = document.querySelectorAll(".scroll-dots span");
+      const dotEls = document.querySelectorAll(".scroll-dots button");
+      const dotStops = [0, 0.54, 1];
+      dotEls.forEach((d, i) =>
+        d.addEventListener("click", () => {
+          const maxY = document.documentElement.scrollHeight - window.innerHeight;
+          window.scrollTo({ top: dotStops[i] * maxY, behavior: "smooth" });
+        }),
+      );
       let lastY = -1;
       let lastH = -1;
       let lastDot = 0;
