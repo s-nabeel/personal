@@ -1,7 +1,7 @@
 <!--
 index.html
 
-Version: 8.9.1
+Version: 8.10.0
 Last updated: 2026-09-22
 Author: Nabeel
 -->
@@ -297,6 +297,31 @@ Author: Nabeel
         right: 0;
         padding: calc(32px + env(safe-area-inset-top)) calc(40px + env(safe-area-inset-right)) 32px 40px;
         z-index: 10000;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .top-nav,
+        footer.lens {
+          opacity: 0;
+          transition:
+            opacity 0.7s ease,
+            transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .top-nav {
+          transform: translateY(-10px);
+        }
+        footer.lens {
+          transform: translateY(10px);
+        }
+        body.ready .top-nav {
+          opacity: 1;
+          transform: translateY(0);
+          transition-delay: 0.5s;
+        }
+        body.ready footer.lens {
+          opacity: 1;
+          transform: translateY(0);
+          transition-delay: 0.72s;
+        }
       }
       #theme-toggle {
         width: 53px;
