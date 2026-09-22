@@ -80,6 +80,38 @@
         font-weight: 700;
         letter-spacing: -0.021em;
         line-height: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.06em;
+      }
+      .orb {
+        width: 0.72em;
+        height: 0.72em;
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 42%),
+          radial-gradient(circle at 70% 25%, #3b6cff 0%, rgba(59, 108, 255, 0) 62%),
+          radial-gradient(circle at 25% 75%, #ff7a59 0%, rgba(255, 122, 89, 0) 60%),
+          radial-gradient(circle at 78% 78%, #2fd3a5 0%, rgba(47, 211, 165, 0) 58%),
+          #8e5cff;
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.4),
+          inset 0 -2px 6px rgba(0, 0, 0, 0.35);
+        animation: bob 3.6s ease-in-out infinite;
+      }
+      @keyframes bob {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-0.08em);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .orb {
+          animation: none;
+        }
       }
       p {
         font-size: clamp(17px, 2vw, 22px);
@@ -115,9 +147,20 @@
     <img class="glow" alt="" style="right: -18vmin; top: -14vmin" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20200%20200%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27g%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%271%27%2F%3E%3Cstop%20offset%3D%270.55%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%270.35%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Ccircle%20cx%3D%27100%27%20cy%3D%27100%27%20r%3D%27100%27%20fill%3D%27url%28%23g%29%27%2F%3E%3C%2Fsvg%3E" />
     <img class="glow" alt="" style="left: -16vmin; bottom: -14vmin" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20200%20200%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27g%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%271%27%2F%3E%3Cstop%20offset%3D%270.55%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%270.35%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Ccircle%20cx%3D%27100%27%20cy%3D%27100%27%20r%3D%27100%27%20fill%3D%27url%28%23g%29%27%2F%3E%3C%2Fsvg%3E" />
     <div class="pane">
-      <h1>404</h1>
-      <p>This page doesn&#8217;t exist.</p>
+      <h1><span>4</span><span class="orb" aria-hidden="true"></span><span>4</span></h1>
+      <p id="quip">This page doesn&#8217;t exist.</p>
       <a href="/">Take me home</a>
     </div>
+    <script>
+      const quips = [
+        "This page doesn\u2019t exist. Never has.",
+        "You\u2019ve scrolled right off the glass.",
+        "Nothing to see here. Literally.",
+        "I checked twice. It\u2019s not back here either.",
+        "Whatever was here, it wasn\u2019t built on the internet.",
+        "Even typing apple won\u2019t fix this one.",
+      ];
+      document.getElementById("quip").textContent = quips[Math.floor(Math.random() * quips.length)];
+    </script>
   </body>
 </html>
