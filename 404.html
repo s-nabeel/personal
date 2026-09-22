@@ -1,7 +1,7 @@
 <!--
 404.html
 
-Version: 8.14.4
+Version: 8.14.6
 Last updated: 2026-09-22
 Author: Nabeel
 -->
@@ -77,7 +77,25 @@ Author: Nabeel
         opacity: var(--glow);
         pointer-events: none;
       }
+      .shape {
+        background: rgba(255, 255, 255, 0.1);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        backdrop-filter: blur(20px) saturate(180%);
+        will-change: transform;
+      }
+      .mask {
+        box-shadow: 0 0 0 200vmax var(--bg-color);
+        pointer-events: none;
+        z-index: 9990;
+      }
+      .shape {
+        z-index: 9999;
+      }
+      .pane {
+        z-index: 10000;
+      }
       .shape,
+      .mask,
       .pane {
         position: fixed;
         top: var(--pad);
@@ -167,6 +185,7 @@ Author: Nabeel
           --pane-h: 54vh;
         }
         .shape,
+        .mask,
         .pane {
           top: 50%;
           left: 50%;
@@ -183,6 +202,7 @@ Author: Nabeel
           --pane-h: calc(100vh - 2 * var(--pad));
         }
         .shape,
+        .mask,
         .pane {
           left: calc(14vw + env(safe-area-inset-left));
           width: calc(72vw - env(safe-area-inset-left) - env(safe-area-inset-right));
@@ -195,6 +215,7 @@ Author: Nabeel
     <img class="glow" alt="" style="left: -14vmin; top: 22vh" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20200%20200%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27g%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%271%27%2F%3E%3Cstop%20offset%3D%270.55%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%270.35%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%233b6cff%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Ccircle%20cx%3D%27100%27%20cy%3D%27100%27%20r%3D%27100%27%20fill%3D%27url%28%23g%29%27%2F%3E%3C%2Fsvg%3E" />
     <img class="glow" alt="" style="right: -18vmin; top: 60vh" src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20200%20200%27%3E%3Cdefs%3E%3CradialGradient%20id%3D%27g%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%271%27%2F%3E%3Cstop%20offset%3D%270.55%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%270.35%27%2F%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23ff7a59%27%20stop-opacity%3D%270%27%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Ccircle%20cx%3D%27100%27%20cy%3D%27100%27%20r%3D%27100%27%20fill%3D%27url%28%23g%29%27%2F%3E%3C%2Fsvg%3E" />
     </div>
+    <div class="mask" aria-hidden="true"></div>
     <div class="shape"></div>
     <div class="pane">
       <h1><span>4</span><span class="orb" aria-hidden="true"></span><span>4</span></h1>
