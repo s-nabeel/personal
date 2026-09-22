@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /demo-
+Disallow: /styles-demo.html
+
+Sitemap: https://nabeel.ca/sitemap.xml
