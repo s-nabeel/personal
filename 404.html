@@ -1,7 +1,7 @@
 <!--
 404.html
 
-Version: 8.15.1
+Version: 8.15.2
 Last updated: 2026-09-22
 Author: Nabeel
 -->
@@ -653,14 +653,21 @@ Author: Nabeel
         }
       }
 
+      html,
       body {
+        height: 100%;
         overflow: hidden;
+        overscroll-behavior: none;
       }
       .scroll-hint,
       #arrow-touch,
       .top-nav,
       #end-sentinel {
         display: none !important;
+      }
+      .main-content {
+        height: 100svh;
+        overflow: hidden;
       }
       .banner-text-container {
         height: 100svh;
@@ -670,12 +677,14 @@ Author: Nabeel
       }
       #name {
         margin: 0 auto;
+        padding: 0.4em 0 0.15em;
       }
       .banner-text.small {
-        margin: 1.5vh auto 0;
+        margin: 0.5vh auto 0;
+        font-size: clamp(18px, 1.9vw, 32px);
       }
       .pill-anchor {
-        padding-top: 30vh;
+        padding-top: 26vh;
         opacity: 1 !important;
         transform: none !important;
       }
