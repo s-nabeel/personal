@@ -1,4 +1,4 @@
-import { recaptureSnapshot } from "./glass.js";
+import { recaptureSnapshot } from "./glass.js?v=9.0.1";
 
 const STORAGE_KEY = "theme";
 const CHROME_COLORS = { dark: "#000000", light: "#f5f5f7" };

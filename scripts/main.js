@@ -1,10 +1,10 @@
-import { initGlass, refreshLive, registerDynamic, startRenderLoop } from "./modules/glass.js";
-import { initThemeToggle, onThemeChange } from "./modules/theme.js";
-import { createScroller, initScrollHint, initScrollProgress, registerScrollHintGlass } from "./modules/scroll.js";
-import { initEasterEggs } from "./modules/egg.js";
-import { initFooterClock } from "./modules/clock.js";
-import { lockZoom } from "./modules/zoom-lock.js";
-import { revealWhenReady } from "./modules/ready.js";
+import { initGlass, refreshLive, registerDynamic, startRenderLoop } from "./modules/glass.js?v=9.0.1";
+import { initThemeToggle, onThemeChange } from "./modules/theme.js?v=9.0.1";
+import { createScroller, initScrollHint, initScrollProgress, registerScrollHintGlass } from "./modules/scroll.js?v=9.0.1";
+import { initEasterEggs } from "./modules/egg.js?v=9.0.1";
+import { initFooterClock } from "./modules/clock.js?v=9.0.1";
+import { lockZoom } from "./modules/zoom-lock.js?v=9.0.1";
+import { revealWhenReady } from "./modules/ready.js?v=9.0.1";
 
 const RESIZE_SETTLE_MS = 600;
 

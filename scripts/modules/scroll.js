@@ -1,5 +1,5 @@
-import { currentTheme, onThemeChange } from "./theme.js";
-import { registerDynamic } from "./glass.js";
+import { currentTheme, onThemeChange } from "./theme.js?v=9.0.1";
+import { registerDynamic } from "./glass.js?v=9.0.1";
 
 const DOT_STOPS = [0, 0.54, 1];
 const DOT_THRESHOLDS = [0.3, 0.78];

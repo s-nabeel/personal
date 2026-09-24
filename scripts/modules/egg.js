@@ -1,5 +1,5 @@
-import { getRenderer, markDirty, refreshLive, registerDynamic, setBusy, unregisterDynamic } from "./glass.js";
-import { setTheme } from "./theme.js";
+import { getRenderer, markDirty, refreshLive, registerDynamic, setBusy, unregisterDynamic } from "./glass.js?v=9.0.1";
+import { setTheme } from "./theme.js?v=9.0.1";
 
 const SERIF_FONT_URL = "https://fonts.googleapis.com/css2?family=Instrument+Serif&display=swap";
 const CONFETTI_Z = 20000;

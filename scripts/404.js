@@ -1,7 +1,7 @@
-import { initGlass, startRenderLoop } from "./modules/glass.js";
-import { initFooterClock } from "./modules/clock.js";
-import { lockZoom } from "./modules/zoom-lock.js";
-import { revealWhenReady } from "./modules/ready.js";
+import { initGlass, startRenderLoop } from "./modules/glass.js?v=9.0.1";
+import { initFooterClock } from "./modules/clock.js?v=9.0.1";
+import { lockZoom } from "./modules/zoom-lock.js?v=9.0.1";
+import { revealWhenReady } from "./modules/ready.js?v=9.0.1";
 
 const QUIPS = [
   "This page doesn’t exist. Never has.",
