@@ -1,0 +1,39 @@
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.page-404 .main-content {
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.page-404 .banner-text-container {
+  height: 100vh;
+  height: 100svh;
+  padding: 0;
+  justify-content: center;
+  transform: translateY(-7vh);
+}
+
+.page-404 .banner-text--name {
+  margin: 0 auto;
+  padding: 0.4em 0 0.15em;
+}
+
+.page-404 .banner-text--small {
+  margin: 0.5vh auto 0;
+  font-size: clamp(18px, 1.9vw, 32px);
+}
+
+.page-404 .pill-anchor {
+  padding-top: 26vh;
+}
+
+.page-404 .site-footer {
+  grid-template-columns: auto auto;
+  justify-content: space-between;
+}

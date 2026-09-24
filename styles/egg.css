@@ -1,0 +1,62 @@
+.banner-text .word {
+  position: relative;
+  z-index: 1;
+}
+
+.banner-text.retro .word,
+.runner {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  color: var(--text-color);
+}
+
+.banner-text .think {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.12em;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 0.28em;
+  letter-spacing: 0.005em;
+  color: var(--muted-color);
+}
+
+.banner-text.crashed .think,
+.banner-text.thinking .think {
+  display: block;
+}
+
+.banner-text .i {
+  display: none;
+}
+
+.banner-text.crashed .i {
+  display: inline;
+}
+
+.banner-text.leaving .i {
+  visibility: hidden;
+}
+
+.banner-text.hold .i {
+  display: inline;
+  visibility: hidden;
+}
+
+.runner {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: -60vw;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.runner.running {
+  display: block;
+}
